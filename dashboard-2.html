@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard — Yantra AI</title>
+<meta name="description" content="Yantra AI dashboard — manage API keys, top up with UPI, track usage.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<style>
+:root{
+  --bg:#03050d; --bg2:#070b16; --card:#0d1528; --card2:#111b33; --line:#1c2742;
+  --ink:#e8edf7; --mut:#9fb0cc; --dim:#64748b;
+  --cyan:#00d4ff; --green:#00ff88; --purple:#9d4edd; --pink:#ff006e; --amber:#ffbe0b; --saffron:#ff9933;
+  --red:#ff5470;
+  --mono:'JetBrains Mono',ui-monospace,monospace; --disp:'Bricolage Grotesque',sans-serif; --sans:'Instrument Sans',system-ui,sans-serif;
+  --r:14px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{background:var(--bg);color:var(--ink);font-family:var(--sans);line-height:1.5;
+  background-image:radial-gradient(1200px 600px at 80% -10%,rgba(0,212,255,.07),transparent 60%),
+                   radial-gradient(900px 500px at -10% 110%,rgba(157,78,221,.08),transparent 60%);
+  background-attachment:fixed;-webkit-font-smoothing:antialiased}
+a{color:var(--cyan);text-decoration:none}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
+input,select{font-family:inherit}
+.mono{font-family:var(--mono)}
+.hide{display:none!important}
+.sf{color:var(--saffron)} .cy{color:var(--cyan)} .gr{color:var(--green)} .mut{color:var(--mut)} .dim{color:var(--dim)}
+.wrap{max-width:1080px;margin:0 auto;padding:0 20px}
+
+/* ---------- buttons ---------- */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:11px 18px;border-radius:11px;
+  font-weight:600;font-size:14px;transition:.15s;border:1px solid transparent;white-space:nowrap}
+.btn-pri{background:linear-gradient(135deg,var(--cyan),#3b9dff);color:#02121b;box-shadow:0 6px 22px rgba(0,212,255,.25)}
+.btn-pri:hover{transform:translateY(-1px);box-shadow:0 10px 28px rgba(0,212,255,.35)}
+.btn-saf{background:linear-gradient(135deg,var(--saffron),#ff7a00);color:#1a0c00;box-shadow:0 6px 22px rgba(255,153,51,.25)}
+.btn-saf:hover{transform:translateY(-1px)}
+.btn-ghost{border-color:var(--line);background:var(--card2);color:var(--ink)}
+.btn-ghost:hover{border-color:var(--cyan);color:var(--cyan)}
+.btn-sm{padding:7px 12px;font-size:13px;border-radius:9px}
+.btn-danger{border-color:rgba(255,84,112,.4);color:var(--red);background:rgba(255,84,112,.08)}
+.btn-danger:hover{background:rgba(255,84,112,.16)}
+.btn[disabled]{opacity:.5;cursor:not-allowed;transform:none!important}
+
+/* ---------- inputs ---------- */
+.field{margin-bottom:14px}
+.field label{display:block;font-size:12px;color:var(--mut);margin-bottom:6px;font-weight:500;letter-spacing:.02em}
+.inp{width:100%;background:var(--bg2);border:1px solid var(--line);border-radius:10px;padding:11px 13px;color:var(--ink);font-size:14px;transition:.15s}
+.inp:focus{outline:none;border-color:var(--cyan);box-shadow:0 0 0 3px rgba(0,212,255,.12)}
+.inp.mono{font-size:13px}
+
+/* ---------- card ---------- */
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r)}
+.pad{padding:22px}
+
+/* ================= AUTH SCREEN ================= */
+#auth-screen{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px}
+.auth-card{width:100%;max-width:420px}
+.brand{display:flex;align-items:center;gap:11px;justify-content:center;margin-bottom:26px}
+.glyph{width:42px;height:42px;border-radius:11px;background:linear-gradient(135deg,var(--cyan),var(--purple));
+  display:grid;place-items:center;font-family:var(--disp);font-weight:800;font-size:24px;color:#02121b}
+.brand b{font-family:var(--disp);font-size:21px;font-weight:700;letter-spacing:-.01em}
+.tabs{display:flex;background:var(--bg2);border:1px solid var(--line);border-radius:11px;padding:4px;margin-bottom:20px}
+.tabs button{flex:1;padding:9px;border-radius:8px;font-weight:600;font-size:14px;color:var(--mut);transition:.15s}
+.tabs button.on{background:var(--card2);color:var(--ink)}
+.msg{padding:10px 13px;border-radius:9px;font-size:13px;margin-bottom:14px}
+.msg.err{background:rgba(255,84,112,.1);border:1px solid rgba(255,84,112,.3);color:#ffb3c0}
+.msg.ok{background:rgba(0,255,136,.08);border:1px solid rgba(0,255,136,.25);color:#9affc9}
+.subtle{text-align:center;font-size:13px;color:var(--dim);margin-top:16px}
+.endpoint-row{margin-top:18px;padding-top:16px;border-top:1px solid var(--line)}
+
+/* ================= APP SCREEN ================= */
+.topbar{position:sticky;top:0;z-index:40;background:rgba(7,11,22,.85);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
+.topbar .wrap{display:flex;align-items:center;gap:18px;height:62px}
+.topbar .brand{margin:0;gap:9px}
+.topbar .glyph{width:32px;height:32px;font-size:18px;border-radius:8px}
+.topbar .brand b{font-size:17px}
+.nav{display:flex;gap:4px;margin-left:8px}
+.nav button{padding:8px 14px;border-radius:9px;font-size:14px;font-weight:500;color:var(--mut);transition:.15s}
+.nav button:hover{color:var(--ink)}
+.nav button.on{background:var(--card2);color:var(--cyan)}
+.spacer{flex:1}
+.bal-pill{display:flex;align-items:center;gap:8px;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:7px 13px}
+.bal-pill .lbl{font-size:11px;color:var(--dim);text-transform:uppercase;letter-spacing:.05em}
+.bal-pill .amt{font-family:var(--mono);font-weight:700;font-size:15px;color:var(--green)}
+.acct{position:relative}
+.acct-btn{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,var(--purple),var(--pink));
+  display:grid;place-items:center;font-weight:700;font-size:14px;color:#fff}
+.menu{position:absolute;right:0;top:44px;width:230px;background:var(--card);border:1px solid var(--line);border-radius:12px;padding:8px;box-shadow:0 18px 50px rgba(0,0,0,.5)}
+.menu .em{padding:10px 12px;font-size:13px;color:var(--mut);border-bottom:1px solid var(--line);margin-bottom:6px;word-break:break-all}
+.menu button{display:block;width:100%;text-align:left;padding:9px 12px;border-radius:8px;font-size:14px;color:var(--ink);transition:.12s}
+.menu button:hover{background:var(--card2)}
+
+main{padding:30px 0 80px}
+.view-head{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:22px;flex-wrap:wrap}
+.view-head h1{font-family:var(--disp);font-size:26px;font-weight:700;letter-spacing:-.02em}
+.view-head p{color:var(--mut);font-size:14px;margin-top:3px}
+
+/* verify banner */
+.vbanner{display:flex;align-items:center;gap:14px;background:linear-gradient(135deg,rgba(255,153,51,.12),rgba(255,153,51,.04));
+  border:1px solid rgba(255,153,51,.32);border-radius:12px;padding:14px 18px;margin-bottom:22px;flex-wrap:wrap}
+.vbanner .ic{font-size:20px}
+.vbanner .tx{flex:1;min-width:200px;font-size:14px}
+.vbanner .tx b{color:var(--saffron)}
+
+/* stat grid */
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:14px;margin-bottom:24px}
+.stat{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:18px}
+.stat .k{font-size:12px;color:var(--dim);text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px}
+.stat .v{font-family:var(--mono);font-size:26px;font-weight:700}
+.stat .v.cy{color:var(--cyan)} .stat .v.gr{color:var(--green)} .stat .v.sf{color:var(--saffron)} .stat .v.pu{color:var(--purple)}
+
+/* tables / lists */
+.list{display:flex;flex-direction:column}
+.row{display:flex;align-items:center;gap:14px;padding:15px 0;border-bottom:1px solid var(--line)}
+.row:last-child{border-bottom:none}
+.row .grow{flex:1;min-width:0}
+.row .t1{font-weight:600;font-size:14px}
+.row .t2{font-size:12.5px;color:var(--dim);margin-top:2px}
+.tag{display:inline-block;padding:2px 8px;border-radius:6px;font-size:11px;font-weight:600;font-family:var(--mono)}
+.tag.green{background:rgba(0,255,136,.12);color:var(--green)}
+.tag.dim{background:var(--card2);color:var(--mut)}
+.tag.red{background:rgba(255,84,112,.12);color:var(--red)}
+.empty{text-align:center;padding:46px 20px;color:var(--dim)}
+.empty .big{font-size:30px;margin-bottom:10px;opacity:.6}
+
+.codebox{background:var(--bg2);border:1px solid var(--line);border-radius:11px;padding:15px 16px;font-family:var(--mono);
+  font-size:12.5px;color:var(--mut);overflow-x:auto;white-space:pre;position:relative}
+.copy-ic{position:absolute;top:10px;right:10px}
+
+/* billing packs */
+.packs{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:12px;margin-bottom:18px}
+.pack{background:var(--card2);border:1px solid var(--line);border-radius:12px;padding:18px;text-align:center;cursor:pointer;transition:.15s}
+.pack:hover{border-color:var(--saffron);transform:translateY(-2px)}
+.pack.on{border-color:var(--saffron);background:rgba(255,153,51,.08)}
+.pack .amt{font-family:var(--mono);font-size:22px;font-weight:700}
+.pack .sub{font-size:11px;color:var(--dim);margin-top:4px}
+
+/* ---------- modal ---------- */
+.overlay{position:fixed;inset:0;z-index:60;background:rgba(2,4,10,.74);backdrop-filter:blur(6px);display:none;align-items:center;justify-content:center;padding:22px}
+.overlay.on{display:flex}
+.modal{width:100%;max-width:480px;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:26px;box-shadow:0 30px 80px rgba(0,0,0,.6)}
+.modal h3{font-family:var(--disp);font-size:20px;font-weight:700;margin-bottom:6px}
+.modal .sub{color:var(--mut);font-size:13.5px;margin-bottom:18px}
+.modal-actions{display:flex;gap:10px;justify-content:flex-end;margin-top:20px}
+.warnote{display:flex;gap:10px;background:rgba(255,190,11,.08);border:1px solid rgba(255,190,11,.28);border-radius:10px;padding:12px;font-size:12.5px;color:#ffe08a;margin-top:14px}
+
+/* qr */
+#sim-qr{display:flex;justify-content:center;padding:16px;background:#fff;border-radius:12px;width:fit-content;margin:6px auto 14px}
+
+/* toast */
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--card2);
+  border:1px solid var(--line);border-radius:11px;padding:12px 20px;font-size:14px;z-index:90;opacity:0;transition:.25s;pointer-events:none}
+.toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
+.toast.good{border-color:rgba(0,255,136,.4)} .toast.bad{border-color:rgba(255,84,112,.4)}
+
+.spin{width:16px;height:16px;border:2px solid rgba(255,255,255,.25);border-top-color:#fff;border-radius:50%;animation:sp .7s linear infinite;display:inline-block}
+@keyframes sp{to{transform:rotate(360deg)}}
+
+@media(max-width:640px){
+  .topbar .wrap{flex-wrap:wrap;height:auto;padding-top:10px;padding-bottom:10px;gap:10px 12px}
+  .brand{order:1}
+  .bal-pill{order:2;margin-left:auto}
+  .acct{order:3}
+  .spacer{display:none}
+  .nav{order:4;width:100%;margin-left:0;overflow-x:auto;flex-wrap:nowrap;-webkit-overflow-scrolling:touch;padding-bottom:2px}
+  .nav button{white-space:nowrap;flex:0 0 auto}
+  .bal-pill .lbl{display:none}
+  .view-head h1{font-size:22px}
+}
+</style>
+</head>
+<body>
+
+<!-- ===================== AUTH SCREEN ===================== -->
+<div id="auth-screen">
+  <div class="auth-card">
+    <div class="brand"><div class="glyph">य</div><b>Yantra AI</b></div>
+    <div class="card pad">
+      <div class="tabs">
+        <button id="tab-login" class="on" onclick="setMode('login')">Sign in</button>
+        <button id="tab-signup" onclick="setMode('signup')">Create account</button>
+      </div>
+      <div id="auth-msg"></div>
+      <div class="field" id="name-field" style="display:none">
+        <label>Name</label>
+        <input class="inp" id="f-name" placeholder="Your name" autocomplete="name">
+      </div>
+      <div class="field">
+        <label>Email</label>
+        <input class="inp" id="f-email" type="email" placeholder="you@example.com" autocomplete="email">
+      </div>
+      <div class="field">
+        <label>Password</label>
+        <input class="inp" id="f-pass" type="password" placeholder="At least 8 characters" autocomplete="current-password">
+      </div>
+      <button class="btn btn-pri" id="auth-submit" onclick="submitAuth()" style="width:100%">Sign in</button>
+      <div class="subtle" id="forgot-row"><a onclick="doForgot()">Forgot password?</a></div>
+
+    </div>
+    <div class="subtle">One key for every AI model. Pay with UPI.</div>
+  </div>
+</div>
+
+<!-- ===================== APP SCREEN ===================== -->
+<div id="app-screen" class="hide">
+  <header class="topbar">
+    <div class="wrap">
+      <div class="brand"><div class="glyph">य</div><b>Yantra AI</b></div>
+      <nav class="nav">
+        <button data-view="overview" class="on" onclick="showView('overview')">Overview</button>
+        <button data-view="keys" onclick="showView('keys')">API Keys</button>
+        <button data-view="billing" onclick="showView('billing')">Billing</button>
+        <button data-view="usage" onclick="showView('usage')">Usage</button>
+      </nav>
+      <div class="spacer"></div>
+      <div class="bal-pill"><span class="lbl">Balance</span><span class="amt" id="top-balance">₹0.00</span></div>
+      <div class="acct">
+        <button class="acct-btn" id="acct-initial" onclick="toggleMenu()">U</button>
+        <div class="menu hide" id="acct-menu">
+          <div class="em" id="menu-email">—</div>
+          <button onclick="window.open(gatewayBase()+'/health','_blank')">↗ Gateway status</button>
+          <button onclick="signOut()" style="color:var(--red)">Sign out</button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <div class="vbanner hide" id="verify-banner">
+      <span class="ic">✉️</span>
+      <div class="tx"><b>Verify your email</b> to start creating API keys. Check your inbox for the link.</div>
+      <button class="btn btn-ghost btn-sm" onclick="resendVerify()">Resend email</button>
+    </div>
+
+    <!-- OVERVIEW -->
+    <section id="view-overview">
+      <div class="view-head"><div><h1>Overview</h1><p>Your account at a glance.</p></div>
+        <button class="btn btn-saf" onclick="showView('billing')">+ Add credits</button></div>
+      <div class="stats">
+        <div class="stat"><div class="k">Balance</div><div class="v gr" id="ov-balance">₹0.00</div></div>
+        <div class="stat"><div class="k">Total requests</div><div class="v cy" id="ov-requests">0</div></div>
+        <div class="stat"><div class="k">Total spent</div><div class="v sf" id="ov-spent">₹0.00</div></div>
+        <div class="stat"><div class="k">Active keys</div><div class="v pu" id="ov-keys">0</div></div>
+      </div>
+      <div class="card pad">
+        <div class="t1" style="font-weight:600;margin-bottom:6px">Quick start</div>
+        <p class="mut" style="font-size:13.5px;margin-bottom:14px">Drop your key into the OpenAI SDK — just change the base URL. <code class="mono cy">model:"auto"</code> lets the router pick the best provider.</p>
+        <div class="codebox" id="quickstart-code"><button class="btn btn-ghost btn-sm copy-ic" onclick="copyEl('quickstart-code-pre')">Copy</button><span id="quickstart-code-pre"></span></div>
+      </div>
+    </section>
+
+    <!-- KEYS -->
+    <section id="view-keys" class="hide">
+      <div class="view-head"><div><h1>API Keys</h1><p>One key works for every model. Secrets are shown once.</p></div>
+        <button class="btn btn-pri" id="newkey-btn" onclick="openCreateKey()">+ New key</button></div>
+      <div class="card pad"><div class="list" id="keys-list"></div></div>
+      <div class="card pad" style="margin-top:18px">
+        <div class="t1" style="font-weight:600;margin-bottom:10px">Test a request</div>
+        <div class="codebox" id="curl-code"><button class="btn btn-ghost btn-sm copy-ic" onclick="copyEl('curl-pre')">Copy</button><span id="curl-pre"></span></div>
+      </div>
+    </section>
+
+    <!-- BILLING -->
+    <section id="view-billing" class="hide">
+      <div class="view-head"><div><h1>Billing</h1><p id="billing-mode-note">Top up your balance with UPI.</p></div></div>
+      <div class="stats">
+        <div class="stat"><div class="k">Current balance</div><div class="v gr" id="bill-balance">₹0.00</div></div>
+      </div>
+      <div class="card pad">
+        <div class="t1" style="font-weight:600;margin-bottom:14px">Add credits</div>
+        <div class="packs" id="packs"></div>
+        <div class="field"><label>Or enter an amount (₹)</label>
+          <input class="inp mono" id="amt-inr" type="number" min="10" step="10" placeholder="500" oninput="onAmt()"></div>
+        <button class="btn btn-saf" id="pay-btn" onclick="addCredits()" style="width:100%">Pay <span id="pay-amt">₹500</span> with UPI</button>
+      </div>
+      <div class="card pad" style="margin-top:18px">
+        <div class="t1" style="font-weight:600;margin-bottom:6px">Transaction history</div>
+        <div class="list" id="txn-list"></div>
+      </div>
+    </section>
+
+    <!-- USAGE -->
+    <section id="view-usage" class="hide">
+      <div class="view-head"><div><h1>Usage</h1><p>Recent requests, metered by real token usage.</p></div></div>
+      <div class="stats" id="usage-stats"></div>
+      <div class="card pad"><div class="list" id="usage-list"></div></div>
+    </section>
+  </main>
+</div>
+
+<!-- ===================== MODALS ===================== -->
+<div class="overlay" id="ov-createkey" onclick="if(event.target===this)closeOverlays()">
+  <div class="modal">
+    <div id="ck-step1">
+      <h3>Create API key</h3>
+      <div class="sub">Give it a name so you can recognise it later.</div>
+      <div class="field"><label>Key name</label><input class="inp" id="ck-name" placeholder="Production / my-app" value="Default"></div>
+      <div class="modal-actions">
+        <button class="btn btn-ghost" onclick="closeOverlays()">Cancel</button>
+        <button class="btn btn-pri" id="ck-create" onclick="confirmCreateKey()">Create key</button>
+      </div>
+    </div>
+    <div id="ck-step2" class="hide">
+      <h3>Your new key 🔑</h3>
+      <div class="sub">Copy it now — for security, you won't be able to see it again.</div>
+      <div class="codebox"><button class="btn btn-ghost btn-sm copy-ic" onclick="copyEl('ck-secret')">Copy</button><span id="ck-secret" style="color:var(--green)"></span></div>
+      <div class="warnote"><span>⚠️</span><span>This secret is shown only once. If you lose it, revoke the key and create a new one.</span></div>
+      <div class="modal-actions"><button class="btn btn-pri" onclick="closeOverlays()">Done</button></div>
+    </div>
+  </div>
+</div>
+
+<div class="overlay" id="ov-upi" onclick="if(event.target===this)closeOverlays()">
+  <div class="modal">
+    <h3>Scan to pay <span class="sf" id="upi-amt"></span></h3>
+    <div class="sub">Open any UPI app — GPay, PhonePe, Paytm, BHIM — and scan. <b class="sf">Demo mode:</b> no real money moves.</div>
+    <div id="sim-qr"></div>
+    <div class="codebox" style="text-align:center"><span id="upi-uri-txt"></span></div>
+    <div class="modal-actions">
+      <button class="btn btn-ghost" onclick="closeOverlays()">Cancel</button>
+      <button class="btn btn-saf" id="sim-confirm" onclick="confirmSimulated()">I've paid (demo)</button>
+    </div>
+  </div>
+</div>
+
+
+<div class="toast" id="toast"></div>
+
+<script>
+(function(){
+  'use strict';
+
+  // ---------- storage ----------
+  var mem = {};
+  var store = {
+    get:function(k){ try{return localStorage.getItem(k);}catch(e){return mem[k]||null;} },
+    set:function(k,v){ try{localStorage.setItem(k,v);}catch(e){mem[k]=v;} },
+    del:function(k){ try{localStorage.removeItem(k);}catch(e){delete mem[k];} }
+  };
+
+  // ---------- state ----------
+  var ME=null, KEYS=[], CFG=null, selectedPaise=50000;
+
+  // ---------- helpers ----------
+  function $(id){ return document.getElementById(id); }
+  function esc(s){ return String(s==null?'':s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];}); }
+  function inr(paise){ return '₹'+(Number(paise||0)/100).toLocaleString('en-IN',{minimumFractionDigits:2,maximumFractionDigits:2}); }
+  function fmtNum(n){ return Number(n||0).toLocaleString('en-IN'); }
+  function when(ts){ if(!ts)return '—'; var d=new Date(Number(ts)); return d.toLocaleDateString('en-IN',{day:'numeric',month:'short'})+' '+d.toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'}); }
+  function gatewayBase(){ return 'https://api.aitklabs.in'; }
+  window.gatewayBase=gatewayBase;
+  function token(){ return store.get('yantra.jwt')||''; }
+
+  var toastT;
+  function toast(msg,kind){ var t=$('toast'); t.textContent=msg; t.className='toast on '+(kind||''); clearTimeout(toastT); toastT=setTimeout(function(){t.className='toast '+(kind||'');},2600); }
+  function copyEl(id){ var el=$(id); var txt=el.textContent||''; if(navigator.clipboard){navigator.clipboard.writeText(txt).then(function(){toast('Copied','good');},function(){fallbackCopy(txt);});}else fallbackCopy(txt); }
+  function fallbackCopy(txt){ var ta=document.createElement('textarea'); ta.value=txt; document.body.appendChild(ta); ta.select(); try{document.execCommand('copy');toast('Copied','good');}catch(e){toast('Copy failed','bad');} document.body.removeChild(ta); }
+  window.copyEl=copyEl;
+
+  // ---------- API ----------
+  function api(path, opts){
+    opts = opts||{};
+    var base = gatewayBase();
+    if(!base) return Promise.reject(new Error('Set your Gateway API URL first.'));
+    var headers = opts.headers||{};
+    headers['Content-Type']='application/json';
+    if(opts.auth!==false && token()) headers['Authorization']='Bearer '+token();
+    return fetch(base+path, { method:opts.method||'GET', headers:headers, body:opts.body?JSON.stringify(opts.body):undefined })
+      .then(function(res){
+        return res.text().then(function(t){
+          var data; try{data=t?JSON.parse(t):{};}catch(e){data={};}
+          if(!res.ok){ var msg=(data.error&&data.error.message)||('Request failed ('+res.status+')'); var err=new Error(msg); err.status=res.status; err.data=data; throw err; }
+          return data;
+        });
+      }, function(){ throw new Error("Can't reach the gateway. Check the API URL and that the server is running."); });
+  }
+
+  // ================= AUTH =================
+  var mode='login';
+  window.setMode=function(m){
+    mode=m;
+    $('tab-login').className = m==='login'?'on':'';
+    $('tab-signup').className = m==='signup'?'on':'';
+    $('name-field').style.display = m==='signup'?'block':'none';
+    $('forgot-row').style.display = m==='login'?'block':'none';
+    $('auth-submit').textContent = m==='login'?'Sign in':'Create account';
+    $('f-pass').setAttribute('autocomplete', m==='login'?'current-password':'new-password');
+    authMsg('');
+  };
+  function authMsg(msg,kind){ var el=$('auth-msg'); if(!msg){el.innerHTML='';return;} el.innerHTML='<div class="msg '+(kind||'err')+'">'+esc(msg)+'</div>'; }
+
+  window.submitAuth=function(){
+    var email=($('f-email').value||'').trim(), pass=$('f-pass').value||'';
+    var name=($('f-name').value||'').trim();
+    if(!email||!pass){ authMsg('Email and password are required.'); return; }
+    var btn=$('auth-submit'); btn.disabled=true; var old=btn.textContent; btn.innerHTML='<span class="spin"></span>';
+    var path = mode==='login'?'/app/auth/login':'/app/auth/signup';
+    api(path,{method:'POST',auth:false,body:{email:email,password:pass,name:name}})
+      .then(function(d){ store.set('yantra.jwt', d.token); boot(); })
+      .catch(function(e){ authMsg(e.message); })
+      .then(function(){ btn.disabled=false; btn.textContent=old; });
+  };
+
+  window.doForgot=function(){
+    var email=($('f-email').value||'').trim();
+    if(!email){ authMsg('Enter your email above, then click "Forgot password".'); return; }
+    api('/app/auth/forgot',{method:'POST',auth:false,body:{email:email}})
+      .then(function(){ authMsg('If that email exists, a reset link is on its way.','ok'); })
+      .catch(function(e){ authMsg(e.message); });
+  };
+
+  window.signOut=function(){ store.del('yantra.jwt'); ME=null; location.reload(); };
+
+  // ================= NAV =================
+  window.showView=function(v){
+    ['overview','keys','billing','usage'].forEach(function(name){
+      $('view-'+name).classList.toggle('hide', name!==v);
+      var b=document.querySelector('.nav button[data-view="'+name+'"]'); if(b) b.classList.toggle('on', name===v);
+    });
+    if(v==='keys') loadKeys();
+    if(v==='billing') loadBilling();
+    if(v==='usage') loadUsage();
+    closeMenu();
+  };
+  window.toggleMenu=function(){ $('acct-menu').classList.toggle('hide'); };
+  function closeMenu(){ $('acct-menu').classList.add('hide'); }
+  document.addEventListener('click',function(e){ if(!e.target.closest('.acct')) closeMenu(); });
+
+  // ================= ME / OVERVIEW =================
+  function loadMe(){
+    return api('/app/me').then(function(d){
+      ME=d;
+      var em=d.user.email;
+      $('menu-email').textContent=em;
+      $('acct-initial').textContent=(em[0]||'U').toUpperCase();
+      var bal=d.account.balance_paise;
+      $('top-balance').textContent=inr(bal);
+      $('ov-balance').textContent=inr(bal);
+      $('bill-balance').textContent=inr(bal);
+      $('verify-banner').classList.toggle('hide', !!d.user.email_verified);
+      $('newkey-btn').disabled = !d.user.email_verified;
+      // quick-start snippet
+      var base=gatewayBase();
+      $('quickstart-code-pre').textContent =
+        'from openai import OpenAI\n'+
+        'client = OpenAI(\n'+
+        '    base_url="'+base+'/v1",\n'+
+        '    api_key="yk_live_xxx"   # your Yantra key\n'+
+        ')\n'+
+        'r = client.chat.completions.create(\n'+
+        '    model="auto",          # router picks the best provider\n'+
+        '    messages=[{"role":"user","content":"Hello!"}]\n'+
+        ')\n'+
+        'print(r.choices[0].message.content)';
+    });
+  }
+
+  function loadOverviewStats(){
+    return api('/app/usage').then(function(d){
+      $('ov-requests').textContent=fmtNum(d.totals.requests);
+      $('ov-spent').textContent=inr(d.totals.cost_paise);
+    }).catch(function(){});
+  }
+
+  window.resendVerify=function(){
+    api('/app/auth/resend',{method:'POST'}).then(function(){ toast('Verification email sent','good'); })
+      .catch(function(e){ toast(e.message,'bad'); });
+  };
+
+  // ================= KEYS =================
+  function loadKeys(){
+    return api('/app/keys').then(function(d){
+      KEYS=d.keys||[];
+      var active=KEYS.filter(function(k){return !k.revoked;}).length;
+      $('ov-keys').textContent=active;
+      renderKeys(); renderCurl();
+    });
+  }
+  function renderKeys(){
+    var el=$('keys-list');
+    if(!KEYS.length){ el.innerHTML='<div class="empty"><div class="big">🔑</div>No API keys yet. Create one to start.</div>'; return; }
+    el.innerHTML=KEYS.map(function(k){
+      var revoked=!!k.revoked;
+      return '<div class="row">'+
+        '<div class="grow"><div class="t1 mono">'+esc(k.prefix)+'••••'+esc(k.last4)+
+          (revoked?' <span class="tag red">revoked</span>':'')+'</div>'+
+          '<div class="t2">'+esc(k.name||'Default')+' · '+fmtNum(k.requests)+' requests · created '+when(k.created_at)+'</div></div>'+
+        (revoked?'':'<button class="btn btn-danger btn-sm" onclick="revokeKey(\''+k.id+'\')">Revoke</button>')+
+      '</div>';
+    }).join('');
+  }
+  function renderCurl(){
+    var base=gatewayBase();
+    $('curl-pre').textContent =
+      'curl '+base+'/v1/chat/completions \\\n'+
+      '  -H "Authorization: Bearer yk_live_xxx" \\\n'+
+      '  -H "Content-Type: application/json" \\\n'+
+      "  -d '"+'{"model":"auto","messages":[{"role":"user","content":"Hello"}]}'+"'";
+  }
+  window.openCreateKey=function(){
+    if(ME&&!ME.user.email_verified){ toast('Verify your email first','bad'); return; }
+    $('ck-step1').classList.remove('hide'); $('ck-step2').classList.add('hide');
+    $('ck-name').value='Default'; $('ov-createkey').classList.add('on');
+  };
+  window.confirmCreateKey=function(){
+    var name=($('ck-name').value||'Default').trim();
+    var btn=$('ck-create'); btn.disabled=true;
+    api('/app/keys',{method:'POST',body:{name:name}})
+      .then(function(d){
+        $('ck-secret').textContent=d.secret;
+        $('ck-step1').classList.add('hide'); $('ck-step2').classList.remove('hide');
+        loadKeys();
+      })
+      .catch(function(e){ toast(e.message,'bad'); })
+      .then(function(){ btn.disabled=false; });
+  };
+  window.revokeKey=function(id){
+    if(!confirm('Revoke this key? Apps using it will stop working immediately.')) return;
+    api('/app/keys/'+id+'/revoke',{method:'POST'}).then(function(){ toast('Key revoked','good'); loadKeys(); })
+      .catch(function(e){ toast(e.message,'bad'); });
+  };
+
+  // ================= BILLING =================
+  var PACKS=[10000,50000,100000,200000]; // paise: ₹100/500/1000/2000
+  function loadBilling(){
+    renderPacks();
+    if(!CFG){ api('/app/billing/config',{auth:false}).then(function(c){ CFG=c; afterCfg(); }).catch(function(){}); }
+    else afterCfg();
+    loadTxns();
+  }
+  function afterCfg(){
+    var note=$('billing-mode-note');
+    if(CFG&&CFG.live){ note.innerHTML='Top up your balance with UPI, cards, or netbanking via Razorpay.'; }
+    else { note.innerHTML='Running in <b class="sf">demo mode</b> — top-ups are simulated (no real charge). Add Razorpay keys on the server to go live.'; }
+  }
+  function renderPacks(){
+    $('packs').innerHTML=PACKS.map(function(p){
+      return '<div class="pack'+(p===selectedPaise?' on':'')+'" onclick="selectPack('+p+')"><div class="amt">'+inr(p)+'</div><div class="sub">'+fmtNum(p/100*1)+' credits</div></div>';
+    }).join('');
+    $('pay-amt').textContent=inr(selectedPaise);
+  }
+  window.selectPack=function(p){ selectedPaise=p; $('amt-inr').value=''; renderPacks(); };
+  window.onAmt=function(){ var v=Math.round((Number($('amt-inr').value)||0)*100); if(v>0){selectedPaise=v;} document.querySelectorAll('.pack').forEach(function(el){el.classList.remove('on');}); $('pay-amt').textContent=inr(selectedPaise); };
+
+  function loadTxns(){
+    api('/app/billing/transactions').then(function(d){
+      var el=$('txn-list'), rows=d.transactions||[];
+      if(!rows.length){ el.innerHTML='<div class="empty"><div class="big">🧾</div>No transactions yet.</div>'; return; }
+      el.innerHTML=rows.map(function(t){
+        var paid=t.status==='paid';
+        return '<div class="row"><div class="grow"><div class="t1">'+inr(t.amount_paise)+' top-up</div>'+
+          '<div class="t2 mono">'+esc(t.id)+' · '+when(t.created_at)+'</div></div>'+
+          '<span class="tag '+(paid?'green':'dim')+'">'+esc(t.status)+'</span></div>';
+      }).join('');
+    }).catch(function(){});
+  }
+
+  window.addCredits=function(){
+    if(selectedPaise<1000){ toast('Minimum top-up is ₹10','bad'); return; }
+    var btn=$('pay-btn'); btn.disabled=true; var old=btn.innerHTML; btn.innerHTML='<span class="spin"></span>';
+    api('/app/billing/order',{method:'POST',body:{amount_paise:selectedPaise}})
+      .then(function(order){
+        if(order.provider==='razorpay') return openRazorpay(order);
+        return openSimulated(order);
+      })
+      .catch(function(e){ toast(e.message,'bad'); })
+      .then(function(){ btn.disabled=false; btn.innerHTML=old; });
+  };
+
+  function openRazorpay(order){
+    if(typeof Razorpay==='undefined'){ toast('Payment library failed to load','bad'); return; }
+    var rzp=new Razorpay({
+      key:order.key_id, order_id:order.order_id, amount:order.amount_paise, currency:order.currency||'INR',
+      name:order.name||'Yantra AI', description:'Wallet top-up',
+      prefill:{ email: ME&&ME.user?ME.user.email:'' },
+      theme:{ color:'#ff9933' },
+      handler:function(resp){
+        api('/app/billing/verify',{method:'POST',body:{order_id:resp.razorpay_order_id,payment_id:resp.razorpay_payment_id,signature:resp.razorpay_signature}})
+          .then(function(out){ toast('Added '+inr(out.credited_paise),'good'); refreshAfterPay(); })
+          .catch(function(e){ toast('Payment captured but crediting failed: '+e.message,'bad'); });
+      }
+    });
+    rzp.on('payment.failed',function(){ toast('Payment failed or cancelled','bad'); });
+    rzp.open();
+  }
+
+  function openSimulated(order){
+    window._simOrder=order.order_id;
+    $('upi-amt').textContent=inr(order.amount_paise);
+    $('upi-uri-txt').textContent=order.upi_uri||'';
+    var box=$('sim-qr'); box.innerHTML='';
+    if(typeof QRCode!=='undefined' && order.upi_uri){ try{ new QRCode(box,{text:order.upi_uri,width:180,height:180}); }catch(e){ box.innerHTML='<div style="color:#333;padding:30px">QR unavailable</div>'; } }
+    else box.innerHTML='<div style="color:#333;padding:30px;font-size:12px">'+esc(order.upi_uri||'')+'</div>';
+    $('ov-upi').classList.add('on');
+  }
+  window.confirmSimulated=function(){
+    if(!window._simOrder) return;
+    var btn=$('sim-confirm'); btn.disabled=true;
+    api('/app/billing/simulate',{method:'POST',body:{order_id:window._simOrder}})
+      .then(function(out){ closeOverlays(); toast('Added '+inr(out.credited_paise)+' (demo)','good'); refreshAfterPay(); })
+      .catch(function(e){ toast(e.message,'bad'); })
+      .then(function(){ btn.disabled=false; });
+  };
+  function refreshAfterPay(){ loadMe().then(loadOverviewStats); loadTxns(); }
+
+  // ================= USAGE =================
+  function loadUsage(){
+    api('/app/usage').then(function(d){
+      var t=d.totals;
+      $('usage-stats').innerHTML=
+        stat('Requests',fmtNum(t.requests),'cy')+
+        stat('Input tokens',fmtNum(t.in_tokens),'pu')+
+        stat('Output tokens',fmtNum(t.out_tokens),'pu')+
+        stat('Total spent',inr(t.cost_paise),'sf');
+      var el=$('usage-list'), rows=d.recent||[];
+      if(!rows.length){ el.innerHTML='<div class="empty"><div class="big">📊</div>No requests yet. Send one from the playground or your app.</div>'; return; }
+      el.innerHTML=rows.map(function(u){
+        var routed = u.routed_as && u.routed_as!==u.model;
+        return '<div class="row"><div class="grow"><div class="t1 mono">'+esc(u.model)+
+          (routed?' <span class="tag dim">→ '+esc(u.routed_as)+'</span>':'')+'</div>'+
+          '<div class="t2">'+esc(u.provider)+' · '+fmtNum(u.in_tokens)+' in / '+fmtNum(u.out_tokens)+' out · '+when(u.created_at)+'</div></div>'+
+          '<div class="mono" style="color:var(--saffron);font-weight:600">'+inr(u.cost_paise)+'</div></div>';
+      }).join('');
+    }).catch(function(e){ toast(e.message,'bad'); });
+  }
+  function stat(k,v,cls){ return '<div class="stat"><div class="k">'+k+'</div><div class="v '+(cls||'')+'">'+v+'</div></div>'; }
+
+  // ================= MODALS / SETTINGS =================
+  window.closeOverlays=function(){ document.querySelectorAll('.overlay').forEach(function(o){o.classList.remove('on');}); };
+  document.addEventListener('keydown',function(e){ if(e.key==='Escape') closeOverlays(); });
+
+  // ================= BOOT =================
+  function boot(){
+    $('auth-screen').classList.add('hide');
+    $('app-screen').classList.remove('hide');
+    loadMe().then(function(){ return loadOverviewStats(); })
+      .then(function(){ showView('overview'); })
+      .catch(function(e){
+        // token invalid/expired → back to auth
+        if(e.status===401){ store.del('yantra.jwt'); showAuth(); }
+        else toast(e.message,'bad');
+      });
+  }
+  function showAuth(){
+    $('app-screen').classList.add('hide');
+    $('auth-screen').classList.remove('hide');
+    setMode('login');
+    // handle a password-reset link: #reset=TOKEN
+    var m=(location.hash||'').match(/reset=([^&]+)/);
+    if(m){ var tk=decodeURIComponent(m[1]); var pw=prompt('Enter a new password (min 8 chars):'); if(pw){ api('/app/auth/reset',{method:'POST',auth:false,body:{token:tk,password:pw}}).then(function(){authMsg('Password reset. Sign in with your new password.','ok');location.hash='';}).catch(function(e){authMsg(e.message);}); } }
+  }
+
+  function init(){ if(token()) boot(); else showAuth(); }
+  init();
+})();
+</script>
+</body>
+</html>
