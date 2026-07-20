@@ -1,0 +1,13 @@
+{
+  "name": "Yantra AI",
+  "short_name": "Yantra",
+  "description": "One API key for every AI model. Pay with UPI.",
+  "icons": [
+    { "src": "/assets/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "/assets/icon-512.png", "sizes": "512x512", "type": "image/png" }
+  ],
+  "theme_color": "#03050d",
+  "background_color": "#03050d",
+  "display": "standalone",
+  "start_url": "/"
+}
