@@ -1,0 +1,28 @@
+# Yantra AI
+
+> Yantra AI (apikeys.in) is an LLM API gateway built for India: one API key that works with GPT, Claude, Gemini, DeepSeek and 350+ other AI models, billed per token in Indian rupees and topped up with UPI. It is a drop-in replacement for the OpenAI SDK — point the base URL at Yantra and change the key, nothing else.
+
+## Key facts
+
+- **Base URL:** `https://api.aitklabs.in/v1` (OpenAI-compatible — works with the official OpenAI Python/Node SDKs)
+- **Auth:** `Authorization: Bearer yk_live_...`
+- **Billing:** per-token, in Indian rupees, paid via UPI. Minimum top-up ₹10. No subscription or monthly fee.
+- **Model coverage:** 350+ models across 20+ AI labs — OpenAI, Anthropic, Google, DeepSeek, Mistral, xAI, Moonshot AI, Z.AI, SiliconFlow, Fireworks AI, and community models via OpenRouter.
+- **Routing modes:** pass an explicit model id (e.g. `openai/gpt-5.5`), or use `auto` (same as `auto:balanced`), `auto:cheap`, `auto:fast`, `auto:reasoning`, or `auto:long-context` to let Yantra pick. Automatic failover to a sibling model if a provider errors.
+- **Security:** API keys are SHA-256 hashed server-side and never stored in plaintext. Prompt and completion content is never logged — only token counts, cost, and latency are recorded for billing.
+- **Payments:** top-ups are confirmed via a signed Razorpay webhook, not a client-side callback.
+- **Founder:** Aditya Sunil Borgaonkar, based in Kolhapur, Maharashtra, India.
+
+## Pages
+
+- [Homepage](https://apikeys.in/): product overview, pricing model, how it works
+- [Models](https://apikeys.in/models.html): live, searchable catalog of all 350+ models with current INR pricing per million tokens
+- [Playground](https://apikeys.in/playground.html): try any model in the browser, no signup required — real routing and cost shown live
+- [Docs](https://apikeys.in/docs.html): base URL, auth, routing modes, response headers, error codes — everything needed to integrate
+
+## Typical questions this site answers
+
+- How do I use an AI API from India without an international credit card? (UPI billing)
+- Is there a cheap way to access GPT, Claude, and Gemini through one API key? (yes — one key, per-token INR billing)
+- What is the minimum amount to start? (₹10)
+- Does my existing OpenAI integration work without a rewrite? (yes — change the base URL and key only)
