@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Yantra Admin</title>
+<!-- Private tool. noindex is a hint to crawlers, NOT access control — the real
+     protection is ADMIN_TOKEN on the server. Also Disallowed in robots.txt. -->
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#03050d">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@700;800&family=Instrument+Sans:wght@400;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#03050d; --card:#0d1528; --card2:#111d35;
+  --border:rgba(56,139,253,0.10); --border2:rgba(56,139,253,0.22);
+  --cyan:#00d4ff; --green:#00ff88; --red:#ff5470; --amber:#ffbe0b; --saffron:#ff9933;
+  --text:#e2eaff; --text2:#8899bb; --text3:#5c6e95;
+  --fd:'Bricolage Grotesque',sans-serif; --fm:'JetBrains Mono',monospace; --fb:'Instrument Sans',sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--text);font-family:var(--fb);min-height:100vh;padding:18px 14px 60px;}
+.wrap{max-width:1100px;margin:0 auto;}
+h1{font-family:var(--fd);font-weight:800;font-size:24px;letter-spacing:-0.8px;}
+.sub{color:var(--text3);font-size:12.5px;margin-top:3px;}
+.head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:20px;flex-wrap:wrap;}
+.btn{background:linear-gradient(135deg,var(--cyan),#3b9dff);color:#02121b;border:none;border-radius:10px;
+  padding:10px 16px;font-family:var(--fd);font-weight:700;font-size:13.5px;cursor:pointer;}
+.btn.ghost{background:transparent;color:var(--text2);border:1px solid var(--border2);}
+.gate{max-width:400px;margin:60px auto;background:var(--card);border:1px solid var(--border);border-radius:16px;padding:26px;}
+.gate h2{font-family:var(--fd);font-size:18px;margin-bottom:6px;}
+.gate p{color:var(--text2);font-size:13.5px;margin-bottom:16px;line-height:1.55;}
+input{width:100%;background:var(--bg);border:1px solid var(--border2);border-radius:10px;padding:12px 14px;
+  color:var(--text);font-family:var(--fm);font-size:13.5px;margin-bottom:12px;}
+input:focus{outline:none;border-color:var(--cyan);}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(155px,1fr));gap:11px;margin-bottom:14px;}
+.kpi{background:var(--card);border:1px solid var(--border);border-radius:13px;padding:15px 16px;}
+.kpi .l{font-size:10.5px;text-transform:uppercase;letter-spacing:1px;color:var(--text3);font-weight:700;margin-bottom:6px;}
+.kpi .v{font-family:var(--fd);font-weight:800;font-size:23px;letter-spacing:-0.7px;}
+.kpi .n{font-size:11.5px;color:var(--text3);margin-top:3px;}
+.grn{color:var(--green);} .cy{color:var(--cyan);} .rd{color:var(--red);} .am{color:var(--amber);} .sf{color:var(--saffron);}
+.panel{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:17px;margin-bottom:14px;overflow:hidden;}
+.panel h3{font-family:var(--fd);font-size:14.5px;margin-bottom:12px;}
+table{width:100%;border-collapse:collapse;font-size:12.5px;}
+th{text-align:left;color:var(--text3);font-size:10px;text-transform:uppercase;letter-spacing:.9px;
+  padding:7px 9px;border-bottom:1px solid var(--border);white-space:nowrap;}
+td{padding:9px;border-bottom:1px solid var(--border);color:var(--text2);white-space:nowrap;}
+td.em{color:var(--text);font-weight:600;}
+.scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;}
+.mono{font-family:var(--fm);}
+.pill{display:inline-block;font-size:10px;padding:2px 7px;border-radius:5px;font-weight:700;}
+.pill.ok{background:rgba(0,255,136,0.12);color:var(--green);}
+.pill.no{background:rgba(255,84,112,0.12);color:var(--red);}
+.err{background:rgba(255,84,112,0.10);border:1px solid rgba(255,84,112,0.3);color:#ffb3c0;
+  border-radius:10px;padding:12px 14px;font-size:13px;margin-bottom:14px;}
+.pl{background:var(--card2);border:1px solid var(--border2);border-radius:13px;padding:16px;margin-bottom:14px;}
+.pl-row{display:flex;justify-content:space-between;padding:7px 0;font-size:13.5px;border-bottom:1px solid var(--border);}
+.pl-row:last-child{border-bottom:none;padding-top:11px;font-weight:700;font-size:15px;}
+.pl-row .lbl{color:var(--text2);} .pl-row:last-child .lbl{color:var(--text);}
+.muted{color:var(--text3);font-size:11.5px;line-height:1.5;margin-top:9px;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div id="gate" class="gate">
+    <h2>Yantra Admin</h2>
+    <p>Enter your <span class="mono">ADMIN_TOKEN</span>. It's kept only for this tab and is never saved to disk.</p>
+    <input id="tok" type="password" placeholder="ADMIN_TOKEN" autocomplete="off">
+    <button class="btn" style="width:100%" onclick="unlock()">Unlock</button>
+    <div id="gate-err"></div>
+  </div>
+
+  <div id="app" style="display:none">
+    <div class="head">
+      <div>
+        <h1>Yantra Admin</h1>
+        <div class="sub" id="stamp">—</div>
+      </div>
+      <div style="display:flex;gap:8px">
+        <button class="btn" onclick="load()">Refresh</button>
+        <button class="btn ghost" onclick="lock()">Lock</button>
+      </div>
+    </div>
+
+    <div id="err"></div>
+
+    <div class="grid">
+      <div class="kpi"><div class="l">Registered users</div><div class="v cy" id="k-users">—</div><div class="n" id="k-users-n">—</div></div>
+      <div class="kpi"><div class="l">Money received</div><div class="v grn" id="k-rev">—</div><div class="n" id="k-rev-n">—</div></div>
+      <div class="kpi"><div class="l">API requests</div><div class="v" id="k-reqs">—</div><div class="n" id="k-reqs-n">—</div></div>
+      <div class="kpi"><div class="l">Users' spend</div><div class="v am" id="k-spent">—</div><div class="n" id="k-spent-n">—</div></div>
+      <div class="kpi"><div class="l">Unspent balance</div><div class="v sf" id="k-float">—</div><div class="n">owed back to users</div></div>
+      <div class="kpi"><div class="l">Welcome credits</div><div class="v rd" id="k-wel">—</div><div class="n" id="k-wel-n">—</div></div>
+    </div>
+
+    <div class="pl">
+      <h3 style="font-family:var(--fd);font-size:14.5px;margin-bottom:10px">Are you actually making money?</h3>
+      <div class="pl-row"><span class="lbl">Gross margin earned on usage</span><span class="grn mono" id="p-gross">—</span></div>
+      <div class="pl-row"><span class="lbl">Less: welcome credits (real cost)</span><span class="rd mono" id="p-wel">—</span></div>
+      <div class="pl-row"><span class="lbl">Less: payment fees (~2.36% est.)</span><span class="rd mono" id="p-fee">—</span></div>
+      <div class="pl-row"><span class="lbl">Net position</span><span class="mono" id="p-net">—</span></div>
+      <div class="muted">Margin is what you earned above upstream cost, so it only counts credit users have
+        actually <em>spent</em> — not money sitting unused in wallets. Payment fees are estimated, not read
+        from Razorpay. Treat this as a directional read, not accounting.</div>
+    </div>
+
+    <div class="panel">
+      <h3>Users</h3>
+      <div class="scroll"><table>
+        <thead><tr><th>Email</th><th>Verified</th><th>Balance</th><th>Requests</th><th>Spent</th><th>Paid in</th><th>Joined</th></tr></thead>
+        <tbody id="t-users"><tr><td colspan="7">—</td></tr></tbody>
+      </table></div>
+    </div>
+
+    <div class="panel">
+      <h3>Most used models</h3>
+      <div class="scroll"><table>
+        <thead><tr><th>Model</th><th>Requests</th><th>Revenue from it</th></tr></thead>
+        <tbody id="t-models"><tr><td colspan="3">—</td></tr></tbody>
+      </table></div>
+    </div>
+
+    <div class="panel">
+      <h3>Last 30 days</h3>
+      <div class="scroll"><table>
+        <thead><tr><th>Day</th><th>Requests</th><th>Spend</th></tr></thead>
+        <tbody id="t-daily"><tr><td colspan="3">—</td></tr></tbody>
+      </table></div>
+    </div>
+  </div>
+</div>
+
+<script>
+var BASE = 'https://api.aitklabs.in';
+var TOKEN = sessionStorage.getItem('yk_admin') || '';
+
+function $(id){ return document.getElementById(id); }
+function inr(p){ return '₹' + (Number(p||0)/100).toLocaleString('en-IN',{minimumFractionDigits:2,maximumFractionDigits:2}); }
+function num(n){ return Number(n||0).toLocaleString('en-IN'); }
+function esc(s){ var d=document.createElement('div'); d.textContent=String(s==null?'':s); return d.innerHTML; }
+function when(ms){ if(!ms) return '—'; var d=new Date(Number(ms)); return d.toLocaleDateString('en-IN',{day:'2-digit',month:'short',year:'2-digit'}); }
+
+function unlock(){
+  var t = $('tok').value.trim();
+  if(!t){ $('gate-err').innerHTML = '<div class="err">Enter a token.</div>'; return; }
+  TOKEN = t;
+  sessionStorage.setItem('yk_admin', t);
+  load(true);
+}
+function lock(){
+  TOKEN = ''; sessionStorage.removeItem('yk_admin');
+  $('app').style.display='none'; $('gate').style.display='block'; $('tok').value='';
+}
+
+function load(fromGate){
+  if(!TOKEN){ return; }
+  fetch(BASE + '/app/admin/stats', { headers: { 'x-admin-token': TOKEN } })
+    .then(function(r){
+      if(r.status === 401) throw new Error('Wrong admin token.');
+      if(r.status === 503) throw new Error('ADMIN_TOKEN is not set on the server — add it to .env and restart.');
+      if(!r.ok) throw new Error('Server returned HTTP ' + r.status);
+      return r.json();
+    })
+    .then(render)
+    .catch(function(e){
+      if(fromGate){ $('gate-err').innerHTML = '<div class="err">' + esc(e.message) + '</div>'; }
+      else { $('err').innerHTML = '<div class="err">' + esc(e.message) + '</div>'; }
+    });
+}
+
+function render(d){
+  $('gate').style.display='none'; $('app').style.display='block'; $('err').innerHTML='';
+  $('stamp').textContent = 'Updated ' + new Date().toLocaleString('en-IN');
+
+  $('k-users').textContent = num(d.users.total);
+  $('k-users-n').textContent = num(d.users.verified) + ' verified';
+  $('k-rev').textContent = inr(d.revenue.paise);
+  $('k-rev-n').textContent = num(d.revenue.count) + ' top-ups';
+  $('k-reqs').textContent = num(d.usage.requests);
+  $('k-reqs-n').textContent = num(d.usage.in_tokens + d.usage.out_tokens) + ' tokens · ' + num(d.usage.avg_ms) + 'ms avg';
+  $('k-spent').textContent = inr(d.usage.paise);
+  $('k-spent-n').textContent = 'billed to users';
+  $('k-float').textContent = inr(d.float.paise);
+  $('k-wel').textContent = inr(d.welcome.paise);
+  $('k-wel-n').textContent = num(d.welcome.count) + ' signups';
+
+  // Real cost of a welcome credit is its upstream cost, not face value —
+  // you gave away credit, and only the upstream portion is money out.
+  var gross = d.margin.gross_paise;
+  var welCost = d.margin.pct > 0 ? d.welcome.paise / (1 + d.margin.pct/100) : d.welcome.paise;
+  var fees = d.revenue.paise * 0.0236;
+  var net = gross - welCost - fees;
+  $('p-gross').textContent = inr(gross);
+  $('p-wel').textContent = '−' + inr(welCost);
+  $('p-fee').textContent = '−' + inr(fees);
+  $('p-net').textContent = inr(net);
+  $('p-net').className = 'mono ' + (net >= 0 ? 'grn' : 'rd');
+
+  var rows = (d.perUser||[]).map(function(u){
+    return '<tr><td class="em">' + esc(u.email) + '</td>'
+      + '<td><span class="pill ' + (u.email_verified ? 'ok">yes' : 'no">no') + '</span></td>'
+      + '<td class="mono">' + inr(u.balance_paise) + '</td>'
+      + '<td>' + num(u.requests) + '</td>'
+      + '<td class="mono">' + inr(u.spent_paise) + '</td>'
+      + '<td class="mono">' + inr(u.paid_paise) + '</td>'
+      + '<td>' + when(u.created_at) + '</td></tr>';
+  }).join('');
+  $('t-users').innerHTML = rows || '<tr><td colspan="7">No users yet.</td></tr>';
+
+  var mrows = (d.topModels||[]).map(function(m){
+    return '<tr><td class="em mono">' + esc(m.model) + '</td><td>' + num(m.requests) + '</td><td class="mono">' + inr(m.paise) + '</td></tr>';
+  }).join('');
+  $('t-models').innerHTML = mrows || '<tr><td colspan="3">No usage yet.</td></tr>';
+
+  var drows = (d.daily||[]).map(function(x){
+    return '<tr><td class="em">' + esc(x.day) + '</td><td>' + num(x.requests) + '</td><td class="mono">' + inr(x.paise) + '</td></tr>';
+  }).join('');
+  $('t-daily').innerHTML = drows || '<tr><td colspan="3">No usage yet.</td></tr>';
+}
+
+$('tok').addEventListener('keydown', function(e){ if(e.key === 'Enter') unlock(); });
+if(TOKEN) load(false);
+</script>
+</body>
+</html>

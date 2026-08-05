@@ -1,0 +1,70 @@
+User-agent: *
+Allow: /
+Disallow: /dashboard.html
+Disallow: /admin.html
+
+# ── AI search / citation bots ────────────────────────────────────────────
+# These power real-time answers in ChatGPT Search, Claude, and Perplexity.
+# Allowed on purpose: Yantra is a growth-stage product, and being cited when
+# someone asks an AI assistant "how do I use the OpenAI API from India" is
+# free, high-intent traffic. Blocking these costs citations, not privacy —
+# nothing on these public pages is sensitive.
+User-agent: OAI-SearchBot
+Allow: /
+Disallow: /dashboard.html
+Disallow: /admin.html
+
+User-agent: ChatGPT-User
+Allow: /
+Disallow: /dashboard.html
+Disallow: /admin.html
+
+User-agent: Claude-SearchBot
+Allow: /
+Disallow: /dashboard.html
+Disallow: /admin.html
+
+User-agent: Claude-User
+Allow: /
+Disallow: /dashboard.html
+Disallow: /admin.html
+
+User-agent: PerplexityBot
+Allow: /
+Disallow: /dashboard.html
+Disallow: /admin.html
+
+User-agent: Perplexity-User
+Allow: /
+Disallow: /dashboard.html
+Disallow: /admin.html
+
+# ── AI training bots ──────────────────────────────────────────────────────
+# Separate from the search bots above — these feed model training rather
+# than real-time answers. Also allowed: nothing on this public marketing
+# site is proprietary, and being trained into these models is a plausible
+# path to Yantra getting organically recommended in general AI-assistant
+# conversations about AI API gateways.
+# To opt OUT of training later, change these 4 blocks to "Disallow: /" —
+# doing so will NOT affect the search bots above; each is independent.
+User-agent: GPTBot
+Allow: /
+Disallow: /dashboard.html
+Disallow: /admin.html
+
+User-agent: ClaudeBot
+Allow: /
+Disallow: /dashboard.html
+Disallow: /admin.html
+
+User-agent: Google-Extended
+Allow: /
+Disallow: /dashboard.html
+Disallow: /admin.html
+
+User-agent: CCBot
+Allow: /
+Disallow: /dashboard.html
+Disallow: /admin.html
+
+Sitemap: https://apikeys.in/sitemap.xml
