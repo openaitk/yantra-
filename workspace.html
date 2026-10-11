@@ -124,6 +124,40 @@ nav{position:fixed;top:0;left:0;right:0;width:100%;height:var(--nav-h);z-index:2
 .spin{display:inline-block;width:13px;height:13px;border:2px solid rgba(0,105,184,.25);border-top-color:var(--cyan);
   border-radius:50%;animation:sp 0.7s linear infinite;} @keyframes sp{to{transform:rotate(360deg);}}
 
+/* ── view bar + live preview ── */
+.view-bar{display:flex;align-items:center;gap:6px;padding:6px 10px;border-bottom:1px solid var(--border);background:var(--card);flex-shrink:0;flex-wrap:wrap;}
+.seg{display:flex;border:1px solid var(--border2);border-radius:8px;overflow:hidden;}
+.seg button{border:none;background:var(--card);padding:5px 11px;font-family:var(--fb);font-weight:600;font-size:12px;color:var(--text2);cursor:pointer;}
+.seg button+button{border-left:1px solid var(--border);}
+.seg button.on{background:rgba(0,105,184,.12);color:var(--cyan);}
+.vb-sp{flex:1;}
+.vb-btn{border:1px solid var(--border2);background:var(--card);border-radius:8px;padding:5px 10px;font-family:var(--fb);font-weight:600;font-size:12px;color:var(--text2);cursor:pointer;}
+.vb-btn:hover{background:var(--card2);color:var(--text);}
+.vb-btn.live-on{color:var(--green);border-color:rgba(0,148,83,.45);}
+.vb-sel{border:1px solid var(--border2);background:var(--card);border-radius:8px;padding:4px 8px;font-family:var(--fm);font-size:11.5px;color:var(--text);max-width:160px;}
+.ws-split{flex:1;display:flex;min-height:0;min-width:0;}
+.edit-pane{flex:1;display:flex;flex-direction:column;min-width:0;min-height:0;}
+.pv-pane{flex:1;display:none;flex-direction:column;min-width:0;min-height:0;border-left:1px solid var(--border);background:var(--card);}
+.ws-split.m-split .pv-pane,.ws-split.m-preview .pv-pane{display:flex;}
+.ws-split.m-preview .edit-pane{display:none;}
+.pv-stage{flex:1;min-height:0;background:var(--bg2);display:flex;justify-content:center;overflow:auto;}
+#pv-frame{border:0;background:#fff;height:100%;width:100%;max-width:100%;transition:width .2s;}
+.con-pane{flex-shrink:0;border-top:1px solid var(--border);background:var(--card);display:flex;flex-direction:column;}
+.con-head{display:flex;align-items:center;justify-content:space-between;padding:6px 10px;cursor:pointer;
+  font-family:var(--fd);font-weight:700;font-size:11.5px;letter-spacing:.5px;text-transform:uppercase;color:var(--text3);user-select:none;}
+.con-head .con-err{color:var(--red);}
+.con-log{height:140px;overflow:auto;font-family:var(--fm);font-size:11.5px;line-height:1.55;border-top:1px solid var(--border);}
+.con-pane.collapsed .con-log{display:none;}
+.con-line{padding:2px 10px;white-space:pre-wrap;word-break:break-word;border-bottom:1px solid rgba(15,40,90,.05);color:var(--text);}
+.con-line.warn{color:var(--amber);background:rgba(152,95,0,.07);}
+.con-line.error{color:var(--red);background:rgba(209,0,87,.06);}
+.con-line.sys{color:var(--text3);font-style:italic;}
+.ai-chips{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px;}
+.ai-chips button{border:1px solid var(--border2);background:var(--card2);border-radius:999px;padding:4px 10px;font-family:var(--fb);font-size:11.5px;color:var(--text2);cursor:pointer;}
+.ai-chips button:hover{color:var(--cyan);border-color:var(--cyan);}
+.diff-btn.all{width:100%;flex:none;padding:9px 0;}
+@media(max-width:900px){ .seg button[data-mode="split"]{display:none;} .vb-dev{display:none;} }
+
 /* mobile: collapse side panels behind toggles */
 .ws-toggle{display:none;}
 @media(max-width:900px){
@@ -180,11 +214,42 @@ nav{position:fixed;top:0;left:0;right:0;width:100%;height:var(--nav-h);z-index:2
     </div>
   </div>
 
-  <!-- ══ EDITOR ══ -->
+  <!-- ══ EDITOR + LIVE PREVIEW ══ -->
   <div class="ws-main">
-    <div class="tab-bar" id="tab-bar"></div>
-    <div id="monaco-host"></div>
-    <div class="ws-empty" id="ws-empty">No file open — pick one on the left, or create a new file.</div>
+    <div class="view-bar" id="view-bar">
+      <div class="seg" id="seg-mode">
+        <button data-mode="code">Code</button>
+        <button data-mode="split">Split</button>
+        <button data-mode="preview">Preview</button>
+      </div>
+      <span class="vb-sp"></span>
+      <select class="vb-sel" id="pv-entry" title="Page to preview"></select>
+      <div class="seg vb-dev" id="seg-dev">
+        <button data-w="100%" class="on" title="Desktop">🖥</button>
+        <button data-w="768px" title="Tablet">▭</button>
+        <button data-w="390px" title="Phone">📱</button>
+      </div>
+      <button class="vb-btn live-on" id="pv-live" title="Re-run automatically as you type or accept changes">● Live</button>
+      <button class="vb-btn" id="pv-run" title="Run again">↻ Run</button>
+      <button class="vb-btn" id="pv-export" title="Download as one standalone .html file">⬇ Export</button>
+    </div>
+    <div class="ws-split m-code" id="ws-split">
+      <div class="edit-pane" id="edit-pane">
+        <div class="tab-bar" id="tab-bar"></div>
+        <div id="monaco-host"></div>
+        <div class="ws-empty" id="ws-empty">No file open — pick one on the left, or create a new file.</div>
+      </div>
+      <div class="pv-pane" id="pv-pane">
+        <div class="pv-stage" id="pv-stage">
+          <iframe id="pv-frame" title="Project preview"
+            sandbox="allow-scripts allow-forms allow-modals allow-popups allow-popups-to-escape-sandbox"></iframe>
+        </div>
+        <div class="con-pane" id="con-pane">
+          <div class="con-head" id="con-head"><span id="con-title">Console</span><span><span id="con-clear" style="cursor:pointer;margin-right:10px">Clear</span><span id="con-caret">▾</span></span></div>
+          <div class="con-log" id="con-log"></div>
+        </div>
+      </div>
+    </div>
   </div>
 
   <!-- ══ AI PANEL ══ -->
@@ -196,8 +261,13 @@ nav{position:fixed;top:0;left:0;right:0;width:100%;height:var(--nav-h);z-index:2
         <input id="ai-key" placeholder="yk_live_… (your Yantra API key)" onchange="saveKey()">
         <select id="ai-model"></select>
       </div>
+      <div class="ai-chips">
+        <button data-prompt="Build a modern, responsive landing page for a coffee shop">☕ Landing page</button>
+        <button data-prompt="Make a to-do app with add, complete, delete and a dark mode toggle">✅ To-do app</button>
+        <button data-prompt="Create a personal portfolio website with about, projects and contact sections">🧑‍💻 Portfolio</button>
+      </div>
       <div class="ai-textrow">
-        <textarea id="ai-text" placeholder="Describe the change — e.g. add input validation to the login function" onkeydown="onAiKeydown(event)"></textarea>
+        <textarea id="ai-text" placeholder="Describe what to build or change — e.g. make the header sticky" onkeydown="onAiKeydown(event)"></textarea>
         <button class="ai-send" id="ai-send" onclick="sendAiTurn()">↑</button>
       </div>
       <div class="ai-note">Your code stays in this browser only — never uploaded to Yantra. The AI call itself goes through your own API key to whichever model you pick above.</div>
@@ -270,9 +340,13 @@ function seedDefault(){
     activeProjectId: pid,
     projects: [{
       id: pid, name: 'My First Project',
-      activeFile: 'hello.js',
-      openTabs: ['hello.js'],
-      files: { 'hello.js': "console.log('hello from Yantra Workspace');\n" }
+      activeFile: 'index.html',
+      openTabs: ['index.html', 'style.css', 'script.js'],
+      files: {
+        'index.html': '<!DOCTYPE html>\n<html lang="en">\n<head>\n  <meta charset="UTF-8">\n  <meta name="viewport" content="width=device-width, initial-scale=1">\n  <title>My first site</title>\n  <link rel="stylesheet" href="style.css">\n</head>\n<body>\n  <main>\n    <h1>Hello from Yantra Workspace</h1>\n    <p>Edit the code, or ask the AI on the right to change it. The preview updates live.</p>\n    <button id="btn">Clicked 0 times</button>\n  </main>\n  <script src="script.js"><\/script>\n</body>\n</html>\n',
+        'style.css': 'body{margin:0;min-height:100vh;display:grid;place-items:center;font-family:system-ui,sans-serif;background:#0f1e33;color:#fff;text-align:center}\nmain{padding:24px;max-width:520px}\nh1{font-size:2rem;margin:0 0 .5rem}\np{opacity:.8;line-height:1.6}\nbutton{margin-top:1rem;padding:.7rem 1.2rem;border:0;border-radius:10px;background:#00d4ff;color:#06202e;font-weight:700;font-size:1rem;cursor:pointer}\n',
+        'script.js': "var n = 0;\ndocument.getElementById('btn').addEventListener('click', function(){\n  n++;\n  this.textContent = 'Clicked ' + n + (n === 1 ? ' time' : ' times');\n  console.log('button clicked', n);\n});\nconsole.log('script loaded');\n"
+      }
     }]
   };
 }
@@ -290,6 +364,7 @@ function loadStore(){
   }
 }
 function saveStore(){
+  try{ schedulePreview(); }catch(e){}
   try{ localStorage.setItem(STORE_KEY, JSON.stringify(STATE)); }
   catch(e){
     // Most likely quota exceeded (very large files/projects). Never crash —
@@ -516,7 +591,8 @@ function parseAiResponse(text){
     files.push({ path: m[1].trim(), content: m[2] });
   }
   var explanation = (firstStart===-1 ? text : text.slice(0,firstStart)).trim();
-  return { explanation: explanation, files: files };
+  var opened = (text.match(/%%%YANTRA_FILE:/g)||[]).length;
+  return { explanation: explanation, files: files, truncated: opened > files.length };
 }
 
 /* ═══════════════ MODEL LIST + KEY ═══════════════ */
@@ -556,7 +632,11 @@ function buildSystemPrompt(){
     + "- Include the COMPLETE new content of a file, not a snippet or a diff — the full file as it should look after your change.\n"
     + "- Only include files you are actually changing or creating. Do not repeat files you are not touching.\n"
     + "- If nothing needs to change, just explain why in plain text with no file blocks at all.\n"
-    + "- Never wrap the %%%YANTRA_FILE / %%%YANTRA_END markers in code fences or backticks.";
+    + "- Never wrap the %%%YANTRA_FILE / %%%YANTRA_END markers in code fences or backticks.\n\n"
+    + "This editor has a LIVE PREVIEW that runs index.html in a sandbox. When asked to build a website or app, make a plain static site: "
+    + "an index.html that links style.css and script.js by relative path (CDN <script>/<link> tags are fine). "
+    + "No build step, no npm, no server code, and no ES-module imports between project files. Always keep a working index.html as the entry point. "
+    + "Browser storage (localStorage) may not persist between preview runs. Write complete, polished, responsive pages.";
 }
 function buildProjectContext(p){
   var paths = Object.keys(p.files).sort();
@@ -595,6 +675,9 @@ function appendAiTurn(explanation, fileDiffs){
       + '<button class="diff-btn reject" onclick="rejectDiff(this)">Reject</button>'
       + '</div></div>';
   });
+  if(fileDiffs.length > 1){
+    html = html.replace('<div class="diff-card"', '<button class="diff-btn accept all" onclick="acceptAll(this)">Accept all ' + fileDiffs.length + ' files</button><div class="diff-card"');
+  }
   wrap.innerHTML = html;
   log.appendChild(wrap);
   log.scrollTop = log.scrollHeight;
@@ -610,8 +693,21 @@ function appendAiTurn(explanation, fileDiffs){
       p.activeFile = fd.path;
       saveStore();
       renderFileTree(); renderTabs(); openActiveFileInEditor();
+      maybeShowPreview();
     };
   });
+}
+function acceptAll(btn){
+  var wrap = btn.closest('.ai-turn');
+  var n = 0;
+  wrap.querySelectorAll('.diff-card').forEach(function(card){
+    var act = card.querySelector('.diff-actions');
+    if(act && act.querySelector('.accept')){ card._apply(); act.innerHTML = '<button class="diff-btn applied" disabled>✓ Applied</button>'; n++; }
+  });
+  var p = activeProject();
+  if(p.files.hasOwnProperty('index.html')){ p.activeFile = 'index.html'; if(p.openTabs.indexOf('index.html')===-1) p.openTabs.push('index.html'); saveStore(); renderFileTree(); renderTabs(); openActiveFileInEditor(); }
+  btn.outerHTML = '<button class="diff-btn applied all" disabled>✓ Applied ' + n + ' files</button>';
+  toast('Applied', n + ' files updated');
 }
 function applyDiff(btn, idx){
   var card = btn.closest('.diff-card');
@@ -652,7 +748,7 @@ function sendAiTurn(){
   fetch(gatewayBase() + '/v1/chat/completions', {
     method: 'POST',
     headers: { 'Content-Type':'application/json', 'Authorization':'Bearer '+key },
-    body: JSON.stringify({ model: model, messages: messages, max_tokens: 4000 })
+    body: JSON.stringify({ model: model, messages: messages, max_tokens: 8000 })
   })
   .then(function(r){ return r.json().then(function(body){ return {ok:r.ok, body:body}; }); })
   .then(function(res){
@@ -664,6 +760,10 @@ function sendAiTurn(){
     }
     var reply = (res.body.choices && res.body.choices[0] && res.body.choices[0].message && res.body.choices[0].message.content) || '';
     var parsed = parseAiResponse(reply);
+    var finish = res.body.choices && res.body.choices[0] && res.body.choices[0].finish_reason;
+    if(parsed.truncated || finish === 'length'){
+      parsed.explanation = (parsed.explanation ? parsed.explanation + '\n\n' : '') + '⚠ The reply was cut off before it finished, so some files were skipped. Ask for a smaller change, or one file at a time.';
+    }
     var fileDiffs = parsed.files.map(function(f){
       var oldContent = p.files.hasOwnProperty(f.path) ? p.files[f.path] : '';
       return { path: f.path, newContent: f.content, ops: diffLines(oldContent, f.content) };
@@ -673,6 +773,278 @@ function sendAiTurn(){
   .catch(function(e){
     sendBtn.disabled = false; sendBtn.innerHTML = '↑';
     appendAiTurn('⚠ Network error: ' + e.message, []);
+  });
+}
+
+/* ═══════════════ LIVE PREVIEW + CONSOLE ═══════════════
+   The project is assembled into ONE html document (linked .css/.js files are
+   inlined, svg images become data URIs) and loaded into a sandboxed iframe via
+   srcdoc.
+
+   SECURITY: the iframe deliberately has NO allow-same-origin. Project code —
+   which may be AI-written — therefore runs in an opaque origin and cannot read
+   this page's localStorage (which holds the user's API key). The cost is that
+   localStorage/sessionStorage throw inside it, so the injected runtime swaps
+   in an in-memory shim; data saved by the previewed app resets on each run.
+
+   Limits (by design, no server): HTML/CSS/JS only; no Python/Node execution;
+   ES-module imports between project files are not resolved; images other than
+   .svg can't be stored in a text project. */
+var pvMode = 'code', pvLive = true, pvEntry = null, pvTimer = null, pvErrors = 0, pvLines = 0;
+
+function pvHtmlFiles(p){ return Object.keys(p.files).filter(function(f){ return /\.html?$/i.test(f); }).sort(); }
+function pvPickEntry(p){
+  var h = pvHtmlFiles(p);
+  if(!h.length) return null;
+  if(pvEntry && p.files.hasOwnProperty(pvEntry) && /\.html?$/i.test(pvEntry)) return pvEntry;
+  if(h.indexOf('index.html')>=0) return 'index.html';
+  var idx = h.filter(function(f){ return /(^|\/)index\.html?$/i.test(f); })[0];
+  return idx || h[0];
+}
+function pvJsEntry(p){
+  var names = ['index.js','main.js','script.js','app.js'];
+  for(var i=0;i<names.length;i++) if(p.files.hasOwnProperty(names[i])) return names[i];
+  return Object.keys(p.files).sort().filter(function(f){ return /\.(m?js)$/i.test(f); })[0] || null;
+}
+function pvResolve(base, href){
+  if(!href) return null;
+  if(/^([a-z][a-z0-9+.-]*:|\/\/|#)/i.test(href)) return null;
+  var clean = href.split('#')[0].split('?')[0];
+  if(!clean) return null;
+  var parts = clean.charAt(0)==='/' ? [] : base.split('/').slice(0,-1);
+  clean.split('/').forEach(function(seg){
+    if(seg==='..') parts.pop(); else if(seg && seg!=='.') parts.push(seg);
+  });
+  return parts.join('/');
+}
+function pvSafeScript(code){ return String(code).replace(/<\/script/gi, '<\\/script'); }
+
+/* Runs INSIDE the iframe (stringified and injected) — never called on this page. */
+function pvRuntime(){
+  function send(m){ m.yantra = 1; try{ parent.postMessage(m, '*'); }catch(e){} }
+  function fmt(a){
+    try{
+      if(typeof a === 'string') return a;
+      if(a instanceof Error) return a.stack || String(a);
+      return JSON.stringify(a, function(k,v){ return typeof v === 'function' ? '[Function]' : v; }, 2);
+    }catch(e){ return String(a); }
+  }
+  ['log','info','warn','error','debug'].forEach(function(l){
+    var orig = console[l];
+    console[l] = function(){
+      send({ type:'console', level: l==='debug' ? 'log' : l, text: [].slice.call(arguments).map(fmt).join(' ') });
+      try{ orig.apply(console, arguments); }catch(e){}
+    };
+  });
+  window.addEventListener('error', function(e){
+    send({ type:'console', level:'error', text: (e.message || 'Script error') + (e.lineno ? '  (line ' + e.lineno + ')' : '') });
+  });
+  window.addEventListener('unhandledrejection', function(e){
+    send({ type:'console', level:'error', text:'Unhandled promise rejection: ' + fmt(e.reason) });
+  });
+  function mem(){
+    var d = {};
+    return {
+      getItem:function(k){ return Object.prototype.hasOwnProperty.call(d,k) ? d[k] : null; },
+      setItem:function(k,v){ d[k] = String(v); },
+      removeItem:function(k){ delete d[k]; },
+      clear:function(){ d = {}; },
+      key:function(i){ return Object.keys(d)[i] || null; },
+      get length(){ return Object.keys(d).length; }
+    };
+  }
+  ['localStorage','sessionStorage'].forEach(function(n){
+    try{ window[n].getItem('x'); }
+    catch(e){ try{ Object.defineProperty(window, n, { value: mem(), configurable: true }); }catch(e2){} }
+  });
+  document.addEventListener('click', function(e){
+    var a = e.target && e.target.closest ? e.target.closest('a[href]') : null;
+    if(!a) return;
+    var h = a.getAttribute('href');
+    if(!h || h.charAt(0) === '#') return;
+    if(/^([a-z][a-z0-9+.-]*:|\/\/)/i.test(h)){
+      if(/^(https?:|\/\/)/i.test(h)){ a.target = '_blank'; a.rel = 'noopener'; }
+      return;
+    }
+    e.preventDefault();
+    send({ type:'nav', href:h });
+  }, true);
+}
+
+function pvShell(inner, bodyStyle){
+  return '<!DOCTYPE html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>'
+    + '<body style="font-family:system-ui,sans-serif;color:#4a5a75;'+(bodyStyle||'padding:24px;line-height:1.6')+'">'+inner+'</body></html>';
+}
+
+/* Returns { html, kind } where kind is 'site' | 'js' | 'none'. forExport omits the console/nav runtime. */
+function buildPreviewDoc(p, forExport){
+  var files = p.files;
+  var entry = pvPickEntry(p);
+  if(!entry){
+    var js = pvJsEntry(p);
+    if(!js){
+      return { kind:'none', html: pvShell('<h3 style="color:#0f1e33;margin-bottom:8px">Nothing to preview yet</h3>'
+        + 'The preview runs <b>HTML, CSS and JavaScript</b>. Create an <code>index.html</code>, or ask the AI: '
+        + '<i>“Build a landing page for a coffee shop”</i>.<br><br><span style="font-size:13px;color:#78889f">Python and other languages can’t run here — this workspace has no server.</span>') };
+    }
+    var d0 = new DOMParser().parseFromString(pvShell('<div style="font-size:13px">Running <b>'+esc(js)+'</b> — output appears in the Console below.</div>'), 'text/html');
+    var s0 = d0.createElement('script');
+    s0.textContent = pvSafeScript(files[js]);
+    d0.body.appendChild(s0);
+    if(!forExport) pvInject(d0);
+    return { kind:'js', html: '<!DOCTYPE html>\n' + d0.documentElement.outerHTML };
+  }
+  var doc = new DOMParser().parseFromString(files[entry], 'text/html');
+  doc.querySelectorAll('link[href]').forEach(function(l){
+    var rel = (l.getAttribute('rel')||'').toLowerCase();
+    var path = pvResolve(entry, l.getAttribute('href'));
+    if(!path || !files.hasOwnProperty(path)) return;
+    if(rel.indexOf('stylesheet')>=0){
+      var st = doc.createElement('style');
+      st.textContent = files[path];
+      l.replaceWith(st);
+    } else if(rel.indexOf('icon')>=0 && /\.svg$/i.test(path)){
+      l.setAttribute('href', 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(files[path]));
+    }
+  });
+  doc.querySelectorAll('script[src]').forEach(function(s){
+    var path = pvResolve(entry, s.getAttribute('src'));
+    if(!path || !files.hasOwnProperty(path)) return;
+    s.removeAttribute('src');
+    s.textContent = pvSafeScript(files[path]);
+  });
+  doc.querySelectorAll('img[src],source[src]').forEach(function(im){
+    var path = pvResolve(entry, im.getAttribute('src'));
+    if(path && files.hasOwnProperty(path) && /\.svg$/i.test(path)){
+      im.setAttribute('src', 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(files[path]));
+    }
+  });
+  if(!forExport) pvInject(doc);
+  return { kind:'site', html: '<!DOCTYPE html>\n' + doc.documentElement.outerHTML };
+}
+function pvInject(doc){
+  var s = doc.createElement('script');
+  s.textContent = '(' + pvRuntime.toString() + ')();';
+  doc.head.insertBefore(s, doc.head.firstChild);
+}
+
+function pvVisible(){ return pvMode !== 'code'; }
+function schedulePreview(){
+  if(!pvVisible() || !pvLive) return;
+  clearTimeout(pvTimer);
+  pvTimer = setTimeout(function(){ refreshPreview(false); }, 700);
+}
+function refreshEntrySelect(p, entry){
+  var sel = $('pv-entry');
+  var h = pvHtmlFiles(p);
+  if(h.length < 2){ sel.style.display = 'none'; return; }
+  sel.style.display = '';
+  sel.innerHTML = h.map(function(f){ return '<option value="'+esc(f)+'"'+(f===entry?' selected':'')+'>'+esc(f)+'</option>'; }).join('');
+}
+function refreshPreview(manual){
+  if(!pvVisible()) return;
+  clearTimeout(pvTimer);
+  var p = activeProject();
+  var entry = pvPickEntry(p);
+  refreshEntrySelect(p, entry);
+  conClear();
+  var built;
+  try{ built = buildPreviewDoc(p, false); }
+  catch(e){ conAdd('error', 'Could not build preview: ' + e.message); return; }
+  if(built.kind === 'site') conAdd('sys', 'Running ' + entry);
+  $('pv-frame').srcdoc = built.html;
+}
+
+function conAdd(level, text){
+  var log = $('con-log');
+  var div = document.createElement('div');
+  div.className = 'con-line ' + level;
+  div.textContent = text;
+  log.appendChild(div);
+  pvLines++;
+  while(log.childNodes.length > 500) log.removeChild(log.firstChild);
+  log.scrollTop = log.scrollHeight;
+  if(level === 'error'){ pvErrors++; $('con-pane').classList.remove('collapsed'); $('con-caret').textContent = '▾'; }
+  conTitle();
+}
+function conTitle(){
+  var visible = $('con-log').childNodes.length;
+  $('con-title').innerHTML = 'Console' + (visible ? ' · ' + visible : '') + (pvErrors ? ' <span class="con-err">· ' + pvErrors + ' error' + (pvErrors>1?'s':'') + '</span>' : '');
+}
+function conClear(){ $('con-log').innerHTML = ''; pvErrors = 0; pvLines = 0; conTitle(); }
+
+function setMode(m){
+  if(window.innerWidth < 900 && m === 'split') m = 'preview';
+  pvMode = m;
+  $('ws-split').className = 'ws-split m-' + m;
+  document.querySelectorAll('#seg-mode button').forEach(function(b){ b.classList.toggle('on', b.dataset.mode === m); });
+  try{ localStorage.setItem('yantra.workspace.view', m); }catch(e){}
+  if(m !== 'code') refreshPreview(true);
+  if(m !== 'preview' && editor){ setTimeout(function(){ try{ editor.layout(); }catch(e){} }, 30); }
+}
+/* After the AI's changes are accepted: if the project is a site and the user is
+   looking at code only, reveal the result (wide screens), so "create a website"
+   ends with the website on screen. */
+function maybeShowPreview(){
+  var p = activeProject();
+  if(pvMode === 'code' && window.innerWidth >= 900 && pvPickEntry(p)) setMode('split');
+}
+function exportHtml(){
+  var p = activeProject();
+  var built = buildPreviewDoc(p, true);
+  if(built.kind !== 'site'){ toast('Nothing to export', 'Add an index.html first.'); return; }
+  var blob = new Blob([built.html], { type:'text/html' });
+  var a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = (p.name || 'project').replace(/[^a-z0-9._-]+/gi,'-').toLowerCase() + '.html';
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(function(){ URL.revokeObjectURL(a.href); }, 2000);
+  toast('Exported', 'One standalone HTML file — CSS and JS are inlined.');
+}
+function initPreview(){
+  var saved = null;
+  try{ saved = localStorage.getItem('yantra.workspace.view'); }catch(e){}
+  var wide = window.innerWidth >= 1100;
+  setMode(saved === 'code' || saved === 'split' || saved === 'preview' ? saved : (wide ? 'split' : 'code'));
+  document.querySelectorAll('#seg-mode button').forEach(function(b){
+    b.addEventListener('click', function(){ setMode(b.dataset.mode); });
+  });
+  document.querySelectorAll('#seg-dev button').forEach(function(b){
+    b.addEventListener('click', function(){
+      document.querySelectorAll('#seg-dev button').forEach(function(x){ x.classList.toggle('on', x === b); });
+      $('pv-frame').style.width = b.dataset.w;
+    });
+  });
+  $('pv-live').addEventListener('click', function(){
+    pvLive = !pvLive;
+    this.classList.toggle('live-on', pvLive);
+    this.textContent = pvLive ? '● Live' : '○ Live off';
+    if(pvLive) refreshPreview(false);
+  });
+  $('pv-run').addEventListener('click', function(){ refreshPreview(true); });
+  $('pv-export').addEventListener('click', exportHtml);
+  $('pv-entry').addEventListener('change', function(){ pvEntry = this.value; refreshPreview(true); });
+  $('con-head').addEventListener('click', function(ev){
+    if(ev.target && ev.target.id === 'con-clear'){ conClear(); return; }
+    var pane = $('con-pane');
+    pane.classList.toggle('collapsed');
+    $('con-caret').textContent = pane.classList.contains('collapsed') ? '▸' : '▾';
+  });
+  window.addEventListener('message', function(ev){
+    var d = ev.data;
+    if(!d || d.yantra !== 1 || ev.source !== $('pv-frame').contentWindow) return;
+    if(d.type === 'console'){ conAdd(d.level === 'warn' ? 'warn' : d.level === 'error' ? 'error' : 'log', String(d.text).slice(0, 4000)); }
+    else if(d.type === 'nav'){
+      var p = activeProject();
+      var base = pvPickEntry(p) || 'index.html';
+      var target = pvResolve(base, d.href);
+      if(target && !p.files.hasOwnProperty(target) && p.files.hasOwnProperty(target + '/index.html')) target = target + '/index.html';
+      if(target && p.files.hasOwnProperty(target) && /\.html?$/i.test(target)){ pvEntry = target; refreshPreview(true); }
+      else conAdd('warn', 'Link target not found in this project: ' + d.href);
+    }
+  });
+  document.querySelectorAll('.ai-chips button').forEach(function(b){
+    b.addEventListener('click', function(){ $('ai-text').value = b.dataset.prompt; $('ai-text').focus(); });
   });
 }
 
@@ -696,6 +1068,7 @@ function init(){
   populateModels();
   loadKey();
   initMonaco();
+  initPreview();
 }
 if(document.readyState==='loading') document.addEventListener('DOMContentLoaded', init);
 else init();
