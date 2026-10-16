@@ -217,6 +217,11 @@ main{padding:30px 0 80px}
         <label>Password</label>
         <input class="inp" id="f-pass" type="password" placeholder="At least 8 characters" autocomplete="current-password">
       </div>
+      <!-- honeypot: invisible to people, bots fill it -->
+      <div aria-hidden="true" style="position:absolute;left:-9999px;top:auto;width:1px;height:1px;overflow:hidden">
+        <label>Website <input id="f-website" name="website" tabindex="-1" autocomplete="off"></label>
+      </div>
+      <div id="cf-box" style="display:none;margin:0 0 12px"></div>
       <button class="btn btn-pri" id="auth-submit" onclick="submitAuth()" style="width:100%">Sign in</button>
       <div class="subtle" id="forgot-row"><a onclick="doForgot()">Forgot password?</a></div>
 
@@ -435,8 +440,56 @@ main{padding:30px 0 80px}
 
   // ================= AUTH =================
   var mode='login';
+  var formShownAt=Date.now(), cfToken='', cfWidget=null, cfCfg=undefined;
+
+  // Anti-abuse signals sent with signup. A persistent random id (one per browser)
+  // plus a hash of coarse browser traits. Neither is perfect; the server combines
+  // them with IP, email-alias and captcha checks.
+  function deviceId(){
+    var id=store.get('yantra.did');
+    if(!id||id.length<16){
+      var a=new Uint8Array(16);
+      try{ (window.crypto||window.msCrypto).getRandomValues(a); }catch(e){ for(var i=0;i<16;i++) a[i]=Math.floor(Math.random()*256); }
+      id=Array.prototype.map.call(a,function(b){return ('0'+b.toString(16)).slice(-2);}).join('');
+      store.set('yantra.did',id);
+    }
+    return id;
+  }
+  function fingerprint(){
+    var parts=[navigator.userAgent,navigator.language,navigator.platform,screen.width+'x'+screen.height+'x'+screen.colorDepth,
+      new Date().getTimezoneOffset(),navigator.hardwareConcurrency||'',navigator.maxTouchPoints||0];
+    try{
+      var c=document.createElement('canvas'); c.width=200; c.height=30; var x=c.getContext('2d');
+      x.textBaseline='top'; x.font='14px Arial'; x.fillStyle='#f60'; x.fillRect(10,2,80,20); x.fillStyle='#069'; x.fillText('Yantra, \u0928\u092e\u0938\u094d\u0924\u0947 \u2603',4,4);
+      parts.push(c.toDataURL());
+    }catch(e){}
+    var str=parts.join('|'), h=5381;
+    for(var i=0;i<str.length;i++){ h=((h<<5)+h+str.charCodeAt(i))|0; }
+    return 'fp1-'+(h>>>0).toString(16)+'-'+str.length;
+  }
+  function loadCaptcha(){
+    if(cfCfg!==undefined){ renderCaptcha(); return; }
+    cfCfg=null;
+    api('/app/auth/config',{auth:false}).then(function(c){
+      cfCfg=(c&&c.captcha&&c.captcha.site_key)?c.captcha:null;
+      if(!cfCfg) return;
+      var sc=document.createElement('script');
+      sc.src='https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit'; sc.async=true; sc.onload=renderCaptcha;
+      document.head.appendChild(sc);
+    }).catch(function(){});
+  }
+  function renderCaptcha(){
+    if(!cfCfg||!window.turnstile||mode!=='signup') return;
+    $('cf-box').style.display='block';
+    if(cfWidget!==null) return;
+    cfWidget=window.turnstile.render('#cf-box',{sitekey:cfCfg.site_key,callback:function(t){cfToken=t;},'expired-callback':function(){cfToken='';},'error-callback':function(){cfToken='';}});
+  }
+
   window.setMode=function(m){
     mode=m;
+    formShownAt=Date.now();
+    $('cf-box').style.display = (m==='signup'&&cfCfg)?'block':'none';
+    if(m==='signup') loadCaptcha();
     $('tab-login').className = m==='login'?'on':'';
     $('tab-signup').className = m==='signup'?'on':'';
     $('name-field').style.display = m==='signup'?'block':'none';
@@ -453,9 +506,23 @@ main{padding:30px 0 80px}
     if(!email||!pass){ authMsg('Email and password are required.'); return; }
     var btn=$('auth-submit'); btn.disabled=true; var old=btn.textContent; btn.innerHTML='<span class="spin"></span>';
     var path = mode==='login'?'/app/auth/login':'/app/auth/signup';
-    api(path,{method:'POST',auth:false,body:{email:email,password:pass,name:name}})
-      .then(function(d){ store.set('yantra.jwt', d.token); boot(); })
-      .catch(function(e){ authMsg(e.message); })
+    var body={email:email,password:pass,name:name};
+    if(mode==='signup'){
+      body.device=deviceId(); body.fp=fingerprint();
+      body.formMs=Date.now()-formShownAt; body.website=($('f-website').value||'');
+      body.cfToken=cfToken;
+    }
+    api(path,{method:'POST',auth:false,body:body})
+      .then(function(d){
+        store.set('yantra.jwt', d.token); boot();
+        if(mode==='signup' && d.welcome){
+          setTimeout(function(){ toast(d.welcome.granted ? 'Welcome! ₹'+(d.welcome.amount_paise/100).toFixed(2)+' free credit added' : d.welcome.message, d.welcome.granted?'good':''); }, 900);
+        }
+      })
+      .catch(function(e){
+        authMsg(e.message);
+        if(mode==='signup' && cfWidget!==null && window.turnstile){ cfToken=''; try{ window.turnstile.reset(cfWidget); }catch(_){} }
+      })
       .then(function(){ btn.disabled=false; btn.textContent=old; });
   };
 
