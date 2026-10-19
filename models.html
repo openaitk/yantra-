@@ -178,7 +178,7 @@ nav{position:fixed;top:0;left:0;right:0;width:100%;height:var(--nav-h);z-index:2
 .ticker-bar{position:absolute;top:var(--nav-h);/* absolute, not fixed: the ticker scrolls away with the page instead of sitting over the content forever. Fixed meant every section slid under a permanent strip, and nav(64)+ticker(32) ate ~14% of a phone screen for good. It still sits below the fixed nav on load; .page already reserves 108px. */ left:0;right:0;width:100%;z-index:199;overflow:hidden;background:rgba(255,255,255,0.94);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-bottom:1px solid var(--border);}
 .ticker-inner{display:flex;align-items:center;height:32px;}
 .ticker-label{padding:0 14px;font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--cyan);white-space:nowrap;border-right:1px solid var(--border);height:100%;display:flex;align-items:center;background:rgba(0,105,184,0.045);flex-shrink:0;}
-.ticker-scroll{overflow:hidden;flex:1;}
+.ticker-scroll{overflow:hidden;flex:1;min-width:0;}
 .ticker-track{display:flex;gap:30px;animation:scroll-ticker 36s linear infinite;white-space:nowrap;}
 .tk{display:flex;align-items:center;gap:6px;font-size:11px;font-weight:600;font-family:var(--fm);}
 .tk-name{color:var(--text2);} .tk-val{color:var(--cyan);} .tk-val.grn{color:var(--green);} .tk-sep{color:var(--border2);}
@@ -566,6 +566,107 @@ html{scroll-behavior:smooth;}
 .pg-settings.on{display:block;}
 .toast-note{display:none;}
 .toast-note.on{display:flex;flex-direction:column;}
+/* ═════ MODELS EXPLORER ═════ */
+#page-models .mx{padding-bottom:90px}
+#page-models .mx-head{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;margin-bottom:18px}
+#page-models .mx-head .s-title{margin-bottom:8px;text-align:left}
+#page-models .mx-sub{color:var(--text2);font-size:15px;line-height:1.6;max-width:62ch}
+#page-models .mx-sub #mx-count{color:var(--text);font-weight:700}
+#page-models .mx-status{display:inline-flex;align-items:center;gap:8px;font-size:12.5px;font-weight:600;color:var(--text2);text-decoration:none;background:var(--card);border:1px solid var(--border);border-radius:100px;padding:7px 13px;white-space:nowrap;flex-shrink:0}
+#page-models .mx-status[hidden]{display:none}
+#page-models .mx-status i{width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 0 3px rgba(0,148,83,.18)}
+#page-models .mx-status.degraded i{background:#d18a00;box-shadow:0 0 0 3px rgba(209,138,0,.2)}
+#page-models .mx-status.outage i{background:#c4262e;box-shadow:0 0 0 3px rgba(196,38,46,.2)}
+#page-models .mx-est{display:flex;justify-content:space-between;align-items:center;gap:18px;flex-wrap:wrap;background:var(--card);border:1px solid var(--border);border-radius:var(--r2);padding:16px 18px;margin-bottom:14px}
+#page-models .mx-est-l b{font-family:var(--fd);font-size:15px;display:block;margin-bottom:9px}
+#page-models .mx-presets{display:flex;gap:8px;flex-wrap:wrap}
+#page-models .mx-presets button{font:inherit;font-size:13px;font-weight:600;text-align:left;padding:8px 12px;border-radius:12px;border:1px solid var(--border);background:var(--card2);color:var(--text);cursor:pointer;line-height:1.25}
+#page-models .mx-presets button small{display:block;font-size:11px;font-weight:500;color:var(--text3)}
+#page-models .mx-presets button.on{border-color:var(--cyan);background:rgba(0,105,184,.08);color:var(--cyan)}
+#page-models .mx-est-r{display:flex;gap:12px;flex-wrap:wrap}
+#page-models .mx-est-r label{display:flex;align-items:center;gap:8px;font-size:12.5px;font-weight:600;color:var(--text2)}
+#page-models .mx-est-r input{width:92px;padding:9px 10px;border:1.5px solid var(--border2);border-radius:10px;background:var(--card);font:600 14px var(--fm);color:var(--text)}
+#page-models .mx-est-r span{font-weight:500;color:var(--text3);font-size:12px}
+#page-models .mx-bar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px}
+#page-models .mx-search{flex:1 1 240px;min-width:0}
+#page-models .mx-search input,#page-models .mx-bar select{width:100%;padding:11px 13px;border:1.5px solid var(--border2);border-radius:11px;background:var(--card);font-size:14px;color:var(--text);min-width:0}
+#page-models .mx-bar select{width:auto;flex:0 1 auto}
+#page-models .mx-search input:focus,#page-models .mx-bar select:focus,#page-models .mx-est-r input:focus{outline:2px solid var(--cyan);outline-offset:1px;border-color:var(--cyan)}
+#page-models .mx-view{display:flex;border:1.5px solid var(--border2);border-radius:11px;overflow:hidden;background:var(--card)}
+#page-models .mx-view button{font:inherit;font-size:13px;font-weight:600;padding:0 14px;border:0;background:transparent;color:var(--text2);cursor:pointer}
+#page-models .mx-view button.on{background:var(--cyan);color:#fff}
+#page-models .mx-chips{display:flex;gap:7px;overflow-x:auto;padding:2px 0 12px;scrollbar-width:none;margin-bottom:6px}
+#page-models .mx-chips::-webkit-scrollbar{display:none}
+#page-models .mx-chips .chip{white-space:nowrap;flex-shrink:0;font-family:inherit}
+#page-models .mx-list{background:var(--card);border:1px solid var(--border);border-radius:var(--r2);overflow:hidden}
+#page-models .mx-th,#page-models .mx-row{display:grid;grid-template-columns:28px minmax(190px,2.3fr) 78px minmax(110px,1.1fr) minmax(150px,1.5fr) 118px 40px;gap:14px;align-items:center;padding:12px 16px}
+#page-models .mx-th{font-size:11.5px;font-weight:700;color:var(--text3);background:var(--card2);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:2}
+#page-models .mx-th .r,#page-models .mx-row .r{text-align:right}
+#page-models .mx-row{border-bottom:1px solid var(--border);transition:background .15s}
+#page-models .mx-row:last-child{border-bottom:0}
+#page-models .mx-row:hover{background:var(--card2)}
+#page-models .mx-row.sel{background:rgba(0,105,184,.06)}
+#page-models .mx-ck{width:18px;height:18px;accent-color:var(--cyan);cursor:pointer}
+#page-models .mx-name a{font-family:var(--fd);font-weight:800;font-size:16px;color:var(--text);text-decoration:none;letter-spacing:-.2px}
+#page-models .mx-name a:hover{color:var(--cyan)}
+#page-models .mx-meta{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:3px;font-size:12px;color:var(--text3)}
+#page-models .mx-meta code{font-family:var(--fm);font-size:11px;color:var(--cyan);word-break:break-all}
+#page-models .mx-tags{display:flex;gap:5px;flex-wrap:wrap;margin-top:6px}
+#page-models .mx-tags span{font-size:11px;font-weight:600;padding:2px 8px;border-radius:100px;background:rgba(124,58,237,.1);color:#6d3fd1}
+#page-models .mx-ctx{font:600 12.5px var(--fm);color:var(--text2)}
+#page-models .mx-p{font:700 13.5px var(--fm);color:var(--text)}
+#page-models .mx-p small{display:block;font-size:10.5px;color:var(--text3);font-weight:500}
+#page-models .mx-ruler{height:6px;border-radius:6px;background:var(--bg3);margin-top:6px;overflow:hidden}
+#page-models .mx-ruler i{display:block;height:100%;border-radius:6px;background:linear-gradient(90deg,var(--green),#e6a100 70%,#d16800)}
+#page-models .mx-est-c{font:800 15px var(--fm);color:var(--green)}
+#page-models .mx-est-c small{display:block;font-size:10.5px;color:var(--text3);font-weight:500}
+#page-models .mx-cp{border:1px solid var(--border);background:var(--card);border-radius:9px;width:34px;height:34px;cursor:pointer;color:var(--text2);font-size:13px}
+#page-models .mx-cp:hover{border-color:var(--cyan);color:var(--cyan)}
+#page-models .mx-free{color:var(--green);font-weight:800}
+#page-models .mx-empty{padding:50px 20px;text-align:center;color:var(--text2)}
+#page-models .mx-more{padding:14px;text-align:center;font-size:13px;color:var(--text3)}
+#page-models .mx-list.cards{background:transparent;border:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px;overflow:visible}
+#page-models .mx-list.cards .mx-th{display:none}
+#mx-tray{position:fixed;left:50%;bottom:78px;transform:translateX(-50%);z-index:300;display:flex;align-items:center;gap:10px;background:#0f1e33;color:#fff;padding:10px 12px 10px 18px;border-radius:100px;box-shadow:0 10px 34px rgba(15,30,51,.35);font-size:14px;font-weight:600;max-width:calc(100vw - 24px)}
+#mx-tray[hidden],#mx-modal[hidden]{display:none}
+.mx-btn{font:700 13px var(--fb);padding:8px 16px;border-radius:100px;border:0;background:#fff;color:#0f1e33;cursor:pointer}
+.mx-btn.ghost{background:transparent;color:#cfd8e8}
+#mx-modal{position:fixed;inset:0;z-index:400;background:rgba(15,30,51,.55);display:flex;align-items:center;justify-content:center;padding:14px}
+.mx-modal-box{background:var(--card);border-radius:20px;width:min(920px,100%);max-height:88vh;display:flex;flex-direction:column;overflow:hidden}
+.mx-modal-h{display:flex;justify-content:space-between;align-items:center;padding:16px 20px;border-bottom:1px solid var(--border)}
+.mx-modal-h h2{font-family:var(--fd);font-size:20px;margin:0}
+.mx-modal-h button{font-size:26px;line-height:1;border:0;background:transparent;cursor:pointer;color:var(--text2);padding:0 6px}
+.mx-modal-b{overflow:auto;padding:6px 20px 20px}
+.mx-cmp{width:100%;border-collapse:collapse;font-size:13.5px;min-width:520px}
+.mx-cmp th,.mx-cmp td{padding:11px 10px;border-bottom:1px solid var(--border);text-align:left;vertical-align:top}
+.mx-cmp th:first-child{width:130px;color:var(--text3);font-weight:600;font-size:12.5px}
+.mx-cmp thead th{font-family:var(--fd);font-size:16px;color:var(--text)}
+.mx-cmp td.best{color:var(--green);font-weight:800}
+.mx-cmp td code{font-family:var(--fm);font-size:11.5px;color:var(--cyan);word-break:break-all}
+
+#page-models .mx-list.cards .mx-row{display:grid;grid-template-columns:24px minmax(0,1fr) auto;grid-template-areas:"ck name cp" "ck ctx ctx" "ck pin pout" "ck est est";background:var(--card);border:1px solid var(--border);border-radius:var(--r2);padding:14px;gap:8px 12px;align-items:start}
+#page-models .mx-list.cards .mx-row>.mx-ckw{grid-area:ck}#page-models .mx-list.cards .mx-row>.mx-name{grid-area:name;min-width:0}#page-models .mx-list.cards .mx-row>.mx-ctx{grid-area:ctx}
+#page-models .mx-list.cards .mx-row>.pin{grid-area:pin}#page-models .mx-list.cards .mx-row>.pout{grid-area:pout}#page-models .mx-list.cards .mx-row>.mx-est-c{grid-area:est}#page-models .mx-list.cards .mx-row>.mx-cpw{grid-area:cp}
+#page-models .mx-list.cards .mx-row .r{text-align:left}
+#page-models .mx-list.cards .mx-ctx::before{content:"Context ";color:var(--text3);font-weight:500}
+@media(max-width:900px){
+  #page-models .mx-th{display:none}
+  #page-models .mx-list{background:transparent;border:0;display:grid;gap:12px;grid-template-columns:minmax(0,1fr);overflow:visible}
+  #page-models .mx-row,#page-models .mx-list.cards .mx-row{display:grid;grid-template-columns:24px minmax(0,1fr) auto;grid-template-areas:"ck name cp" "ck ctx ctx" "ck pin pout" "ck est est";background:var(--card);border:1px solid var(--border);border-radius:var(--r2);padding:14px;gap:8px 12px;align-items:start}
+  #page-models .mx-row>.mx-ckw{grid-area:ck}#page-models .mx-row>.mx-name{grid-area:name;min-width:0}#page-models .mx-row>.mx-ctx{grid-area:ctx}
+  #page-models .mx-row>.pin{grid-area:pin}#page-models .mx-row>.pout{grid-area:pout}#page-models .mx-row>.mx-est-c{grid-area:est}#page-models .mx-row>.mx-cpw{grid-area:cp}
+  #page-models .mx-row .r{text-align:left}
+  #page-models .mx-ctx::before{content:"Context ";color:var(--text3);font-weight:500}
+  #page-models .mx-view{display:none}
+  #page-models .mx-list.cards{grid-template-columns:minmax(0,1fr)}
+}
+@media(max-width:560px){
+  #page-models .mx-head{flex-direction:column}
+  #page-models .mx-est-r input{width:84px}
+  #page-models .mx-bar select{flex:1 1 140px}
+  #mx-tray{bottom:74px}
+}
+@media(prefers-reduced-motion:reduce){#page-models *{transition:none!important}}
 </style>
 
 </head>
@@ -613,36 +714,68 @@ html{scroll-behavior:smooth;}
 
 <!-- ═══════ MODELS ═══════ -->
 <main class="page on" id="page-models">
-  <div class="wrap">
-    <div class="page-head"><h2 class="s-title">Models</h2><div class="s-sub">Every model below is reachable with your single Yantra key. Pricing is per 1M tokens in INR.</div></div>
-    <div class="onekey-banner"><span class="badge-dot"></span> <strong>One key, all of them.</strong> &nbsp;Switch models by changing a string — never a credential.</div>
-    <div class="tool-row">
-      <div class="search-box"><span class="s-label">⌕</span><input id="model-search" placeholder="Search models or providers…" oninput="renderModels()"></div>
-      <div class="pg-chips" id="model-filters">
-        <button class="chip on" data-filter="all" onclick="setModelFilter(this,'all')">All</button>
-        <button class="chip" data-filter="reasoning" onclick="setModelFilter(this,'reasoning')">Reasoning</button>
-        <button class="chip" data-filter="fast" onclick="setModelFilter(this,'fast')">Fast</button>
-        <button class="chip" data-filter="cheap" onclick="setModelFilter(this,'cheap')">Cheap</button>
-        <button class="chip" data-filter="long-context" onclick="setModelFilter(this,'long-context')">Long-context</button>
-        <button class="chip" data-filter="local" onclick="setModelFilter(this,'local')">Local</button>
-        <button class="chip" data-filter="community" id="community-chip" onclick="setModelFilter(this,'community')">Community <span id="community-chip-count" class="dim"></span></button>
+  <div class="wrap mx">
+    <header class="mx-head">
+      <div>
+        <h1 class="s-title">Models</h1>
+        <p class="mx-sub"><span id="mx-count">Every model</span> behind one key. Prices are ₹ per 1M tokens. Set your monthly usage and every row shows what it would cost you.</p>
       </div>
-      <select class="pg-sel" id="model-sort" onchange="renderModels()" style="max-width:170px">
-        <option value="popular">Sort: Popular</option>
-        <option value="cheapest">Sort: Cheapest</option>
-        <option value="context">Sort: Context</option>
-        <option value="az">Sort: A–Z</option>
+      <a class="mx-status" id="mx-status" href="status.html" hidden><i></i><span></span></a>
+    </header>
+
+    <section class="mx-est" aria-label="Estimate monthly cost">
+      <div class="mx-est-l">
+        <b>Your monthly usage</b>
+        <div class="mx-presets" id="mx-presets" role="group" aria-label="Usage presets">
+          <button type="button" data-in="0.7" data-out="0.3" class="on">Chatbot<small>1,000 chats</small></button>
+          <button type="button" data-in="10" data-out="2">Coding helper<small>~200 sessions</small></button>
+          <button type="button" data-in="5" data-out="0.5">Summaries<small>~2,500 documents</small></button>
+          <button type="button" data-in="50" data-out="10">Production app<small>heavy traffic</small></button>
+        </div>
+      </div>
+      <div class="mx-est-r">
+        <label>Input <input id="mx-in" type="number" min="0" step="any" value="0.7" inputmode="decimal"><span>M tokens</span></label>
+        <label>Output <input id="mx-out" type="number" min="0" step="any" value="0.3" inputmode="decimal"><span>M tokens</span></label>
+      </div>
+    </section>
+
+    <div class="mx-bar">
+      <div class="mx-search"><input id="model-search" type="search" placeholder="Search by name, provider or ID" aria-label="Search models" autocomplete="off"></div>
+      <select id="mx-prov" aria-label="Provider"></select>
+      <select id="model-sort" aria-label="Sort">
+        <option value="popular">Popular first</option>
+        <option value="cheapest">Cheapest first</option>
+        <option value="priciest">Most capable first</option>
+        <option value="context">Longest context</option>
+        <option value="az">A to Z</option>
       </select>
+      <div class="mx-view" role="group" aria-label="View"><button type="button" id="mx-v-table" class="on" aria-label="Table view">Table</button><button type="button" id="mx-v-cards" aria-label="Card view">Cards</button></div>
     </div>
-    <div class="models-grid" id="models-grid"></div>
+    <div class="mx-chips" id="model-filters" role="group" aria-label="Capabilities"></div>
+
+    <div class="mx-list" id="models-grid"></div>
+  </div>
+
+  <div class="mx-tray" id="mx-tray" hidden>
+    <span id="mx-tray-n"></span>
+    <button type="button" id="mx-tray-go" class="mx-btn">Compare</button>
+    <button type="button" id="mx-tray-clear" class="mx-btn ghost">Clear</button>
+  </div>
+  <div class="mx-modal" id="mx-modal" hidden role="dialog" aria-modal="true" aria-labelledby="mx-modal-t">
+    <div class="mx-modal-box">
+      <div class="mx-modal-h"><h2 id="mx-modal-t">Compare models</h2><button type="button" id="mx-modal-x" aria-label="Close">×</button></div>
+      <div class="mx-modal-b" id="mx-modal-b"></div>
+    </div>
   </div>
 </main>
+
 
 <footer style="border-top:1px solid var(--border);padding:34px 20px 100px;text-align:center;font-family:var(--fb)">
   <div style="display:flex;gap:22px;justify-content:center;flex-wrap:wrap;margin-bottom:14px;font-size:13px">
     <a href="legal/terms.html" style="color:var(--text2)">Terms</a>
     <a href="legal/privacy.html" style="color:var(--text2)">Privacy</a>
     <a href="legal/refund.html" style="color:var(--text2)">Refund &amp; Cancellation</a>
+    <a href="status.html" style="color:var(--text2)">Status</a>
     <a href="mailto:gettony3000@gmail.com" style="color:var(--text2)">Contact</a>
   </div>
   <div style="color:var(--text3);font-size:12px">© 2026 Yantra AI · Aditya Sunil Borgaonkar · Kolhapur, Maharashtra, India</div>
@@ -740,6 +873,7 @@ var MODELS = {
   "anthropic/claude-haiku-4-5": { provider:"anthropic", label:"Claude Haiku 4.5", inr:{in:108.68,out:543.38}, ctx:200000, tags:["fast","cheap","tools"], blurb:"Fastest Claude — real-time tasks." },
   "google/gemini-3.1-pro": { provider:"gemini", label:"Gemini 3.1 Pro", inr:{in:217.35,out:1304.1}, ctx:1000000, tags:["reasoning","vision","long-context","flagship"], blurb:"Reasoning-first Google flagship, 1M context (preview)." },
   "google/gemini-3.6-flash": { provider:"gemini", label:"Gemini 3.6 Flash", inr:{in:81.51,out:407.54}, ctx:1000000, tags:["fast","vision","long-context","code"], blurb:"Previous-gen Flash tier." },
+  "google/gemini-4-argon": { provider:"gemini", label:"Gemini 4 Argon", get inr(){ return Date.now()>=Date.UTC(2026,11,1) ? {in:434.7,out:2173.5} : {in:217.35,out:1086.75}; }, ctx:1000000, tags:["reasoning","vision","tools","long-context","flagship"], blurb:"Latest Google flagship - 1M context, intro pricing until Nov 30." },
   "google/gemini-3.8-flash": { provider:"gemini", label:"Gemini 3.8 Flash", inr:{in:81.51,out:407.54}, ctx:1000000, tags:["fast","vision","long-context","code"], blurb:"Latest Gemini Flash." },
   "google/gemini-3.7-flash": { provider:"gemini", label:"Gemini 3.7 Flash", inr:{in:81.65,out:407.1}, ctx:1000000, tags:["fast","vision","long-context","code","reasoning"], blurb:"Google's newest Flash tier — introductory pricing through Dec 2026." },
   "google/gemini-3.5-flash-lite": { provider:"gemini", label:"Gemini 3.5 Flash-Lite", inr:{in:32.2,out:271.4}, ctx:1000000, tags:["fast","cheap"], blurb:"Google's newer budget tier — high-throughput, low-latency." },
@@ -1021,50 +1155,161 @@ function animateRoute(routedAs, providerId, fellBack, opts){
 
 /* ════════════ models page ════════════ */
 var modelFilter='all';
-window.setModelFilter=function(btn,f){
-  modelFilter=f;
-  var chips=document.querySelectorAll('#model-filters .chip'); for(var i=0;i<chips.length;i++) chips[i].classList.remove('on');
-  btn.classList.add('on');
-  if(f==='community') loadCommunityModels(); // no-ops instantly if already loaded/loading; triggers a re-render either way
-  renderModels();
-};
 function ctxLabel(n){ if(n>=1000000) return (n/1000000)+'M ctx'; if(n>=1000) return Math.round(n/1000)+'K ctx'; return n+' ctx'; }
-window.renderModels=function(){
-  var grid=$('models-grid'); if(!grid) return;
-  var q=(($('model-search')&&$('model-search').value)||'').toLowerCase().trim();
-  var sort=($('model-sort')&&$('model-sort').value)||'popular';
-  var isCommunity = modelFilter==='community';
-  var list;
-  if(isCommunity){
-    if(communityLoading){ grid.innerHTML=skeletonCards(6); return; }
-    list = Object.keys(MODELS_COMMUNITY).map(function(id){ var o={id:id}; for(var k in MODELS_COMMUNITY[id]) o[k]=MODELS_COMMUNITY[id][k]; return o; });
-    if(!list.length){ grid.innerHTML='<div class="empty-state"><div class="big">◇</div>Couldn\'t reach the live catalog right now — try again in a moment.</div>'; return; }
-  } else {
-    list=listModels();
-    if(modelFilter!=='all') list=list.filter(function(m){ return m.tags.indexOf(modelFilter)>=0; });
+/* ═════ MODELS EXPLORER ═════ */
+(function(){
+  var S={cap:'all',prov:'all',view:null,inM:0.7,outM:0.3,cmp:[],ready:false};
+  var CAPS=[['all','All'],['reasoning','Reasoning'],['vision','Vision'],['tools','Tools'],['fast','Fast'],['cheap','Cheap'],['long-context','Long context'],['flagship','Flagship'],['local','Local'],['community','Community']];
+  function g(id){return document.getElementById(id);}
+  function e(s){return esc(String(s==null?'':s));}
+  function inr(n){ if(n===0) return '0'; var d=n>=100?0:2; return Number(n).toLocaleString('en-IN',{minimumFractionDigits:0,maximumFractionDigits:d}); }
+  function ctx(n){ if(n>=1e6) return +(n/1e6).toFixed(2)+'M'; if(n>=1e3) return Math.round(n/1e3)+'K'; return String(n||'—'); }
+  function slug(id){ return id.replace(/[^a-z0-9]+/gi,'-').toLowerCase(); }
+  function cost(m){ return m.inr.in*S.inM + m.inr.out*S.outM; }
+  function sync(){
+    var a=parseFloat(g('mx-in').value), b=parseFloat(g('mx-out').value);
+    S.inM=isFinite(a)&&a>=0?a:0; S.outM=isFinite(b)&&b>=0?b:0;
   }
-  if(q) list=list.filter(function(m){ return (m.id+' '+m.label+' '+((PROVIDERS[m.provider]||{}).label||'')+' '+m.tags.join(' ')).toLowerCase().indexOf(q)>=0; });
-  var cost=function(m){ return m.inr.in+m.inr.out; };
-  if(sort==='cheapest') list.sort(function(a,b){ return cost(a)-cost(b); });
-  else if(sort==='context') list.sort(function(a,b){ return b.ctx-a.ctx; });
-  else if(sort==='az') list.sort(function(a,b){ return a.label.localeCompare(b.label); });
-  else if(!isCommunity) { var sc=function(m){ return m.tags.indexOf('flagship')>=0?0:(m.tags.indexOf('balanced')>=0?1:2); }; list.sort(function(a,b){ return sc(a)-sc(b) || cost(b)-cost(a); }); }
-  if(!list.length){ grid.innerHTML='<div class="empty-state"><div class="big">◈</div>No models match your filters.</div>'; return; }
-  var shown = isCommunity ? list.slice(0,60) : list;
-  grid.innerHTML=shown.map(function(m){
-    var prov=PROVIDERS[m.provider]||{label:m.provider,glyph:'•'};
-    var free=(m.inr.in===0 && m.inr.out===0);
-    var price = free ? '<span class="free">FREE · self-hosted</span>'
-      : '<span class="price"><b>₹'+m.inr.in+'</b> in · <b>₹'+m.inr.out+'</b> out <span class="dim">/1M</span></span>';
-    var tags=m.tags.slice(0,4).map(function(t){ return '<span class="mtag">'+esc(t)+'</span>'; }).join('');
-    return '<div class="mcard">'
-      +'<div class="mcard-top"><div><h3 class="mcard-name"><a class="mcard-link" href="models/'+m.id.replace(/[^a-z0-9]+/gi,'-').toLowerCase()+'.html">'+esc(m.label)+'</a></h3><div class="mcard-id mono">'+esc(m.id)+'</div></div><div class="mcard-prov">'+prov.glyph+' '+esc(prov.label)+'</div></div>'
-      +'<div class="mcard-desc">'+esc(m.blurb)+'</div>'
-      +'<div class="mcard-tags">'+tags+'</div>'
-      +'<div class="mcard-foot">'+price+'<span class="ctx-pill">'+ctxLabel(m.ctx)+'</span></div>'
+  function pool(){
+    if(S.cap==='community'){
+      return Object.keys(MODELS_COMMUNITY).map(function(id){ var o={id:id}; for(var k in MODELS_COMMUNITY[id]) o[k]=MODELS_COMMUNITY[id][k]; return o; });
+    }
+    return listModels();
+  }
+  function provLabel(p){ return (PROVIDERS[p]||{label:p}).label; }
+  function buildChips(){
+    g('model-filters').innerHTML=CAPS.map(function(c){
+      return '<button type="button" class="chip'+(S.cap===c[0]?' on':'')+'" data-cap="'+c[0]+'">'+c[1]+(c[0]==='community'?' <span id="community-chip-count" class="dim"></span>':'')+'</button>';
+    }).join('');
+    var n=Object.keys(MODELS_COMMUNITY).length, el=g('community-chip-count'); if(el) el.textContent=n?'('+n+')':'';
+  }
+  function buildProv(){
+    var base=S.cap==='community'?pool():listModels(), cnt={};
+    base.forEach(function(m){ cnt[m.provider]=(cnt[m.provider]||0)+1; });
+    var keys=Object.keys(cnt).sort(function(a,b){ return provLabel(a).localeCompare(provLabel(b)); });
+    var cur=S.prov; if(cur!=='all' && !cnt[cur]) cur=S.prov='all';
+    g('mx-prov').innerHTML='<option value="all">All providers</option>'+keys.map(function(k){ return '<option value="'+e(k)+'"'+(cur===k?' selected':'')+'>'+e(provLabel(k))+' ('+cnt[k]+')</option>'; }).join('');
+  }
+  function row(m,lo,hi){
+    var free=(m.inr.in===0&&m.inr.out===0);
+    var pct=free?3:Math.max(4,Math.round(100*(Math.log(m.inr.out+1)-lo)/Math.max(.001,hi-lo)));
+    var sel=S.cmp.indexOf(m.id)>=0;
+    var tags=(m.tags||[]).filter(function(t){return t!=='community';}).slice(0,3).map(function(t){return '<span>'+e(t)+'</span>';}).join('');
+    var c=cost(m);
+    return '<div class="mx-row'+(sel?' sel':'')+'" data-id="'+e(m.id)+'">'
+      +'<div class="mx-ckw"><input class="mx-ck" type="checkbox" '+(sel?'checked ':'')+'aria-label="Compare '+e(m.label)+'"></div>'
+      +'<div class="mx-name"><a href="models/'+slug(m.id)+'.html">'+e(m.label)+'</a>'
+        +'<div class="mx-meta"><span>'+e(provLabel(m.provider))+'</span><code>'+e(m.id)+'</code></div>'
+        +(tags?'<div class="mx-tags">'+tags+'</div>':'')+'</div>'
+      +'<div class="mx-ctx r">'+ctx(m.ctx)+'</div>'
+      +'<div class="mx-p r pin">'+(free?'<span class="mx-free">Free</span>':'₹'+inr(m.inr.in))+'<small>input / 1M</small></div>'
+      +'<div class="mx-p r pout">'+(free?'<span class="mx-free">Free</span>':'₹'+inr(m.inr.out))+'<small>output / 1M</small>'+'<div class="mx-ruler" title="Output price, log scale"><i style="width:'+pct+'%"></i></div></div>'
+      +'<div class="mx-est-c r">'+(free?'Free':'₹'+inr(c))+'<small>per month</small></div>'
+      +'<div class="mx-cpw"><button type="button" class="mx-cp" data-copy="'+e(m.id)+'" title="Copy model ID" aria-label="Copy model ID of '+e(m.label)+'">⧉</button></div>'
       +'</div>';
-  }).join('') + (isCommunity && list.length>60 ? '<div class="dim" style="grid-column:1/-1;text-align:center;padding:14px;font-size:13px">+'+(list.length-60)+' more — use search to narrow it down</div>' : '');
-};
+  }
+  window.setModelFilter=function(btn,f){ S.cap=f; if(f==='community') loadCommunityModels(); window.renderModels(); };
+  window.renderModels=function(){
+    var host=g('models-grid'); if(!host||!g('mx-in')) return;
+    sync();
+    var q=(g('model-search').value||'').toLowerCase().trim();
+    var sort=g('model-sort').value;
+    var list=pool();
+    var all=list.length;
+    if(S.cap!=='all'&&S.cap!=='community') list=list.filter(function(m){ return (m.tags||[]).indexOf(S.cap)>=0; });
+    if(S.prov!=='all') list=list.filter(function(m){ return m.provider===S.prov; });
+    if(q) list=list.filter(function(m){ return (m.id+' '+m.label+' '+provLabel(m.provider)+' '+(m.tags||[]).join(' ')).toLowerCase().indexOf(q)>=0; });
+    var c2=function(m){ return m.inr.in+m.inr.out; };
+    if(sort==='cheapest') list.sort(function(a,b){ return cost(a)-cost(b); });
+    else if(sort==='priciest') list.sort(function(a,b){ return c2(b)-c2(a); });
+    else if(sort==='context') list.sort(function(a,b){ return (b.ctx||0)-(a.ctx||0); });
+    else if(sort==='az') list.sort(function(a,b){ return a.label.localeCompare(b.label); });
+    else { var sc=function(m){ return (m.tags||[]).indexOf('flagship')>=0?0:((m.tags||[]).indexOf('balanced')>=0?1:2); }; list.sort(function(a,b){ return sc(a)-sc(b)||c2(b)-c2(a); }); }
+    var cnt=g('mx-count'); if(cnt) cnt.textContent=(list.length===all?all:list.length+' of '+all)+' models';
+    var cards=S.view==='cards';
+    host.className='mx-list'+(cards?' cards':'');
+    if(S.cap==='community'&&communityLoading){ host.innerHTML='<div class="mx-empty">Loading the community catalog…</div>'; return; }
+    if(!list.length){
+      host.innerHTML='<div class="mx-empty"><b>No models match.</b><br>'+(S.cap==='community'?'The community catalog could not be loaded. Try again in a moment.':'Clear the search or pick “All” to see every model.')+'</div>'; return;
+    }
+    var shown=list.slice(0,80);
+    var outs=shown.map(function(m){return Math.log(m.inr.out+1);}), lo=Math.min.apply(null,outs), hi=Math.max.apply(null,outs);
+    host.innerHTML='<div class="mx-th" aria-hidden="true"><span></span><span>Model</span><span class="r">Context</span><span class="r">Input</span><span class="r">Output</span><span class="r">Your monthly cost</span><span></span></div>'
+      +shown.map(function(m){return row(m,lo,hi);}).join('')
+      +(list.length>shown.length?'<div class="mx-more">Showing '+shown.length+' of '+list.length+'. Search to narrow it down.</div>':'');
+    buildChips(); tray();
+  };
+  function tray(){
+    var t=g('mx-tray'); if(!t) return;
+    t.hidden=S.cmp.length<1;
+    g('mx-tray-n').textContent=S.cmp.length+' selected'+(S.cmp.length<2?' (pick 1 more)':'');
+    g('mx-tray-go').disabled=S.cmp.length<2; g('mx-tray-go').style.opacity=S.cmp.length<2?.5:1;
+  }
+  function compare(){
+    var ms=S.cmp.map(function(id){var m=getModel(id); if(!m) return null; var o={id:id}; for(var k in m) o[k]=m[k]; return o;}).filter(Boolean); if(ms.length<2) return;
+    var best=function(f,low){ var v=ms.map(f), t=low?Math.min.apply(null,v):Math.max.apply(null,v); return v.map(function(x){return x===t;}); };
+    var bi=best(function(m){return m.inr.in;},true), bo=best(function(m){return m.inr.out;},true), bc=best(function(m){return cost(m);},true), bx=best(function(m){return m.ctx||0;},false);
+    var tr=function(label,fn,flags){ return '<tr><th scope="row">'+label+'</th>'+ms.map(function(m,i){ return '<td'+(flags&&flags[i]?' class="best"':'')+'>'+fn(m)+'</td>'; }).join('')+'</tr>'; };
+    var cheapest=Math.min.apply(null,ms.map(cost));
+    g('mx-modal-b').innerHTML='<table class="mx-cmp"><thead><tr><th></th>'+ms.map(function(m){return '<th scope="col">'+e(m.label)+'</th>';}).join('')+'</tr></thead><tbody>'
+      +tr('Provider',function(m){return e(provLabel(m.provider));})
+      +tr('Model ID',function(m){return '<code>'+e(m.id)+'</code>';})
+      +tr('Context',function(m){return ctx(m.ctx)+' tokens';},bx)
+      +tr('Input / 1M',function(m){return '₹'+inr(m.inr.in);},bi)
+      +tr('Output / 1M',function(m){return '₹'+inr(m.inr.out);},bo)
+      +tr('Your monthly cost',function(m){var c=cost(m);return '₹'+inr(c)+(cheapest>0&&c>cheapest?' <small>('+(c/cheapest).toFixed(1)+'× the cheapest)</small>':'');},bc)
+      +tr('Good for',function(m){return e((m.tags||[]).join(', '))||'—';})
+      +tr('About',function(m){return e(m.blurb||'');})
+      +'</tbody></table><p style="font-size:12.5px;color:var(--text3);margin-top:12px">Monthly cost uses your usage above: '+S.inM+'M input and '+S.outM+'M output tokens.</p>';
+    g('mx-modal').hidden=false; g('mx-modal-x').focus();
+  }
+  function status(){
+    var el=g('mx-status'); if(!el) return;
+    var ctl=new AbortController(), to=setTimeout(function(){ctl.abort();},6000);
+    fetch(gatewayBase.replace(/\/+$/,'')+'/status.json',{signal:ctl.signal}).then(function(r){return r.ok?r.json():Promise.reject();}).then(function(d){
+      var o=d&&d.overall; if(!o) return;
+      el.className='mx-status'+(o==='degraded'?' degraded':o==='outage'?' outage':'');
+      el.querySelector('span').textContent=o==='operational'?'All systems operational':o==='degraded'?'Some providers degraded':'Service disruption';
+      el.hidden=false;
+    }).catch(function(){}).then(function(){clearTimeout(to);});
+  }
+  function init(){
+    if(S.ready||!g('mx-in')) return; S.ready=true;
+    S.view=(window.innerWidth<=900)?'cards':'table';
+    g('mx-v-table').classList.toggle('on',S.view==='table'); g('mx-v-cards').classList.toggle('on',S.view==='cards');
+    buildChips(); buildProv();
+    g('model-search').addEventListener('input',window.renderModels);
+    g('model-sort').addEventListener('change',window.renderModels);
+    g('mx-prov').addEventListener('change',function(){ S.prov=this.value; window.renderModels(); });
+    g('mx-in').addEventListener('input',function(){ clearPreset(); window.renderModels(); });
+    g('mx-out').addEventListener('input',function(){ clearPreset(); window.renderModels(); });
+    function clearPreset(){ var b=g('mx-presets').querySelectorAll('button'); for(var i=0;i<b.length;i++) b[i].classList.remove('on'); }
+    g('mx-presets').addEventListener('click',function(ev){ var b=ev.target.closest('button'); if(!b) return; clearPreset(); b.classList.add('on'); g('mx-in').value=b.getAttribute('data-in'); g('mx-out').value=b.getAttribute('data-out'); window.renderModels(); });
+    g('mx-v-table').addEventListener('click',function(){ S.view='table'; this.classList.add('on'); g('mx-v-cards').classList.remove('on'); window.renderModels(); });
+    g('mx-v-cards').addEventListener('click',function(){ S.view='cards'; this.classList.add('on'); g('mx-v-table').classList.remove('on'); window.renderModels(); });
+    g('model-filters').addEventListener('click',function(ev){ var b=ev.target.closest('.chip'); if(!b) return; S.cap=b.getAttribute('data-cap'); if(S.cap==='community') loadCommunityModels(); buildProv(); window.renderModels(); });
+    g('models-grid').addEventListener('change',function(ev){
+      if(!ev.target.classList.contains('mx-ck')) return;
+      var id=ev.target.closest('.mx-row').getAttribute('data-id'), i=S.cmp.indexOf(id);
+      if(ev.target.checked){ if(S.cmp.length>=3){ ev.target.checked=false; return; } if(i<0) S.cmp.push(id); } else if(i>=0) S.cmp.splice(i,1);
+      ev.target.closest('.mx-row').classList.toggle('sel',ev.target.checked); tray();
+    });
+    g('models-grid').addEventListener('click',function(ev){
+      var b=ev.target.closest('[data-copy]'); if(!b) return; var id=b.getAttribute('data-copy');
+      var done=function(){ var o=b.textContent; b.textContent='✓'; setTimeout(function(){b.textContent=o;},1200); };
+      if(navigator.clipboard&&navigator.clipboard.writeText) navigator.clipboard.writeText(id).then(done,function(){});
+      else { var t=document.createElement('textarea'); t.value=id; document.body.appendChild(t); t.select(); try{document.execCommand('copy');done();}catch(x){} t.remove(); }
+    });
+    g('mx-tray-go').addEventListener('click',compare);
+    g('mx-tray-clear').addEventListener('click',function(){ S.cmp=[]; window.renderModels(); });
+    g('mx-modal-x').addEventListener('click',function(){ g('mx-modal').hidden=true; });
+    g('mx-modal').addEventListener('click',function(ev){ if(ev.target===this) this.hidden=true; });
+    document.addEventListener('keydown',function(ev){ if(ev.key==='Escape') g('mx-modal').hidden=true; });
+    status();
+    window.renderModels();
+  }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',init); else init();
+})();
 
 /* ════════════ playground ════════════ */
 var pgReady=false;

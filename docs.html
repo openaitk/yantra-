@@ -178,7 +178,7 @@ nav{position:fixed;top:0;left:0;right:0;width:100%;height:var(--nav-h);z-index:2
 .ticker-bar{position:absolute;top:var(--nav-h);/* absolute, not fixed: the ticker scrolls away with the page instead of sitting over the content forever. Fixed meant every section slid under a permanent strip, and nav(64)+ticker(32) ate ~14% of a phone screen for good. It still sits below the fixed nav on load; .page already reserves 108px. */ left:0;right:0;width:100%;z-index:199;overflow:hidden;background:rgba(255,255,255,0.94);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-bottom:1px solid var(--border);}
 .ticker-inner{display:flex;align-items:center;height:32px;}
 .ticker-label{padding:0 14px;font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--cyan);white-space:nowrap;border-right:1px solid var(--border);height:100%;display:flex;align-items:center;background:rgba(0,105,184,0.045);flex-shrink:0;}
-.ticker-scroll{overflow:hidden;flex:1;}
+.ticker-scroll{overflow:hidden;flex:1;min-width:0;}
 .ticker-track{display:flex;gap:30px;animation:scroll-ticker 36s linear infinite;white-space:nowrap;}
 .tk{display:flex;align-items:center;gap:6px;font-size:11px;font-weight:600;font-family:var(--fm);}
 .tk-name{color:var(--text2);} .tk-val{color:var(--cyan);} .tk-val.grn{color:var(--green);} .tk-sep{color:var(--border2);}
@@ -614,7 +614,7 @@ html{scroll-behavior:smooth;}
 <!-- ═══════ DOCS ═══════ -->
 <main class="page on" id="page-docs">
   <div class="wrap">
-    <div class="page-head"><h2 class="s-title">Docs</h2><div class="s-sub">Yantra speaks the OpenAI API. If your code talks to OpenAI today, it talks to Yantra with two edits.</div></div>
+    <div class="page-head"><h1 class="s-title">Docs</h1><div class="s-sub">Yantra speaks the OpenAI API. If your code talks to OpenAI today, it talks to Yantra with two edits.</div></div>
 
     <div class="panel"><div class="panel-head"><span class="panel-title">1 · Base URL & key</span></div><div class="panel-body">
       <p class="dim" style="margin:0 0 10px">Set your gateway base URL and your <span class="mono">yk_live_…</span> key. Everything else is standard OpenAI.</p>
@@ -681,6 +681,7 @@ print(resp.yantra)                   # which model/provider we routed to + ₹ c
     <a href="legal/terms.html" style="color:var(--text2)">Terms</a>
     <a href="legal/privacy.html" style="color:var(--text2)">Privacy</a>
     <a href="legal/refund.html" style="color:var(--text2)">Refund &amp; Cancellation</a>
+    <a href="status.html" style="color:var(--text2)">Status</a>
     <a href="mailto:gettony3000@gmail.com" style="color:var(--text2)">Contact</a>
   </div>
   <div style="color:var(--text3);font-size:12px">© 2026 Yantra AI · Aditya Sunil Borgaonkar · Kolhapur, Maharashtra, India</div>
@@ -778,6 +779,7 @@ var MODELS = {
   "anthropic/claude-haiku-4-5": { provider:"anthropic", label:"Claude Haiku 4.5", inr:{in:108.68,out:543.38}, ctx:200000, tags:["fast","cheap","tools"], blurb:"Fastest Claude — real-time tasks." },
   "google/gemini-3.1-pro": { provider:"gemini", label:"Gemini 3.1 Pro", inr:{in:217.35,out:1304.1}, ctx:1000000, tags:["reasoning","vision","long-context","flagship"], blurb:"Reasoning-first Google flagship, 1M context (preview)." },
   "google/gemini-3.6-flash": { provider:"gemini", label:"Gemini 3.6 Flash", inr:{in:81.51,out:407.54}, ctx:1000000, tags:["fast","vision","long-context","code"], blurb:"Previous-gen Flash tier." },
+  "google/gemini-4-argon": { provider:"gemini", label:"Gemini 4 Argon", get inr(){ return Date.now()>=Date.UTC(2026,11,1) ? {in:434.7,out:2173.5} : {in:217.35,out:1086.75}; }, ctx:1000000, tags:["reasoning","vision","tools","long-context","flagship"], blurb:"Latest Google flagship - 1M context, intro pricing until Nov 30." },
   "google/gemini-3.8-flash": { provider:"gemini", label:"Gemini 3.8 Flash", inr:{in:81.51,out:407.54}, ctx:1000000, tags:["fast","vision","long-context","code"], blurb:"Latest Gemini Flash." },
   "google/gemini-3.7-flash": { provider:"gemini", label:"Gemini 3.7 Flash", inr:{in:81.65,out:407.1}, ctx:1000000, tags:["fast","vision","long-context","code","reasoning"], blurb:"Google's newest Flash tier — introductory pricing through Dec 2026." },
   "google/gemini-3.5-flash-lite": { provider:"gemini", label:"Gemini 3.5 Flash-Lite", inr:{in:32.2,out:271.4}, ctx:1000000, tags:["fast","cheap"], blurb:"Google's newer budget tier — high-throughput, low-latency." },
