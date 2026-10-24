@@ -1,0 +1,1511 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="description" content="Compare live pricing for GPT, Claude, Gemini, DeepSeek and 350+ AI models — all billed in Indian rupees per token through one Yantra API key. Filter by reasoning, cost, or context length.">
+<meta property="og:title" content="350+ AI Models, Compared and Priced in ₹ — Yantra AI">
+<meta property="og:description" content="Browse every model available through your Yantra key — GPT, Claude, Gemini, DeepSeek and hundreds more, with live INR pricing per token.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://apikeys.in/models.html">
+<meta property="og:image" content="https://apikeys.in/assets/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Yantra AI — one API key for every AI model">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="350+ AI Models, Compared and Priced in ₹ — Yantra AI">
+<meta name="twitter:description" content="Browse every model available through your Yantra key — GPT, Claude, Gemini, DeepSeek and hundreds more, with live INR pricing per token.">
+<meta name="twitter:image" content="https://apikeys.in/assets/og-image.png">
+<link rel="canonical" href="https://apikeys.in/models.html">
+<!-- Favicons: PNG set covers Google's 48x48 search-result minimum + browser tabs;
+     favicon.ico is the legacy fallback browsers check by default at the root. -->
+<link rel="icon" type="image/png" sizes="16x16" href="assets/favicon-16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png">
+<link rel="icon" type="image/png" sizes="48x48" href="assets/favicon-48.png">
+<link rel="shortcut icon" href="assets/favicon.ico">
+<link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png">
+<link rel="manifest" href="assets/site.webmanifest">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "Yantra AI",
+  "url": "https://apikeys.in/",
+  "logo": "https://apikeys.in/assets/icon-512.png",
+  "description": "Yantra AI is an LLM API gateway — one API key for every AI model, with intelligent routing and UPI billing.",
+  "sameAs": []
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  "name": "Yantra AI",
+  "applicationCategory": "DeveloperApplication",
+  "operatingSystem": "Any (REST API)",
+  "url": "https://apikeys.in/",
+  "description": "LLM API gateway with one key for GPT, Claude, Gemini, DeepSeek and 350+ AI models. Pay with UPI in Indian rupees.",
+  "offers": {
+    "@type": "Offer",
+    "price": "10",
+    "priceCurrency": "INR",
+    "description": "Pay-as-you-go, billed per token. Minimum top-up ₹10. No subscription."
+  },
+  "featureList": [
+    "OpenAI-compatible API",
+    "350+ models from 20+ AI labs",
+    "UPI payments in INR",
+    "Automatic provider failover",
+    "Per-token billing in rupees",
+    "SHA-256 hashed API keys"
+  ]
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Home",
+      "item": "https://apikeys.in/"
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": "Models",
+      "item": "https://apikeys.in/models.html"
+    }
+  ]
+}
+</script>
+<meta name="theme-color" content="#eaeff7">
+<title>AI Model Pricing & Comparison — 350+ Models in ₹ | Yantra AI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://api.aitklabs.in" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* ═══════════════════════════════════════════════════════
+   YANTRA — DESIGN SYSTEM
+   Aesthetic: Cyberpunk Finance — dark luxury, electric neon.
+   A saffron accent appears ONLY on India/UPI payment touchpoints.
+   Type: Bricolage Grotesque (display) · JetBrains Mono (data) · Instrument Sans (body)
+   Signature: a live request-routing diagram.
+═══════════════════════════════════════════════════════ */
+:root{
+  /* LIGHT THEME — off-white base rather than pure #fff: pure white is harsh
+     on large surfaces and makes white cards invisible. Cards sit at #fff so
+     they lift off the background without needing heavy borders. */
+  --bg:#eaeff7; --bg2:#ffffff; --bg3:#e1e8f3;
+  --card:#ffffff; --card2:#f2f6fd;
+  --border:rgba(15,40,90,0.14); --border2:rgba(15,40,90,0.26);
+
+  /* Brand mark keeps the ORIGINAL bright gradient so the logo still matches
+     the favicon, app icons and OG image. Everything else uses the deeper
+     accents below, which are actually readable on white. */
+  --brand-c:#00d4ff; --brand-p:#9d4edd;
+
+  --cyan:#0069b8; --cyan2:#005599;
+  --green:#009453; --purple:#7c3aed; --pink:#d10057; --amber:#985f00;
+  --saffron:#d16800;            /* UPI / India accent — deepened for contrast */
+
+  --text:#0f1e33; --text2:#4a5a75; --text3:#78889f; --muted:#4a5a75;
+
+  /* On light, "glow" becomes a soft coloured shadow rather than emitted light. */
+  --glow-c:rgba(0,105,184,0.10); --glow-g:rgba(0,148,83,0.08); --glow-p:rgba(124,58,237,0.10);
+
+  --r:14px; --r2:20px; --r3:28px;
+  --fd:'Bricolage Grotesque',sans-serif;
+  --fm:'JetBrains Mono',monospace;
+  --fb:'Instrument Sans',sans-serif;
+  --nav-h:64px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;font-size:16px;}
+body{background:var(--bg);color:var(--text);font-family:var(--fb);min-height:100vh;overflow-x:hidden;-webkit-font-smoothing:antialiased;}
+a{color:inherit;text-decoration:none;}
+button{font-family:inherit;cursor:pointer;}
+:focus-visible{outline:2px solid var(--cyan);outline-offset:3px;border-radius:4px;}
+input,textarea,select{font-family:inherit;}
+code,pre{font-family:var(--fm);}
+
+/* canvas + grain */
+#bg-canvas{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:0.5;}
+body::before{content:'';position:fixed;inset:0;z-index:1;pointer-events:none;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");opacity:0.3;}
+.z1{position:relative;z-index:2;}
+.wrap{max-width:1200px;margin:0 auto;padding:0 20px;}
+
+/* ════ NAV ════ */
+nav{position:fixed;top:0;left:0;right:0;width:100%;height:var(--nav-h);z-index:200;
+  /* No translateZ/backface hints: forcing a separate GPU layer made Android
+     size the blurred BACKDROP narrower than the bar itself, so the frosted
+     background stopped mid-screen while content kept going. Opacity raised
+     to .94 so the bar still looks right wherever blur is unsupported. */
+  background:rgba(255,255,255,0.94);backdrop-filter:blur(18px) saturate(160%);-webkit-backdrop-filter:blur(18px) saturate(160%);
+  border-bottom:1px solid var(--border);}
+.nav-wrap{display:flex;align-items:center;justify-content:space-between;height:100%;gap:16px;}
+.logo{display:flex;align-items:center;gap:10px;flex-shrink:0;}
+.logo-icon{width:38px;height:38px;border-radius:11px;display:flex;align-items:center;justify-content:center;
+  background:linear-gradient(135deg,var(--brand-c),var(--brand-p));color:#fff;
+  font-family:var(--fd);font-weight:800;font-size:18px;box-shadow:0 6px 18px rgba(0,105,184,0.28);flex-shrink:0;}
+.logo-name{font-family:var(--fd);font-weight:800;font-size:21px;letter-spacing:-0.5px;}
+.logo-name em{color:var(--cyan);font-style:normal;}
+.logo-name small{font-family:var(--fm);font-weight:500;font-size:10px;color:var(--text3);letter-spacing:1px;display:block;margin-top:-3px;}
+
+.nav-tabs{display:flex;gap:2px;background:rgba(15,40,90,0.028);border:1px solid var(--border);border-radius:12px;padding:4px;overflow-x:auto;scrollbar-width:none;}
+.nav-tabs::-webkit-scrollbar{display:none;}
+.ntab{text-decoration:none;padding:8px 15px;border-radius:9px;font-size:13px;font-weight:600;color:var(--text2);border:none;background:transparent;transition:all .2s;white-space:nowrap;display:flex;align-items:center;gap:6px;}
+.ntab:hover{color:var(--text);background:rgba(15,40,90,0.035);}
+.ntab.on{background:rgba(0,105,184,0.09);color:var(--cyan);}
+.ntab .ti{font-size:14px;}
+
+.nav-right{display:flex;align-items:center;gap:8px;flex-shrink:0;}
+.bal-pill{display:flex;flex-direction:column;align-items:flex-end;padding:5px 13px;border-radius:11px;background:var(--card);border:1px solid rgba(0,255,136,0.25);cursor:pointer;transition:border-color .2s;}
+.bal-pill:hover{border-color:rgba(0,255,136,0.5);}
+.bal-pill .bl{font-size:8px;letter-spacing:1px;text-transform:uppercase;color:var(--text3);font-weight:700;}
+.bal-pill .bv{font-family:var(--fm);font-size:14px;font-weight:700;color:var(--green);line-height:1.1;}
+.btn-connect{background:linear-gradient(135deg,var(--cyan),#0066cc);color:#fff;border:none;padding:9px 18px;border-radius:10px;font-family:var(--fd);font-weight:700;font-size:13px;transition:all .2s;box-shadow:0 0 24px rgba(0,105,184,0.22);}
+.btn-connect:hover{transform:translateY(-1px);box-shadow:0 0 36px rgba(0,105,184,0.35);}
+.acct-chip{display:flex;align-items:center;gap:8px;background:var(--card);border:1px solid var(--border2);padding:7px 13px;border-radius:10px;font-family:var(--fm);font-size:12px;cursor:pointer;transition:border-color .2s;}
+.acct-chip:hover{border-color:rgba(0,105,184,0.35);}
+.w-dot{width:8px;height:8px;background:var(--green);border-radius:50%;flex-shrink:0;}
+
+/* ════ TICKER ════ */
+.ticker-bar{position:absolute;top:var(--nav-h);/* absolute, not fixed: the ticker scrolls away with the page instead of sitting over the content forever. Fixed meant every section slid under a permanent strip, and nav(64)+ticker(32) ate ~14% of a phone screen for good. It still sits below the fixed nav on load; .page already reserves 108px. */ left:0;right:0;width:100%;z-index:199;overflow:hidden;background:rgba(255,255,255,0.94);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-bottom:1px solid var(--border);}
+.ticker-inner{display:flex;align-items:center;height:32px;}
+.ticker-label{padding:0 14px;font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--cyan);white-space:nowrap;border-right:1px solid var(--border);height:100%;display:flex;align-items:center;background:rgba(0,105,184,0.045);flex-shrink:0;}
+.ticker-scroll{overflow:hidden;flex:1;min-width:0;}
+.ticker-track{display:flex;gap:30px;animation:scroll-ticker 36s linear infinite;white-space:nowrap;}
+.tk{display:flex;align-items:center;gap:6px;font-size:11px;font-weight:600;font-family:var(--fm);}
+.tk-name{color:var(--text2);} .tk-val{color:var(--cyan);} .tk-val.grn{color:var(--green);} .tk-sep{color:var(--border2);}
+@keyframes scroll-ticker{from{transform:translateX(0);}to{transform:translateX(-50%);}}
+
+/* ════ PAGES ════ */
+.page{display:none;padding-top:calc(var(--nav-h) + 44px);min-height:100vh;}
+.page.on{display:block;}
+
+/* ════ HERO ════ */
+.hero{padding:46px 0 30px;position:relative;}
+.hero-grid{display:grid;grid-template-columns:1.05fr 0.95fr;gap:48px;align-items:center;}
+.hero-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(255,153,51,0.08);border:1px solid rgba(255,153,51,0.25);padding:7px 16px;border-radius:100px;font-size:12px;font-weight:600;color:var(--saffron);letter-spacing:.5px;margin-bottom:26px;animation:fade-up .6s ease both;}
+.badge-dot{width:6px;height:6px;background:var(--green);border-radius:50%;animation:blink 1.5s infinite;}
+.hero-h1{font-family:var(--fd);font-weight:800;font-size:clamp(40px,5.8vw,84px);line-height:0.93;letter-spacing:-2.8px;margin-bottom:22px;animation:fade-up .6s .1s ease both;text-shadow:0 0 60px rgba(0,105,184,0.10);}
+.hero-h1 .g2{background:linear-gradient(90deg,var(--cyan) 0%,var(--green) 55%,var(--purple) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.hero-sub{font-size:clamp(15px,1.5vw,18px);color:var(--text2);max-width:540px;margin-bottom:32px;line-height:1.65;animation:fade-up .6s .2s ease both;}
+.hero-sub code{background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:1px 7px;color:var(--cyan);font-size:0.88em;}
+.hero-ctas{display:flex;gap:13px;flex-wrap:wrap;margin-bottom:30px;animation:fade-up .6s .3s ease both;}
+.cta-primary{background:linear-gradient(135deg,var(--cyan),#0055cc);color:#fff;border:none;padding:15px 30px;border-radius:12px;font-family:var(--fd);font-weight:700;font-size:15px;transition:all .25s;box-shadow:0 0 40px rgba(0,105,184,0.26);display:flex;align-items:center;gap:8px;}
+.cta-primary:hover{transform:translateY(-2px);box-shadow:0 0 60px rgba(0,105,184,0.45);}
+.cta-secondary{background:rgba(15,40,90,0.035);color:var(--text);border:1px solid var(--border2);padding:15px 28px;border-radius:12px;font-family:var(--fd);font-weight:700;font-size:15px;transition:all .25s;display:flex;align-items:center;gap:8px;}
+.cta-secondary:hover{border-color:rgba(0,105,184,0.35);background:rgba(0,105,184,0.05);transform:translateY(-2px);}
+.hero-keyline{display:flex;align-items:center;gap:10px;font-size:12px;color:var(--text3);font-family:var(--fm);animation:fade-up .6s .4s ease both;}
+.hero-keyline b{color:var(--green);font-weight:700;}
+
+/* ════ ROUTING DIAGRAM (signature) ════ */
+.diagram-card{background:linear-gradient(160deg,rgba(0,105,184,0.045),rgba(124,58,237,0.05));border:1px solid var(--border2);border-radius:var(--r3);padding:22px;box-shadow:0 0 60px rgba(15,40,90,0.10),0 0 50px var(--glow-c);animation:diagram-settle .8s .35s cubic-bezier(.2,.8,.2,1) both;transform-style:preserve-3d;transition:transform .4s cubic-bezier(.2,.8,.2,1);}
+.diagram-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;}
+.diagram-title{font-family:var(--fm);font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:var(--text2);font-weight:700;}
+.diagram-live{display:flex;align-items:center;gap:5px;font-size:10px;font-weight:700;color:var(--green);font-family:var(--fm);}
+.diagram-svg{width:100%;height:auto;display:block;}
+
+/* ── Fine detail polish ─────────────────────────────────────
+   Small things that read as "considered" rather than default:
+   a themed scrollbar (default light scrollbars look unfinished
+   on a dark site), a brand selection colour, and smooth anchor
+   scrolling. */
+::selection{background:rgba(0,105,184,0.22);color:#fff;}
+::-moz-selection{background:rgba(0,105,184,0.22);color:#fff;}
+html{scroll-behavior:smooth;}
+@media(prefers-reduced-motion:reduce){ html{scroll-behavior:auto;} }
+*{scrollbar-width:thin;scrollbar-color:var(--border2) transparent;}
+::-webkit-scrollbar{width:10px;height:10px;}
+::-webkit-scrollbar-track{background:transparent;}
+::-webkit-scrollbar-thumb{background:var(--border2);border-radius:8px;border:2px solid var(--bg);}
+::-webkit-scrollbar-thumb:hover{background:rgba(0,105,184,0.40);}
+
+/* Scroll reveal. These classes are ONLY ever applied by JS — so if
+   scripting fails or IntersectionObserver is unavailable, nothing is
+   hidden and the page renders exactly as it does today. Same fail-safe
+   principle as everything else here: never hide content speculatively. */
+.reveal-ready{opacity:0;transform:translateY(18px);}
+.reveal-in{opacity:1;transform:none;transition:opacity .55s cubic-bezier(.2,.8,.2,1),transform .55s cubic-bezier(.2,.8,.2,1);}
+@media(prefers-reduced-motion:reduce){
+  .reveal-ready{opacity:1;transform:none;}
+  .reveal-in{transition:none;}
+}
+
+/* Skeleton loaders — a shimmering placeholder in the shape of the real
+   content reads as far more finished than the word "Loading…", and gives
+   the eye something structured to rest on while the catalog fetches. */
+@keyframes skeleton-shimmer{0%{background-position:-320px 0;}100%{background-position:320px 0;}}
+.skel{background:linear-gradient(90deg,var(--card) 0%,var(--card2) 40%,var(--card) 80%);background-size:320px 100%;animation:skeleton-shimmer 1.25s ease-in-out infinite;border-radius:8px;}
+@media(prefers-reduced-motion:reduce){ .skel{animation:none;} }
+.skel-card{border:1px solid var(--border);border-radius:var(--r2);padding:20px;}
+.skel-line{height:11px;margin-bottom:9px;}
+.flow-node rect{transition:all .35s;fill:#fff;stroke:var(--border2);stroke-width:1;}
+.flow-label{font-family:var(--fm);font-size:9px;fill:var(--text2);font-weight:600;}
+.flow-node.active rect{stroke:var(--cyan);fill:rgba(0,105,184,0.10);}
+.flow-node.active .flow-label{fill:var(--cyan);}
+.flow-node.prov.active rect{stroke:var(--green);fill:rgba(0,148,83,0.10);}
+.flow-node.prov.active .flow-label{fill:var(--green);}
+.flow-node.prov.dim rect{opacity:0.35;}
+.flow-edge{stroke:var(--border2);stroke-width:1.5;fill:none;}
+.flow-edge.active{stroke:var(--cyan);stroke-width:2;filter:drop-shadow(0 0 4px rgba(0,105,184,0.55));}
+.diagram-caption{font-size:11px;color:var(--text3);margin-top:10px;text-align:center;line-height:1.5;}
+.diagram-caption b{color:var(--cyan);} .diagram-caption .gr{color:var(--green);}
+
+/* ════ STATS ════ */
+.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--border);border:1px solid var(--border);border-radius:var(--r2);overflow:hidden;margin:44px 0;animation:fade-up .6s .5s ease both;}
+.stat-card{background:var(--card);padding:22px 18px;text-align:center;transition:all .25s;}
+.stat-card:hover{background:var(--card2);box-shadow:inset 0 0 0 1px var(--border2),inset 0 -20px 40px -20px var(--glow-c);}
+.stat-n{font-family:var(--fd);font-weight:800;font-size:28px;color:var(--cyan);display:block;margin-bottom:4px;letter-spacing:-1px;}
+.stat-l{font-size:11px;color:var(--text2);text-transform:uppercase;letter-spacing:1px;font-weight:600;}
+
+.faq-list{max-width:820px;margin:0 auto;display:flex;flex-direction:column;gap:10px;}
+.faq-item{background:var(--card);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;transition:all .2s;box-shadow:0 1px 2px rgba(15,40,90,0.04);}
+.faq-item[open]{border-color:var(--border2);box-shadow:0 10px 30px rgba(15,40,90,0.06);}
+.faq-q{cursor:pointer;padding:17px 20px;font-family:var(--fd);font-weight:700;font-size:15.5px;color:var(--text);list-style:none;display:flex;align-items:center;justify-content:space-between;gap:12px;}
+.faq-q::-webkit-details-marker{display:none;}
+.faq-q::after{content:'+';font-size:20px;color:var(--cyan);flex-shrink:0;transition:transform .2s;}
+.faq-item[open] .faq-q::after{transform:rotate(45deg);}
+.faq-q:hover{color:var(--cyan);}
+.faq-a{padding:0 20px 18px;color:var(--text2);font-size:14.5px;line-height:1.65;}
+.prov-strip{padding:26px 0 4px;border-top:1px solid var(--border);}
+.prov-strip-label{text-align:center;font-size:11px;letter-spacing:1.4px;text-transform:uppercase;color:var(--text3);font-weight:700;margin-bottom:16px;}
+.prov-logos{display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:12px 26px;}
+.prov-logo{display:inline-flex;align-items:center;gap:10px;height:54px;padding:0 18px 0 15px;
+  border:1px solid var(--border);border-radius:13px;background:var(--card);transition:all .2s;}
+.prov-logo:hover{border-color:var(--border2);transform:translateY(-2px);box-shadow:0 8px 22px rgba(15,40,90,0.08);}
+.pl-img{height:26px;width:auto;display:block;flex-shrink:0;}
+.pl-name{font-family:var(--fd);font-weight:700;font-size:15px;color:var(--text);white-space:nowrap;}
+.pl-more{font-family:var(--fd);font-weight:600;font-size:14px;color:var(--text3);}
+.community-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:12px 13px;margin-bottom:9px;cursor:pointer;transition:all .18s;}
+.community-card:hover{border-color:var(--border2);transform:translateY(-2px);box-shadow:0 8px 22px rgba(15,40,90,0.08);}
+.cc-name{font-family:var(--fd);font-weight:700;font-size:14px;color:var(--text);margin-bottom:2px;}
+.cc-id{font-size:10.5px;color:var(--cyan);word-break:break-all;margin-bottom:7px;}
+.cc-tags{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:7px;}
+.cc-price{font-family:var(--fm);font-size:11.5px;font-weight:600;color:var(--text2);}
+@media(max-width:640px){ .prov-logo{height:46px;padding:0 14px 0 12px;gap:8px;} .pl-img{height:21px;} .pl-name{font-size:13.5px;} }
+.pl-img{width:18px;height:18px;object-fit:contain;margin-right:7px;}
+@media(max-width:640px){ .prov-logos{gap:9px 12px;} .prov-logo{font-size:13px;padding:6px 10px;} }
+.trust-strip{display:grid;grid-template-columns:repeat(3,1fr);gap:28px;padding:26px 0 6px;border-top:1px solid var(--border);}
+.trust-item{display:flex;gap:13px;align-items:flex-start;}
+.trust-ic{flex-shrink:0;width:30px;height:30px;border-radius:9px;background:var(--card2);border:1px solid var(--border2);display:flex;align-items:center;justify-content:center;font-size:14px;color:var(--cyan);}
+.trust-h{font-weight:700;font-size:14px;margin-bottom:3px;color:var(--text);}
+.trust-p{font-size:12.5px;color:var(--text2);line-height:1.55;}
+@media(max-width:760px){ .trust-strip{grid-template-columns:1fr;gap:18px;} }
+
+/* ════ SECTIONS ════ */
+.section{padding:74px 0;}
+.section-head{text-align:center;margin-bottom:50px;}
+.s-label{font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--cyan);margin-bottom:12px;}
+.s-title{margin:0 0 14px;font-family:var(--fd);font-weight:800;font-size:clamp(28px,4vw,46px);letter-spacing:-1.5px;line-height:1.05;margin-bottom:14px;}
+.s-sub{color:var(--text2);font-size:16px;max-width:520px;margin:0 auto;line-height:1.6;}
+
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;}
+.step{background:var(--card);border:1px solid var(--border);border-radius:var(--r2);padding:30px;position:relative;overflow:hidden;transition:all .3s;}
+.step:hover{border-color:var(--border2);transform:translateY(-4px);box-shadow:0 20px 60px rgba(15,40,90,0.08);}
+.step::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--cyan),var(--purple));transform:scaleX(0);transition:transform .3s;transform-origin:left;}
+.step:hover::before{transform:scaleX(1);}
+.step-n{font-family:var(--fm);font-size:11px;color:var(--text3);margin-bottom:18px;font-weight:700;letter-spacing:1px;}
+.step-icon{font-size:34px;margin-bottom:14px;display:block;}
+.step-title{font-family:var(--fd);font-weight:700;font-size:19px;margin-bottom:9px;}
+.step-desc{color:var(--text2);font-size:14px;line-height:1.65;}
+.step-desc code{background:var(--bg3);border-radius:5px;padding:1px 6px;color:var(--cyan);font-size:0.86em;}
+
+.features{display:grid;grid-template-columns:repeat(2,1fr);gap:18px;}
+.feat{background:var(--card);border:1px solid var(--border);border-radius:var(--r2);padding:26px;display:flex;gap:18px;align-items:flex-start;transition:all .25s;box-shadow:0 1px 2px rgba(15,40,90,0.05),0 4px 14px rgba(15,40,90,0.05);}
+.feat:hover{border-color:var(--border2);background:var(--card2);transform:translateY(-4px);box-shadow:0 18px 46px rgba(15,40,90,0.08),0 0 24px var(--glow-c);}
+.feat-icon{width:46px;height:46px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:21px;flex-shrink:0;}
+.feat-icon.c{background:rgba(0,105,184,0.09);} .feat-icon.g{background:rgba(0,255,136,0.10);} .feat-icon.p{background:rgba(157,78,221,0.10);} .feat-icon.a{background:rgba(255,153,51,0.10);}
+.feat-title{font-family:var(--fd);font-weight:700;font-size:17px;margin-bottom:6px;}
+.feat-desc{color:var(--text2);font-size:13px;line-height:1.6;}
+
+/* ════ GENERIC PANEL / CARD ════ */
+.panel{background:var(--card);border:1px solid var(--border);border-radius:var(--r2);overflow:hidden;}
+.panel-head{padding:18px 22px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:12px;}
+.panel-title{font-family:var(--fd);font-weight:700;font-size:15px;}
+.panel-body{padding:18px 22px;}
+.page-head{margin-bottom:24px;}
+.page-head .s-title{font-size:clamp(26px,3.4vw,38px);margin-bottom:6px;}
+.page-head p{color:var(--text2);font-size:14px;max-width:640px;line-height:1.6;}
+
+/* one-key banner */
+.onekey-banner{display:flex;align-items:center;gap:14px;background:linear-gradient(135deg,rgba(0,148,83,0.07),rgba(0,105,184,0.05));border:1px solid rgba(0,148,83,0.18);border-radius:var(--r);padding:14px 18px;margin-bottom:20px;}
+.onekey-banner .k{font-size:22px;flex-shrink:0;}
+.onekey-banner b{color:var(--green);}
+.onekey-banner span{font-size:13px;color:var(--text2);line-height:1.5;}
+
+/* ════ MODELS GRID ════ */
+.tool-row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:14px;}
+.search-box{position:relative;flex:1;min-width:200px;}
+.search-box span.ic{position:absolute;left:12px;top:50%;transform:translateY(-50%);font-size:14px;pointer-events:none;}
+.search-box input{width:100%;padding:10px 14px 10px 36px;background:var(--card);border:1.5px solid rgba(0,105,184,0.18);border-radius:10px;color:var(--text);font-size:13px;outline:none;transition:border-color .2s;}
+.search-box input:focus{border-color:var(--cyan);}
+.sel{background:var(--card);border:1px solid var(--border2);color:var(--text);padding:10px 12px;border-radius:10px;font-size:12px;cursor:pointer;outline:none;}
+.chip{padding:7px 14px;border-radius:100px;font-size:12px;font-weight:600;background:var(--card);border:1px solid var(--border);color:var(--text2);transition:all .2s;cursor:pointer;}
+.chip.on,.chip:hover{border-color:var(--cyan);color:var(--cyan);background:rgba(0,105,184,0.08);}
+.models-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:16px;align-items:start;}
+.mcard{background:var(--card);border:1px solid var(--border);border-radius:var(--r2);padding:20px;transition:all .25s;
+  display:flex;flex-direction:column;box-shadow:0 1px 2px rgba(15,40,90,0.05),0 4px 14px rgba(15,40,90,0.05);
+  break-inside:avoid;-webkit-column-break-inside:avoid;}
+.mcard:hover{border-color:var(--border2);transform:translateY(-4px);box-shadow:0 20px 50px rgba(15,40,90,0.09),0 0 26px var(--glow-c);}
+.mcard-top{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-bottom:10px;}
+.mcard-prov{font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--text3);display:flex;align-items:center;gap:6px;}
+.mcard-link{color:inherit;text-decoration:none;}
+.mcard-link:hover{color:var(--cyan);}
+.mcard-name{margin:0;font-family:var(--fd);font-weight:800;font-size:18px;margin-bottom:4px;line-height:1.15;}
+.mcard-id{font-family:var(--fm);font-size:10px;color:var(--cyan);margin-bottom:10px;word-break:break-all;}
+.mcard-desc{color:var(--text2);font-size:13px;line-height:1.6;margin-bottom:14px;flex:1;}
+.mcard-tags{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:14px;}
+.mtag{font-size:10px;font-weight:700;letter-spacing:.4px;text-transform:uppercase;padding:3px 7px;border-radius:6px;background:rgba(157,78,221,0.12);color:#8b5cf6;}
+.mtag.free{background:rgba(0,148,83,0.10);color:var(--green);}
+.mcard-foot{border-top:1px solid var(--border);padding-top:12px;display:flex;justify-content:space-between;align-items:flex-end;}
+.price{font-family:var(--fm);font-size:13px;font-weight:700;color:var(--green);}
+.price small{display:block;font-size:9px;color:var(--text3);font-weight:500;margin-top:1px;}
+.ctx-pill{font-size:10px;font-family:var(--fm);color:var(--text2);background:var(--bg3);border-radius:6px;padding:3px 8px;}
+
+/* ════ PLAYGROUND ════ */
+.pg-shell{display:flex;flex-direction:column;height:calc(100vh - 130px);max-width:1180px;margin:0 auto;}
+.pg-cols{display:grid;grid-template-columns:1fr 300px;gap:16px;flex:1;min-height:0;}
+.pg-main{display:flex;flex-direction:column;min-height:0;}
+.pg-bar{display:flex;align-items:center;gap:8px;padding:0 0 10px;flex-wrap:wrap;flex-shrink:0;}
+.pg-sel{flex:1;min-width:170px;position:relative;}
+.pg-sel select{width:100%;background:var(--card);border:1.5px solid rgba(0,105,184,0.26);color:var(--text);padding:10px 30px 10px 12px;border-radius:12px;font-size:13px;font-weight:700;cursor:pointer;outline:none;appearance:none;-webkit-appearance:none;}
+.pg-sel span.ar{position:absolute;right:10px;top:50%;transform:translateY(-50%);pointer-events:none;color:var(--muted);}
+.pg-iconbtn{padding:9px 13px;border-radius:10px;background:var(--card);border:1px solid var(--border);color:var(--muted);font-size:13px;font-weight:600;transition:all .2s;white-space:nowrap;}
+.pg-iconbtn:hover{border-color:var(--border2);color:var(--text);}
+.pg-strip{font-size:11px;color:var(--muted);padding:0 2px 8px;flex-shrink:0;}
+.pg-settings{display:none;background:var(--card);border:1px solid rgba(0,105,184,0.18);border-radius:14px;padding:16px;margin-bottom:10px;flex-shrink:0;}
+.fld-label{font-size:11px;color:var(--cyan);font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;display:block;}
+.fld{width:100%;padding:10px 12px;background:#eaf0f9;border:1.5px solid rgba(0,105,184,0.22);color:var(--text);border-radius:9px;font-size:12px;outline:none;transition:border-color .2s;}
+.fld:focus{border-color:var(--cyan);}
+.fld.mono{font-family:var(--fm);}
+.pg-msgs{flex:1;overflow-y:auto;padding:6px 4px;display:flex;flex-direction:column;gap:14px;min-height:0;}
+.pg-msgs::-webkit-scrollbar{width:7px;} .pg-msgs::-webkit-scrollbar-thumb{background:var(--border2);border-radius:10px;}
+.bubble{max-width:84%;padding:13px 16px;border-radius:16px;font-size:14px;line-height:1.6;white-space:pre-wrap;word-wrap:break-word;}
+.bubble.user{align-self:flex-end;background:linear-gradient(135deg,rgba(0,105,184,0.14),rgba(0,105,184,0.07));border:1px solid rgba(0,105,184,0.22);border-bottom-right-radius:5px;}
+.bubble.ai{align-self:flex-start;background:var(--card);border:1px solid var(--border);border-bottom-left-radius:5px;}
+.bubble.err{align-self:flex-start;background:rgba(209,0,87,0.07);border:1px solid rgba(255,0,110,0.3);color:#c2185b;font-size:13px;}
+.bubble .meta{margin-top:9px;padding-top:8px;border-top:1px solid var(--border);font-family:var(--fm);font-size:10px;color:var(--text3);display:flex;gap:12px;flex-wrap:wrap;}
+.bubble .meta .route{color:var(--green);}
+.pg-empty{flex:1;display:flex;align-items:center;justify-content:center;text-align:center;color:var(--text3);padding:30px 24px;}
+.pg-empty-inner{max-width:400px;font-size:14px;line-height:1.65;}
+.pg-empty .big{font-size:42px;}
+.pg-chips{display:flex;gap:6px;overflow-x:auto;padding:8px 0;scrollbar-width:none;flex-shrink:0;}
+.pg-chips::-webkit-scrollbar{display:none;}
+.pg-chip{padding:7px 14px;background:var(--card);border:1px solid var(--border2);color:var(--muted);border-radius:20px;font-size:12px;cursor:pointer;white-space:nowrap;flex-shrink:0;transition:all .15s;}
+.pg-chip:hover{border-color:rgba(0,105,184,0.45);color:var(--text);}
+.pg-input-row{display:flex;gap:8px;align-items:flex-end;padding-top:8px;flex-shrink:0;}
+.pg-input{flex:1;background:var(--card);border:1.5px solid var(--border2);border-radius:14px;padding:12px 14px;color:var(--text);font-size:14px;resize:none;outline:none;max-height:120px;transition:border-color .2s;}
+.pg-input:focus{border-color:var(--cyan);}
+.pg-send{height:48px;padding:0 20px;border-radius:13px;border:none;background:linear-gradient(135deg,var(--cyan),#005599);
+  color:#fff;font-family:var(--fd);font-weight:700;font-size:14.5px;flex-shrink:0;transition:all .2s;
+  display:inline-flex;align-items:center;gap:7px;white-space:nowrap;}
+.pg-send:hover{transform:translateY(-1px);box-shadow:0 8px 20px rgba(0,105,184,0.28);}
+.pg-send:hover{filter:brightness(1.1);} .pg-send:disabled{opacity:.4;}
+.pg-side{display:flex;flex-direction:column;gap:14px;min-height:0;overflow-y:auto;}
+.pg-side::-webkit-scrollbar{width:6px;} .pg-side::-webkit-scrollbar-thumb{background:var(--border2);border-radius:10px;}
+.side-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r);padding:16px;}
+.side-card h4{font-family:var(--fm);font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--text2);font-weight:700;margin-bottom:12px;}
+.kv{display:flex;justify-content:space-between;align-items:center;padding:5px 0;font-size:12px;}
+.kv .k{color:var(--text2);} .kv .v{font-family:var(--fm);font-weight:600;}
+.typing{display:flex;align-items:center;gap:8px;padding:6px 4px;color:var(--text3);font-size:12px;}
+.typing .dot{width:7px;height:7px;border-radius:50%;background:var(--cyan);animation:bounce 1.2s infinite;}
+.typing .dot:nth-child(2){animation-delay:.15s;} .typing .dot:nth-child(3){animation-delay:.3s;}
+
+/* ════ API KEYS ════ */
+.key-row{display:flex;align-items:center;gap:14px;padding:14px 16px;border-radius:var(--r);transition:background .2s;}
+.key-row:hover{background:var(--card2);}
+.key-ic{width:40px;height:40px;border-radius:11px;background:rgba(0,105,184,0.09);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;}
+.key-info{flex:1;min-width:0;}
+.key-name{font-family:var(--fd);font-weight:700;font-size:14px;}
+.key-mask{font-family:var(--fm);font-size:11px;color:var(--text3);margin-top:2px;}
+.key-meta{text-align:right;font-size:11px;color:var(--text2);}
+.btn-ghost{background:var(--card2);border:1px solid var(--border);color:var(--text2);padding:7px 14px;border-radius:8px;font-size:12px;font-weight:600;transition:all .2s;}
+.btn-ghost:hover{border-color:var(--cyan);color:var(--cyan);}
+.btn-danger{background:rgba(209,0,87,0.07);border:1px solid rgba(255,0,110,0.25);color:var(--pink);padding:7px 13px;border-radius:8px;font-size:12px;font-weight:600;transition:all .2s;}
+.btn-danger:hover{background:rgba(255,0,110,0.15);}
+.revoked-tag{font-size:9px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;padding:3px 8px;border-radius:20px;background:rgba(255,0,110,0.12);color:var(--pink);}
+
+/* code block */
+.codeblock{position:relative;background:#eaf0f9;border:1px solid var(--border);border-radius:12px;padding:16px 16px;overflow-x:auto;}
+.codeblock pre{font-family:var(--fm);font-size:12px;line-height:1.7;color:#16294a;white-space:pre;}
+.codeblock .cp{position:absolute;top:10px;right:10px;background:var(--card2);border:1px solid var(--border2);color:var(--text2);padding:5px 11px;border-radius:7px;font-size:11px;font-weight:600;}
+.codeblock .cp:hover{color:var(--cyan);border-color:var(--cyan);}
+.tok-c{color:var(--cyan);} .tok-g{color:var(--green);} .tok-p{color:var(--purple);} .tok-m{color:var(--text3);} .tok-s{color:#8a6d00;}
+
+/* ════ BILLING ════ */
+.bill-grid{display:grid;grid-template-columns:1.3fr 1fr;gap:20px;align-items:start;}
+.balance-card{background:linear-gradient(135deg,rgba(0,148,83,0.07),rgba(0,105,184,0.05));border:1px solid rgba(0,148,83,0.18);border-radius:var(--r3);padding:28px;position:relative;overflow:hidden;}
+.balance-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--green),var(--cyan));}
+.balance-label{font-size:11px;text-transform:uppercase;letter-spacing:1.5px;color:var(--text2);font-weight:700;margin-bottom:8px;}
+.balance-amt{font-family:var(--fd);font-weight:800;font-size:46px;letter-spacing:-2px;line-height:1;}
+.balance-amt .rs{color:var(--green);}
+.balance-sub{font-size:12px;color:var(--text3);margin-top:8px;}
+.packs{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:18px 0;}
+.pack{background:var(--card);border:1.5px solid var(--border);border-radius:12px;padding:14px 10px;text-align:center;transition:all .2s;}
+.pack:hover,.pack.on{border-color:var(--saffron);background:rgba(255,153,51,0.06);transform:translateY(-3px);box-shadow:0 14px 34px rgba(15,40,90,0.07),0 0 20px rgba(255,153,51,0.15);}
+.pack .pa{font-family:var(--fd);font-weight:800;font-size:20px;color:var(--text);}
+.pack .pc{font-size:10px;color:var(--text3);margin-top:2px;}
+.amt-input-row{display:flex;gap:8px;align-items:center;margin-bottom:14px;}
+.amt-input-row .rs{font-family:var(--fd);font-size:26px;font-weight:800;color:var(--saffron);}
+.amt-input-row input{flex:1;background:var(--card);border:1.5px solid var(--border2);border-radius:12px;padding:12px 14px;color:var(--text);font-size:20px;font-family:var(--fd);font-weight:700;outline:none;}
+.amt-input-row input:focus{border-color:var(--saffron);}
+.btn-upi{width:100%;padding:15px;border:none;border-radius:12px;font-family:var(--fd);font-weight:800;font-size:16px;background:linear-gradient(135deg,var(--saffron),#c46200);color:#fff3e3;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:9px;}
+.btn-upi:hover{filter:brightness(1.08);transform:translateY(-1px);} .btn-upi:disabled{opacity:.5;transform:none;}
+.upi-badges{display:flex;gap:8px;justify-content:center;margin-top:12px;flex-wrap:wrap;}
+.upi-badge{font-size:10px;font-weight:700;color:var(--text3);background:var(--bg3);border:1px solid var(--border);border-radius:7px;padding:5px 10px;}
+.txn{display:flex;align-items:center;gap:12px;padding:11px 0;border-bottom:1px solid var(--border);}
+.txn:last-child{border-bottom:none;}
+.txn-ic{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0;}
+.txn-ic.up{background:rgba(0,255,136,0.1);} .txn-ic.dn{background:rgba(0,105,184,0.09);}
+.txn-main{flex:1;min-width:0;} .txn-t{font-size:13px;font-weight:600;} .txn-d{font-size:10px;color:var(--text3);font-family:var(--fm);margin-top:2px;}
+.txn-amt{font-family:var(--fm);font-weight:700;font-size:13px;} .txn-amt.pos{color:var(--green);} .txn-amt.neg{color:var(--text2);}
+
+/* QR */
+.qr-wrap{display:flex;flex-direction:column;align-items:center;gap:12px;}
+#upi-qr{background:#fff;padding:12px;border-radius:14px;line-height:0;}
+#upi-qr img,#upi-qr canvas{display:block;border-radius:4px;}
+
+/* ════ MODALS ════ */
+.overlay{position:fixed;inset:0;z-index:300;background:rgba(2,4,10,0.78);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);display:none;align-items:center;justify-content:center;padding:20px;}
+.overlay.on{display:flex;animation:fadeIn .2s ease;}
+.modal{background:var(--card);border:1px solid var(--border2);border-radius:var(--r2);max-width:460px;width:100%;max-height:90vh;overflow-y:auto;box-shadow:0 24px 64px rgba(15,40,90,0.16);}
+.modal-head{padding:20px 22px;border-bottom:1px solid var(--border);display:flex;align-items:flex-start;justify-content:space-between;gap:12px;}
+.modal-title{font-family:var(--fd);font-weight:800;font-size:19px;}
+.modal-close{background:var(--card2);border:1px solid var(--border);color:var(--text2);width:32px;height:32px;border-radius:9px;font-size:14px;flex-shrink:0;}
+.modal-close:hover{color:var(--text);}
+.modal-body{padding:22px;}
+.form-field{margin-bottom:14px;}
+.f-label{display:block;font-size:12px;color:var(--text2);font-weight:600;margin-bottom:6px;}
+
+/* once-only secret reveal */
+.secret-reveal{background:#eaf0f9;border:1.5px dashed rgba(0,255,136,0.4);border-radius:12px;padding:14px;margin-bottom:14px;}
+.secret-reveal .sv{font-family:var(--fm);font-size:13px;color:var(--green);word-break:break-all;line-height:1.5;}
+.secret-warn{display:flex;gap:9px;align-items:flex-start;background:rgba(255,190,11,0.06);border:1px solid rgba(255,190,11,0.25);border-radius:10px;padding:11px 13px;font-size:12px;color:var(--amber);line-height:1.5;margin-bottom:14px;}
+
+/* toast */
+.toast-note{position:fixed;bottom:24px;right:20px;z-index:9999;background:#eef3fa;border-radius:12px;padding:13px 17px;max-width:300px;box-shadow:0 8px 32px rgba(15,40,90,0.10);animation:fadeIn .3s ease;transition:opacity .3s;}
+.toast-note .tt{font-weight:700;font-size:13px;} .toast-note .tm{color:var(--text2);font-size:12px;margin-top:3px;}
+
+/* mobile bottom tabs */
+.mob-tabs{display:none;position:fixed;bottom:0;left:0;right:0;z-index:200;background:rgba(255,255,255,0.93);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-top:1px solid var(--border);padding:6px 6px calc(6px + env(safe-area-inset-bottom));}
+.mob-tab{text-decoration:none;flex:1;background:none;border:none;color:var(--text3);font-size:9px;font-weight:600;display:flex;flex-direction:column;align-items:center;gap:2px;padding:6px 2px;border-radius:10px;}
+.mob-tab .mi{font-size:18px;} .mob-tab.on{color:var(--cyan);}
+
+/* misc */
+.btn-block{width:100%;padding:14px;border:none;border-radius:12px;font-family:var(--fd);font-weight:800;font-size:15px;background:linear-gradient(135deg,var(--cyan),#0055cc);color:#fff;transition:all .2s;}
+.btn-block:hover{filter:brightness(1.1);transform:translateY(-1px);}
+.empty-state{text-align:center;padding:46px 20px;color:var(--text3);}
+.empty-state .big{font-size:40px;margin-bottom:12px;}
+
+@keyframes fade-up{from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:none;}}
+@keyframes diagram-settle{from{opacity:0;transform:perspective(900px) translateY(24px) rotateX(10deg);}to{opacity:1;transform:perspective(900px) translateY(0) rotateX(0deg);}}
+@keyframes fadeIn{from{opacity:0;}to{opacity:1;}}
+@keyframes blink{0%,100%{opacity:1;}50%{opacity:.3;}}
+@keyframes spin{to{transform:rotate(360deg);}}
+@keyframes bounce{0%,60%,100%{transform:translateY(0);}30%{transform:translateY(-5px);}}
+
+/* ════ RESPONSIVE ════ */
+@media (max-width:900px){
+  .nav-tabs{display:none;}
+  .mob-tabs{display:flex;}
+  .hero-grid{grid-template-columns:1fr;gap:32px;}
+  .features{grid-template-columns:1fr;}
+  .steps{grid-template-columns:1fr;}
+  .stats-grid{grid-template-columns:repeat(2,1fr);}
+  .bill-grid{grid-template-columns:1fr;}
+  .pg-cols{grid-template-columns:1fr;}
+  .pg-msgs{min-height:220px;max-height:52vh;}
+  .pg-empty{min-height:180px;padding:24px 16px;}
+  .pg-side{display:none;}
+  .pg-shell{height:calc(100vh - 150px);}
+  .page{padding-bottom:80px;}
+  .packs{grid-template-columns:repeat(2,1fr);}
+}
+/* ── Narrow-screen nav ──────────────────────────────────────────────────
+   The nav packed logo + subtitle + balance + two buttons into one row.
+   With flex-shrink:0 on both sides nothing could give, so on a phone the
+   content overflowed past the nav's own background — a visible seam with
+   the Dashboard button hanging off the edge. Shed the decorative parts
+   in order of least value first. */
+@media (max-width:640px){
+  .nav-wrap{gap:8px;min-width:0;}
+  .logo{min-width:0;}
+  .logo-name{font-size:17px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+  .logo-name small{display:none;}      /* decorative tagline */
+  button.btn-connect{display:none;}    /* the hero already has the primary CTA */
+  .nav-right{gap:6px;min-width:0;}
+  .bal-pill{padding:4px 9px;}
+  a.btn-connect{padding:8px 12px;font-size:12.5px;}
+}
+@media (max-width:380px){
+  .bal-pill .bl{display:none;}         /* keep the amount, drop the word */
+  .logo-icon{width:32px;height:32px;font-size:15px;}
+}
+@media (max-width:480px){
+  .wrap{padding:0 14px;}
+  .balance-amt{font-size:38px;}
+}
+@media (prefers-reduced-motion:reduce){
+  *{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;}
+  .ticker-track{animation:none!important;}
+}
+/* ── Yantra helpers (color accents + show/hide) ── */
+.sf{color:var(--saffron);}
+.grn{color:var(--green);}
+.org{color:var(--amber);}
+.hide{display:none!important;}
+.modal{display:none;}
+.modal.on{display:block;}
+.pg-settings.on{display:block;}
+.toast-note{display:none;}
+.toast-note.on{display:flex;flex-direction:column;}
+/* ═════ MODELS EXPLORER ═════ */
+#page-models .mx{padding-bottom:90px}
+#page-models .mx-head{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;margin-bottom:18px}
+#page-models .mx-head .s-title{margin-bottom:8px;text-align:left}
+#page-models .mx-sub{color:var(--text2);font-size:15px;line-height:1.6;max-width:62ch}
+#page-models .mx-sub #mx-count{color:var(--text);font-weight:700}
+#page-models .mx-status{display:inline-flex;align-items:center;gap:8px;font-size:12.5px;font-weight:600;color:var(--text2);text-decoration:none;background:var(--card);border:1px solid var(--border);border-radius:100px;padding:7px 13px;white-space:nowrap;flex-shrink:0}
+#page-models .mx-status[hidden]{display:none}
+#page-models .mx-status i{width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 0 3px rgba(0,148,83,.18)}
+#page-models .mx-status.degraded i{background:#d18a00;box-shadow:0 0 0 3px rgba(209,138,0,.2)}
+#page-models .mx-status.outage i{background:#c4262e;box-shadow:0 0 0 3px rgba(196,38,46,.2)}
+#page-models .mx-est{display:flex;justify-content:space-between;align-items:center;gap:18px;flex-wrap:wrap;background:var(--card);border:1px solid var(--border);border-radius:var(--r2);padding:16px 18px;margin-bottom:14px}
+#page-models .mx-est-l b{font-family:var(--fd);font-size:15px;display:block;margin-bottom:9px}
+#page-models .mx-presets{display:flex;gap:8px;flex-wrap:wrap}
+#page-models .mx-presets button{font:inherit;font-size:13px;font-weight:600;text-align:left;padding:8px 12px;border-radius:12px;border:1px solid var(--border);background:var(--card2);color:var(--text);cursor:pointer;line-height:1.25}
+#page-models .mx-presets button small{display:block;font-size:11px;font-weight:500;color:var(--text3)}
+#page-models .mx-presets button.on{border-color:var(--cyan);background:rgba(0,105,184,.08);color:var(--cyan)}
+#page-models .mx-est-r{display:flex;gap:12px;flex-wrap:wrap}
+#page-models .mx-est-r label{display:flex;align-items:center;gap:8px;font-size:12.5px;font-weight:600;color:var(--text2)}
+#page-models .mx-est-r input{width:92px;padding:9px 10px;border:1.5px solid var(--border2);border-radius:10px;background:var(--card);font:600 14px var(--fm);color:var(--text)}
+#page-models .mx-est-r span{font-weight:500;color:var(--text3);font-size:12px}
+#page-models .mx-bar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px}
+#page-models .mx-search{flex:1 1 240px;min-width:0}
+#page-models .mx-search input,#page-models .mx-bar select{width:100%;padding:11px 13px;border:1.5px solid var(--border2);border-radius:11px;background:var(--card);font-size:14px;color:var(--text);min-width:0}
+#page-models .mx-bar select{width:auto;flex:0 1 auto}
+#page-models .mx-search input:focus,#page-models .mx-bar select:focus,#page-models .mx-est-r input:focus{outline:2px solid var(--cyan);outline-offset:1px;border-color:var(--cyan)}
+#page-models .mx-view{display:flex;border:1.5px solid var(--border2);border-radius:11px;overflow:hidden;background:var(--card)}
+#page-models .mx-view button{font:inherit;font-size:13px;font-weight:600;padding:0 14px;border:0;background:transparent;color:var(--text2);cursor:pointer}
+#page-models .mx-view button.on{background:var(--cyan);color:#fff}
+#page-models .mx-chips{display:flex;gap:7px;overflow-x:auto;padding:2px 0 12px;scrollbar-width:none;margin-bottom:6px}
+#page-models .mx-chips::-webkit-scrollbar{display:none}
+#page-models .mx-chips .chip{white-space:nowrap;flex-shrink:0;font-family:inherit}
+#page-models .mx-list{background:var(--card);border:1px solid var(--border);border-radius:var(--r2);overflow:hidden}
+#page-models .mx-th,#page-models .mx-row{display:grid;grid-template-columns:28px minmax(190px,2.3fr) 78px minmax(110px,1.1fr) minmax(150px,1.5fr) 118px 40px;gap:14px;align-items:center;padding:12px 16px}
+#page-models .mx-th{font-size:11.5px;font-weight:700;color:var(--text3);background:var(--card2);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:2}
+#page-models .mx-th .r,#page-models .mx-row .r{text-align:right}
+#page-models .mx-row{border-bottom:1px solid var(--border);transition:background .15s}
+#page-models .mx-row:last-child{border-bottom:0}
+#page-models .mx-row:hover{background:var(--card2)}
+#page-models .mx-row.sel{background:rgba(0,105,184,.06)}
+#page-models .mx-ck{width:18px;height:18px;accent-color:var(--cyan);cursor:pointer}
+#page-models .mx-name a{font-family:var(--fd);font-weight:800;font-size:16px;color:var(--text);text-decoration:none;letter-spacing:-.2px}
+#page-models .mx-name a:hover{color:var(--cyan)}
+#page-models .mx-meta{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:3px;font-size:12px;color:var(--text3)}
+#page-models .mx-meta code{font-family:var(--fm);font-size:11px;color:var(--cyan);word-break:break-all}
+#page-models .mx-tags{display:flex;gap:5px;flex-wrap:wrap;margin-top:6px}
+#page-models .mx-tags span{font-size:11px;font-weight:600;padding:2px 8px;border-radius:100px;background:rgba(124,58,237,.1);color:#6d3fd1}
+#page-models .mx-ctx{font:600 12.5px var(--fm);color:var(--text2)}
+#page-models .mx-p{font:700 13.5px var(--fm);color:var(--text)}
+#page-models .mx-p small{display:block;font-size:10.5px;color:var(--text3);font-weight:500}
+#page-models .mx-ruler{height:6px;border-radius:6px;background:var(--bg3);margin-top:6px;overflow:hidden}
+#page-models .mx-ruler i{display:block;height:100%;border-radius:6px;background:linear-gradient(90deg,var(--green),#e6a100 70%,#d16800)}
+#page-models .mx-est-c{font:800 15px var(--fm);color:var(--green)}
+#page-models .mx-est-c small{display:block;font-size:10.5px;color:var(--text3);font-weight:500}
+#page-models .mx-cp{border:1px solid var(--border);background:var(--card);border-radius:9px;width:34px;height:34px;cursor:pointer;color:var(--text2);font-size:13px}
+#page-models .mx-cp:hover{border-color:var(--cyan);color:var(--cyan)}
+#page-models .mx-free{color:var(--green);font-weight:800}
+#page-models .mx-empty{padding:50px 20px;text-align:center;color:var(--text2)}
+#page-models .mx-more{padding:14px;text-align:center;font-size:13px;color:var(--text3)}
+#page-models .mx-list.cards{background:transparent;border:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px;overflow:visible}
+#page-models .mx-list.cards .mx-th{display:none}
+#mx-tray{position:fixed;left:50%;bottom:78px;transform:translateX(-50%);z-index:300;display:flex;align-items:center;gap:10px;background:#0f1e33;color:#fff;padding:10px 12px 10px 18px;border-radius:100px;box-shadow:0 10px 34px rgba(15,30,51,.35);font-size:14px;font-weight:600;max-width:calc(100vw - 24px)}
+#mx-tray[hidden],#mx-modal[hidden]{display:none}
+.mx-btn{font:700 13px var(--fb);padding:8px 16px;border-radius:100px;border:0;background:#fff;color:#0f1e33;cursor:pointer}
+.mx-btn.ghost{background:transparent;color:#cfd8e8}
+#mx-modal{position:fixed;inset:0;z-index:400;background:rgba(15,30,51,.55);display:flex;align-items:center;justify-content:center;padding:14px}
+.mx-modal-box{background:var(--card);border-radius:20px;width:min(920px,100%);max-height:88vh;display:flex;flex-direction:column;overflow:hidden}
+.mx-modal-h{display:flex;justify-content:space-between;align-items:center;padding:16px 20px;border-bottom:1px solid var(--border)}
+.mx-modal-h h2{font-family:var(--fd);font-size:20px;margin:0}
+.mx-modal-h button{font-size:26px;line-height:1;border:0;background:transparent;cursor:pointer;color:var(--text2);padding:0 6px}
+.mx-modal-b{overflow:auto;padding:6px 20px 20px}
+.mx-cmp{width:100%;border-collapse:collapse;font-size:13.5px;min-width:520px}
+.mx-cmp th,.mx-cmp td{padding:11px 10px;border-bottom:1px solid var(--border);text-align:left;vertical-align:top}
+.mx-cmp th:first-child{width:130px;color:var(--text3);font-weight:600;font-size:12.5px}
+.mx-cmp thead th{font-family:var(--fd);font-size:16px;color:var(--text)}
+.mx-cmp td.best{color:var(--green);font-weight:800}
+.mx-cmp td code{font-family:var(--fm);font-size:11.5px;color:var(--cyan);word-break:break-all}
+
+#page-models .mx-list.cards .mx-row{display:grid;grid-template-columns:24px minmax(0,1fr) auto;grid-template-areas:"ck name cp" "ck ctx ctx" "ck pin pout" "ck est est";background:var(--card);border:1px solid var(--border);border-radius:var(--r2);padding:14px;gap:8px 12px;align-items:start}
+#page-models .mx-list.cards .mx-row>.mx-ckw{grid-area:ck}#page-models .mx-list.cards .mx-row>.mx-name{grid-area:name;min-width:0}#page-models .mx-list.cards .mx-row>.mx-ctx{grid-area:ctx}
+#page-models .mx-list.cards .mx-row>.pin{grid-area:pin}#page-models .mx-list.cards .mx-row>.pout{grid-area:pout}#page-models .mx-list.cards .mx-row>.mx-est-c{grid-area:est}#page-models .mx-list.cards .mx-row>.mx-cpw{grid-area:cp}
+#page-models .mx-list.cards .mx-row .r{text-align:left}
+#page-models .mx-list.cards .mx-ctx::before{content:"Context ";color:var(--text3);font-weight:500}
+@media(max-width:900px){
+  #page-models .mx-th{display:none}
+  #page-models .mx-list{background:transparent;border:0;display:grid;gap:12px;grid-template-columns:minmax(0,1fr);overflow:visible}
+  #page-models .mx-row,#page-models .mx-list.cards .mx-row{display:grid;grid-template-columns:24px minmax(0,1fr) auto;grid-template-areas:"ck name cp" "ck ctx ctx" "ck pin pout" "ck est est";background:var(--card);border:1px solid var(--border);border-radius:var(--r2);padding:14px;gap:8px 12px;align-items:start}
+  #page-models .mx-row>.mx-ckw{grid-area:ck}#page-models .mx-row>.mx-name{grid-area:name;min-width:0}#page-models .mx-row>.mx-ctx{grid-area:ctx}
+  #page-models .mx-row>.pin{grid-area:pin}#page-models .mx-row>.pout{grid-area:pout}#page-models .mx-row>.mx-est-c{grid-area:est}#page-models .mx-row>.mx-cpw{grid-area:cp}
+  #page-models .mx-row .r{text-align:left}
+  #page-models .mx-ctx::before{content:"Context ";color:var(--text3);font-weight:500}
+  #page-models .mx-view{display:none}
+  #page-models .mx-list.cards{grid-template-columns:minmax(0,1fr)}
+}
+@media(max-width:560px){
+  #page-models .mx-head{flex-direction:column}
+  #page-models .mx-est-r input{width:84px}
+  #page-models .mx-bar select{flex:1 1 140px}
+  #mx-tray{bottom:74px}
+}
+
+#page-models .mx-row.off{opacity:.55}
+#page-models .mx-off-b{font-size:10.5px;font-weight:800;padding:2px 8px;border-radius:100px;background:rgba(196,38,46,.12);color:#c4262e;border:1px solid rgba(196,38,46,.3);white-space:nowrap}
+@media(prefers-reduced-motion:reduce){#page-models *{transition:none!important}}
+.page-head .s-sub{margin-left:0;margin-right:0;max-width:64ch;font-size:15px}
+
+/* ── quality pass: speed, phone usability, notes ── */
+#page-models .mx-row{content-visibility:auto;contain-intrinsic-size:auto 92px}
+#page-models .mx-list.cards .mx-row{contain-intrinsic-size:auto 190px}
+#page-models .mx-note{margin-top:5px;font-size:11.5px;font-weight:600;color:#a55b00}
+#page-models .mx-legacy-b{font-size:10.5px;font-weight:700;padding:2px 8px;border-radius:100px;background:var(--bg3);color:var(--text3);border:1px solid var(--border);white-space:nowrap}
+#page-models .mx-empty button{margin-top:12px;font:700 13px var(--fb);padding:9px 18px;border-radius:100px;border:1.5px solid var(--cyan);background:transparent;color:var(--cyan);cursor:pointer}
+#page-models .mx-chips .chip{min-height:36px}
+#page-models .mx-sel2{display:contents}
+@media(max-width:900px){
+  /* search stays under the nav while you scroll the list; filters sit beside each other */
+  #page-models .mx-bar{display:contents}
+  #page-models .mx-search{position:sticky;top:8px;z-index:60;margin:0 0 8px;flex:none}
+  #page-models .mx-search input{box-shadow:0 6px 18px rgba(15,40,90,.12);min-height:46px}
+  #page-models .mx-sel2{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:0 0 10px}
+  #page-models .mx-sel2 select{width:100%;min-height:44px}
+  #page-models .mx-list.cards .mx-row,#page-models .mx-row{grid-template-columns:34px minmax(0,1fr) minmax(0,1fr) minmax(0,1fr);grid-template-areas:"ck name name cp" "ck ctx ctx ctx" "ck pin pout est";gap:8px 10px;padding:14px 12px}
+  #page-models .mx-row>.mx-est-c{text-align:right}
+  #page-models .mx-row>.mx-cpw{justify-self:end}
+  #page-models .mx-ckw{margin:-8px;padding:8px;display:flex}
+  #page-models .mx-ck{width:22px;height:22px}
+  #page-models .mx-cp{width:40px;height:40px}
+  #page-models .mx-p,#page-models .mx-est-c{font-size:13px}
+}
+</style>
+
+</head>
+<body>
+<canvas id="bg-canvas"></canvas>
+
+<!-- ════ NAV ════ -->
+
+<nav class="z1">
+  <div class="wrap nav-wrap">
+    <a href="index.html" class="logo">
+      <div class="logo-icon">य</div>
+      <span class="logo-name">Yantra<em> AI</em><small>ROUTING GATEWAY</small></span>
+    </a>
+    <div class="nav-tabs">
+      <a class="ntab" href="index.html"><span class="ti">⌂</span> Home</a>
+      <a class="ntab on" href="models.html"><span class="ti">◈</span> Models</a>
+      <a class="ntab" href="playground.html"><span class="ti">▷</span> Playground</a>
+      <a class="ntab" href="workspace.html"><span class="ti">⌨</span> Workspace</a>
+      <a class="ntab" href="docs.html"><span class="ti">⌘</span> Docs</a>
+    </div>
+    <div class="nav-right">
+      <div class="bal-pill" onclick="location.href='dashboard.html'" title="Top up in your dashboard" style="cursor:pointer">
+        <span class="bl">Balance</span>
+        <span class="bv" id="nav-balance">—</span>
+      </div>
+      <button class="btn-connect" onclick="ykGetKey()">Get API Key</button>
+      <a class="btn-connect" href="dashboard.html" style="background:linear-gradient(135deg,var(--saffron),#c46200);color:#fff3e3;text-decoration:none;display:inline-flex;align-items:center">Dashboard ↗</a>
+    </div>
+  </div>
+</nav>
+
+
+<!-- ════ TICKER ════ -->
+
+<div class="ticker-bar z1">
+  <div class="ticker-inner">
+    <div class="ticker-label">LIVE</div>
+    <div class="ticker-scroll">
+      <div class="ticker-track" id="ticker"></div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ═══════ MODELS ═══════ -->
+<main class="page on" id="page-models">
+  <div class="wrap mx">
+    <header class="mx-head">
+      <div>
+        <h1 class="s-title">Models</h1>
+        <p class="mx-sub" aria-live="polite"><span id="mx-count">Every model</span> behind one key. Prices are ₹ per 1M tokens. Set your monthly usage and every row shows what it would cost you.</p>
+      </div>
+      <a class="mx-status" id="mx-status" href="status.html" hidden><i></i><span></span></a>
+    </header>
+
+    <section class="mx-est" aria-label="Estimate monthly cost">
+      <div class="mx-est-l">
+        <b>Your monthly usage</b>
+        <div class="mx-presets" id="mx-presets" role="group" aria-label="Usage presets">
+          <button type="button" data-in="0.7" data-out="0.3" class="on">Chatbot<small>1,000 chats</small></button>
+          <button type="button" data-in="10" data-out="2">Coding helper<small>~200 sessions</small></button>
+          <button type="button" data-in="5" data-out="0.5">Summaries<small>~2,500 documents</small></button>
+          <button type="button" data-in="50" data-out="10">Production app<small>heavy traffic</small></button>
+        </div>
+      </div>
+      <div class="mx-est-r">
+        <label>Input <input id="mx-in" type="number" min="0" step="any" value="0.7" inputmode="decimal"><span>M tokens</span></label>
+        <label>Output <input id="mx-out" type="number" min="0" step="any" value="0.3" inputmode="decimal"><span>M tokens</span></label>
+      </div>
+    </section>
+
+    <div class="mx-bar">
+      <div class="mx-search"><input id="model-search" type="search" placeholder="Search by name, provider or ID" aria-label="Search models" autocomplete="off"></div>
+      <div class="mx-sel2">
+      <select id="mx-prov" aria-label="Provider"></select>
+      <select id="model-sort" aria-label="Sort">
+        <option value="popular">Popular first</option>
+        <option value="cheapest">Cheapest first</option>
+        <option value="priciest">Most capable first</option>
+        <option value="context">Longest context</option>
+        <option value="az">A to Z</option>
+      </select>
+      </div>
+      <div class="mx-view" role="group" aria-label="View"><button type="button" id="mx-v-table" class="on" aria-label="Table view">Table</button><button type="button" id="mx-v-cards" aria-label="Card view">Cards</button></div>
+    </div>
+    <div class="mx-chips" id="model-filters" role="group" aria-label="Capabilities"></div>
+
+    <div class="mx-list" id="models-grid"></div>
+  </div>
+
+  <div class="mx-tray" id="mx-tray" hidden>
+    <span id="mx-tray-n"></span>
+    <button type="button" id="mx-tray-go" class="mx-btn">Compare</button>
+    <button type="button" id="mx-tray-clear" class="mx-btn ghost">Clear</button>
+  </div>
+  <div class="mx-modal" id="mx-modal" hidden role="dialog" aria-modal="true" aria-labelledby="mx-modal-t">
+    <div class="mx-modal-box">
+      <div class="mx-modal-h"><h2 id="mx-modal-t">Compare models</h2><button type="button" id="mx-modal-x" aria-label="Close">×</button></div>
+      <div class="mx-modal-b" id="mx-modal-b"></div>
+    </div>
+  </div>
+</main>
+
+
+<footer style="border-top:1px solid var(--border);padding:34px 20px 100px;text-align:center;font-family:var(--fb)">
+  <div style="display:flex;gap:22px;justify-content:center;flex-wrap:wrap;margin-bottom:14px;font-size:13px">
+    <a href="legal/terms.html" style="color:var(--text2)">Terms</a>
+    <a href="legal/privacy.html" style="color:var(--text2)">Privacy</a>
+    <a href="legal/refund.html" style="color:var(--text2)">Refund &amp; Cancellation</a>
+    <a href="status.html" style="color:var(--text2)">Status</a>
+    <a href="mailto:gettony3000@gmail.com" style="color:var(--text2)">Contact</a>
+  </div>
+  <div style="color:var(--text3);font-size:12px">© 2026 Yantra AI · Aditya Sunil Borgaonkar · Kolhapur, Maharashtra, India</div>
+</footer>
+
+<!-- ════ MODALS ════ -->
+<div class="overlay" id="overlay" onclick="if(event.target===this)closeModals()">
+  <!-- create key -->
+  <!-- community models (OpenRouter long tail) -->
+  <div class="modal" id="modal-community">
+    <div class="modal-head"><span class="modal-title">Browse community models <span class="dim" style="font-weight:400;font-size:12px">via OpenRouter</span></span><button class="modal-close" onclick="closeModals()">✕</button></div>
+    <div class="modal-body">
+      <p class="dim" style="font-size:12.5px;margin:0 0 10px">300+ open-weight and niche models, routed through OpenRouter. Yantra's own 30+ models above stay the cheaper, direct path — this is for everything else.</p>
+      <input class="pg-input" id="community-search" placeholder="Search by name — e.g. llama, qwen, gemma…" oninput="filterCommunityModels()" style="width:100%;margin-bottom:10px">
+      <div id="community-results" style="max-height:320px;overflow-y:auto"></div>
+    </div>
+  </div>
+</div>
+
+<!-- toast -->
+<div class="toast-note" id="toast"></div>
+
+<!-- mobile tabs -->
+<div class="mob-tabs">
+  <a class="mob-tab" href="index.html"><span>⌂</span>Home</a>
+  <a class="mob-tab on" href="models.html"><span>◈</span>Models</a>
+  <a class="mob-tab" href="playground.html"><span>▷</span>Play</a>
+  <a class="mob-tab" href="docs.html"><span>⌘</span>Docs</a>
+</div>
+
+<script>
+(function(){
+'use strict';
+
+/* ════════════ storage shim (localStorage → in-memory fallback) ════════════ */
+var _mem = {};
+var store = {
+  get: function(k){ try { var v = localStorage.getItem(k); return v; } catch(e){ return (k in _mem) ? _mem[k] : null; } },
+  set: function(k,v){ try { localStorage.setItem(k,v); } catch(e){ _mem[k]=v; } },
+  del: function(k){ try { localStorage.removeItem(k); } catch(e){ delete _mem[k]; } }
+};
+function jget(k,d){ var v=store.get(k); if(v==null) return d; try { return JSON.parse(v); } catch(e){ return d; } }
+function jset(k,v){ store.set(k, JSON.stringify(v)); }
+
+/* ════════════ model registry (mirrors backend src/router/registry.js) ════════════ */
+var MODELS = {
+  "openai/gpt-6.1-sol": { provider:"openai", label:"GPT-6.1 Sol", inr:{in:217.35,out:1086.75}, ctx:270000, tags:["reasoning","vision","tools","flagship"], blurb:"Near-Astra intelligence at a fifth of the price - $2/$10." },
+  "openai/gpt-6-luna": { provider:"openai", label:"GPT-6 Luna", inr:{in:10.87,out:54.34}, ctx:270000, tags:["fast","cheap","vision","tools"], blurb:"Cheapest GPT-6 - $0.10/$0.50 per 1M tokens." },
+  "openai/gpt-6-astra": { provider:"openai", label:"GPT-6 Astra", inr:{in:1086.75,out:5433.75}, ctx:1100000, tags:["reasoning","vision","tools","flagship","long-context"], blurb:"OpenAI's new frontier flagship — succeeds Sol, priced 2.5x higher." },
+  "openai/gpt-5.6-sol": { provider:"openai", label:"GPT-5.6 Sol", inr:{in:543.95,out:3260.25}, ctx:1000000, tags:["reasoning","vision","tools","flagship","long-context"], blurb:"OpenAI's actual current flagship — their own default recommendation." },
+  "openai/gpt-5.5": { provider:"openai", label:"GPT-5.5", inr:{in:543.95,out:3260.25}, ctx:1000000, tags:["reasoning","vision","tools","long-context"], blurb:"Still current — same tier as Sol, slightly different behavior profile." },
+  "openai/gpt-4o-mini": { provider:"openai", label:"GPT-4o mini", inr:{in:14.95,out:57.5}, ctx:128000, tags:["vision","tools","cheap","fast"], blurb:"Cheapest OpenAI multimodal — great default." },
+  "openai/gpt-5.4-mini": { provider:"openai", label:"GPT-5.4 Mini", inr:{in:81.65,out:488.75}, ctx:128000, tags:["reasoning","fast","cheap"], blurb:"Budget reasoning tier — between Luna and GPT-4o mini." },
+  "openai/gpt-5.6-terra": { provider:"openai", label:"GPT-5.6 Terra", inr:{in:217.35,out:1304.1}, ctx:1000000, tags:["reasoning","vision","tools","balanced","long-context"], blurb:"OpenAI's new production default — balanced cost + capability." },
+  "openai/gpt-5.6-luna": { provider:"openai", label:"GPT-5.6 Luna", inr:{in:21.85,out:129.95}, ctx:1000000, tags:["fast","cheap","vision","long-context"], blurb:"Cost-sensitive volume tier — 1M context, now far cheaper after the Jul 30 cut." },
+  "anthropic/claude-fable-5-1": { provider:"anthropic", label:"Claude Fable 5.1", inr:{in:1086.75,out:5433.75}, ctx:1000000, tags:["reasoning","tools","vision","flagship","long-context"], blurb:"Same tier as Fable 5, cheaper on cache-heavy workloads." },
+  "anthropic/claude-fable-5": { provider:"anthropic", label:"Claude Fable 5", inr:{in:1086.75,out:5433.75}, ctx:1000000, tags:["reasoning","tools","vision","flagship","long-context"], blurb:"Anthropic's top published tier — hardest reasoning + agentic work." },
+  "anthropic/claude-opus-5": { provider:"anthropic", label:"Claude Opus 5", inr:{in:543.95,out:2717.45}, ctx:1000000, tags:["reasoning","tools","flagship","long-context"], blurb:"Anthropic's own recommended starting point for agentic coding + enterprise work." },
+  "anthropic/claude-opus-5-5": { provider:"anthropic", label:"Claude Opus 5.5", inr:{in:434.7,out:2173.5}, ctx:1000000, tags:["reasoning","tools","flagship","long-context","vision"], blurb:"Newest Opus - $4/$20, 1M context at flat pricing." },
+  "anthropic/claude-sonnet-5-5": { provider:"anthropic", label:"Claude Sonnet 5.5", inr:{in:217.35,out:1086.75}, ctx:1000000, tags:["tools","vision","long-context"], blurb:"Newest Sonnet - smart and efficient for everyday work." },
+  "anthropic/claude-haiku-5-5": { provider:"anthropic", label:"Claude Haiku 5.5", inr:{in:10.87,out:54.34}, ctx:100000, tags:["fast","cheap","tools"], blurb:"Newest Haiku - very fast, $0.10/$0.50 up to 100K prompt." },
+  "anthropic/claude-opus-4-8": { provider:"anthropic", label:"Claude Opus 4.8", inr:{in:543.95,out:2717.45}, ctx:1000000, tags:["reasoning","tools","long-context"], blurb:"Previous-gen flagship — still fully current, not deprecated." },
+  "anthropic/claude-sonnet-5": { provider:"anthropic", label:"Claude Sonnet 5", inr:{in:217.35,out:1086.75}, ctx:1000000, tags:["tools","vision","balanced","long-context"], blurb:"Newest Sonnet — top coding model, now cheaper than 4.6." },
+  "anthropic/claude-opus-4-6": { provider:"anthropic", label:"Claude Opus 4.6", inr:{in:543.38,out:2716.88}, ctx:200000, tags:["reasoning","tools","long-context"], blurb:"Previous-gen Opus — deep reasoning + agents." },
+  "anthropic/claude-sonnet-4-6": { provider:"anthropic", label:"Claude Sonnet 4.6", inr:{in:326.02,out:1630.12}, ctx:200000, tags:["tools","vision","long-context"], blurb:"Previous-gen Sonnet — smart and fast." },
+  "anthropic/claude-haiku-4-5": { provider:"anthropic", label:"Claude Haiku 4.5", inr:{in:108.68,out:543.38}, ctx:200000, tags:["fast","cheap","tools"], blurb:"Fastest Claude — real-time tasks." },
+  "google/gemini-3.1-pro": { provider:"gemini", label:"Gemini 3.1 Pro", inr:{in:217.35,out:1304.1}, ctx:1000000, tags:["reasoning","vision","long-context","flagship"], blurb:"Reasoning-first Google flagship, 1M context (preview)." },
+  "google/gemini-3.6-flash": { provider:"gemini", label:"Gemini 3.6 Flash", inr:{in:81.51,out:407.54}, ctx:1000000, tags:["fast","vision","long-context","code"], blurb:"Previous-gen Flash tier." },
+  "google/gemini-4-argon": { provider:"gemini", label:"Gemini 4 Argon", get inr(){ return Date.now()>=Date.UTC(2026,11,1) ? {in:434.7,out:2173.5} : {in:217.35,out:1086.75}; }, ctx:1000000, tags:["reasoning","vision","tools","long-context","flagship"], blurb:"Latest Google flagship - 1M context, intro pricing until Nov 30." },
+  "google/gemini-3.8-flash": { provider:"gemini", label:"Gemini 3.8 Flash", inr:{in:81.51,out:407.54}, ctx:1000000, tags:["fast","vision","long-context","code"], blurb:"Latest Gemini Flash." },
+  "google/gemini-3.7-flash": { provider:"gemini", label:"Gemini 3.7 Flash", inr:{in:81.65,out:407.1}, ctx:1000000, tags:["fast","vision","long-context","code","reasoning"], blurb:"Google's newest Flash tier — introductory pricing through Dec 2026." },
+  "google/gemini-3.5-flash-lite": { provider:"gemini", label:"Gemini 3.5 Flash-Lite", inr:{in:32.2,out:271.4}, ctx:1000000, tags:["fast","cheap"], blurb:"Google's newer budget tier — high-throughput, low-latency." },
+  "google/gemini-3.5-flash": { provider:"gemini", label:"Gemini 3.5 Flash", inr:{in:163.01,out:978.08}, ctx:1000000, tags:["fast","vision","long-context","code"], blurb:"Previous-gen Flash — still current, not deprecated." },
+  "google/gemini-3.1-flash-lite": { provider:"gemini", label:"Gemini 3.1 Flash-Lite", inr:{in:27.6,out:163.3}, ctx:1000000, tags:["fast","cheap"], blurb:"Google's most cost-efficient tier for high-volume traffic." },
+  "google/gemini-2.5-pro": { provider:"gemini", label:"Gemini 2.5 Pro", inr:{in:135.85,out:1086.75}, ctx:1000000, tags:["reasoning","vision","long-context"], blurb:"Previous-gen — 1M context, strong reasoning + multimodal." },
+  "google/gemini-2.5-flash": { provider:"gemini", label:"Gemini 2.5 Flash", inr:{in:32.6,out:271.69}, ctx:1000000, tags:["fast","cheap","vision","long-context"], blurb:"Ultra-low-cost 1M-context workhorse." },
+  "deepseek/deepseek-v4.1-flash": { provider:"deepseek", label:"DeepSeek V4.1 Flash", inr:{in:32.6,out:130.41}, ctx:1000000, tags:["cheap","fast","tools","long-context"], blurb:"Latest DeepSeek Flash - 1M context, very low cost." },
+  "deepseek/deepseek-v4-flash": { provider:"deepseek", label:"DeepSeek V4 Flash (-> V4.1)", inr:{in:32.6,out:130.41}, ctx:1000000, tags:["tools","long-context"], blurb:"Legacy id - now served by V4.1 Flash." },
+  "deepseek/deepseek-v4-pro": { provider:"deepseek", label:"DeepSeek V4 Pro (0813)", inr:{in:143.45,out:430.35}, ctx:1000000, tags:["reasoning","tools","long-context"], blurb:"Open-weight reasoning grade, 1M context." },
+  "mistral/mistral-large-4": { provider:"mistral", label:"Mistral Large 4 (preview)", inr:{in:147.8,out:454.26}, ctx:128000, tags:["tools","multilingual","vision"], blurb:"Mistral flagship, open-weight multimodal - public preview." },
+  "mistral/mistral-large": { provider:"mistral", label:"Mistral Large", inr:{in:54.34,out:163.01}, ctx:128000, tags:["tools","multilingual"], blurb:"Strong multilingual + function calling." },
+  "mistral/mistral-small": { provider:"mistral", label:"Mistral Small", inr:{in:16.31,out:65.21}, ctx:128000, tags:["cheap","fast","tools"], blurb:"Cheap, fast, capable for most tasks." },
+  "mistral/mistral-medium-3.5": { provider:"mistral", label:"Mistral Medium 3.5", inr:{in:163.3,out:815.35}, ctx:256000, tags:["reasoning","code","tools","vision"], blurb:"Mistral's own pick for coding + agentic work." },
+  "mistral/codestral": { provider:"mistral", label:"Codestral", inr:{in:32.6,out:97.81}, ctx:256000, tags:["code","fast"], blurb:"Code specialist — 256K context." },
+  "xai/grok-4.5": { provider:"xai", label:"Grok 4.5", inr:{in:217.35,out:652.05}, ctx:500000, tags:["reasoning","tools","flagship"], blurb:"xAI's flagship — agentic tool calling, minimal hallucinations." },
+  "xai/grok-4.7": { provider:"xai", label:"Grok 4.7", inr:{in:217.35,out:652.05}, ctx:200000, tags:["reasoning","tools","flagship"], blurb:"xAI's newest flagship for code and general use." },
+  "xai/grok-4.6": { provider:"xai", label:"Grok 4.6", inr:{in:217.35,out:652.05}, ctx:500000, tags:["reasoning","tools","flagship"], blurb:"xAI's newest flagship — stronger agentic coding than 4.5, same price." },
+  "moonshot/kimi-k2.6": { provider:"moonshot", label:"Kimi K2.6", inr:{in:103.5,out:434.7}, ctx:256000, tags:["reasoning","code","tools","long-context"], blurb:"Strong long-horizon coding + multi-agent workflows." },
+  "qwen/qwen3.8-flash": { provider:"qwen", label:"Qwen 3.8 Flash", inr:{in:16.31,out:51.08}, ctx:1000000, tags:["reasoning","vision","code","tools","long-context","cheap","fast"], blurb:"Alibaba's newest Flash - 1M context, image + video input, very low cost." },
+  "qwen/qwen3.8-max": { provider:"qwen", label:"Qwen 3.8 Max", inr:{in:217.35,out:652.05}, ctx:1000000, tags:["reasoning","vision","code","tools","long-context","flagship"], blurb:"Alibaba's 2.4T-parameter flagship - 1M context, image + video input." },
+  "minimax/minimax-m3.1-flash": { provider:"minimax", label:"MiniMax M3.1 Flash", inr:{in:16.31,out:65.21}, ctx:1000000, tags:["reasoning","vision","code","tools","long-context","cheap","fast"], blurb:"MiniMax's agent-tuned Flash (released Oct 19) - 1M context, very low cost." },
+  "moonshot/kimi-k3.1-pro": { provider:"moonshot", label:"Kimi K3.1 Pro", inr:{in:217.35,out:1086.75}, ctx:1000000, tags:["reasoning","vision","code","tools","long-context","flagship"], blurb:"Moonshot's newest flagship - 1M context, native image + video understanding." },
+  "moonshot/kimi-k2.7-code": { provider:"moonshot", label:"Kimi K2.7 Code", inr:{in:103.5,out:434.7}, ctx:256000, tags:["code","tools","long-context"], blurb:"K2.6's coding-tuned sibling — same price, code-specialized." },
+  "zai/glm-5.3": { provider:"zai", label:"GLM-5.3", inr:{in:151.8,out:478.4}, ctx:1000000, tags:["reasoning","code","tools","long-context"], blurb:"Z.AI's newest flagship — stronger coding and longer agent runs than 5.2, same price." },
+  "zai/glm-5.2": { provider:"zai", label:"GLM-5.2", inr:{in:151.8,out:478.4}, ctx:1000000, tags:["reasoning","code","tools","long-context","cheap"], blurb:"Open-weight (MIT) — beats GPT-5.5 on SWE-bench Pro at a fraction of the cost." },
+  "zai/glm-4.5-air": { provider:"zai", label:"GLM-4.5 Air", inr:{in:21.85,out:119.6}, ctx:128000, tags:["fast","cheap"], blurb:"Z.AI's budget tier — high volume, low cost." },
+  "qwen/qwen3.6-27b": { provider:"qwen", label:"Qwen3.6 27B", inr:{in:32.2,out:347.3}, ctx:262000, tags:["reasoning","code","tools","long-context"], blurb:"Alibaba's Qwen — no other direct route to this family yet." },
+  "minimax/minimax-m3": { provider:"minimax", label:"MiniMax M3", inr:{in:32.2,out:129.95}, ctx:1000000, tags:["reasoning","vision","long-context"], blurb:"MiniMax's multimodal specialist — 1M context." },
+  "openai/gpt-oss-120b": { provider:"openai", label:"GPT-OSS 120B", inr:{in:5.75,out:49.45}, ctx:131000, tags:["cheap","fast","tools"], blurb:"OpenAI's open-weight line — a different product from their hosted GPT API." },
+  "moonshot/kimi-k3": { provider:"moonshot", label:"Kimi K3", inr:{in:326.6,out:1630.7}, ctx:256000, tags:["reasoning","code","tools","long-context"], blurb:"Moonshot's newest flagship." },
+  "qwen/qwen3.7-plus": { provider:"qwen", label:"Qwen 3.7 Plus", inr:{in:43.7,out:173.65}, ctx:262000, tags:["reasoning","code","cheap","long-context"], blurb:"Newest Qwen tier — cheap, strong at code." },
+  "openai/gpt-oss-20b": { provider:"openai", label:"GPT-OSS 20B", inr:{in:8.05,out:32.2}, ctx:131000, tags:["cheap","fast"], blurb:"OpenAI's smaller open-weight model — cheapest paid tier here." },
+  "fireworks/nemotron-3-ultra": { provider:"fireworks", label:"Nemotron 3 Ultra", inr:{in:65.55,out:261.05}, ctx:128000, tags:["reasoning","tools"], blurb:"NVIDIA's Nemotron line — no other route to this family (preview)." },
+  "fireworks/nemotron-nano-v2-12b-vl": { provider:"fireworks", label:"Nemotron Nano V2 12B Vl", inr:{in:21.85,out:21.85}, ctx:128000, tags:["vision","cheap"], blurb:"Served on Fireworks AI." },
+  "fireworks/nemotron-nano-3-30b-a3b": { provider:"fireworks", label:"Nemotron Nano 3 30B A3B", inr:{in:54.05,out:54.05}, ctx:128000, tags:["reasoning","tools"], blurb:"Served on Fireworks AI." },
+  "fireworks/llama-v3p1-nemotron-70b-instruct": { provider:"fireworks", label:"Llama V3.1 Nemotron 70B Instruct", inr:{in:97.75,out:97.75}, ctx:128000, tags:["reasoning"], blurb:"Served on Fireworks AI." },
+  "fireworks/nemotron-3-super-120b-a12b-bf16": { provider:"fireworks", label:"Nemotron 3 Super 120B A12B Bf16", inr:{in:129.95,out:129.95}, ctx:128000, tags:["reasoning"], blurb:"Served on Fireworks AI." },
+  "fireworks/glm-4p5-air": { provider:"fireworks", label:"GLM-4.5 Air", inr:{in:129.95,out:129.95}, ctx:131072, tags:["reasoning","tools"], blurb:"Served on Fireworks AI." },
+  "local/llama-3.1-8b": { provider:"local", label:"Llama 3.1 8B (local)", inr:{in:0,out:0}, ctx:128000, tags:["local","free","private"], blurb:"Runs on your box — zero per-token cost." },
+  "local/qwen2.5-7b": { provider:"local", label:"Qwen 2.5 7B (local)", inr:{in:0,out:0}, ctx:32000, tags:["local","free","private","code"], blurb:"Local, private, strong at code." },
+};
+var PROVIDERS = {
+  openai:    { label:'OpenAI',        glyph:'◯' },
+  anthropic: { label:'Anthropic',     glyph:'◆' },
+  gemini:    { label:'Google Gemini', glyph:'◈' },
+  deepseek:  { label:'DeepSeek',      glyph:'❖' },
+  mistral:   { label:'Mistral',       glyph:'▲' },
+  xai:       { label:'xAI',           glyph:'✕' },
+  moonshot:  { label:'Moonshot AI',   glyph:'☾' },
+  qwen:      { label:'Alibaba Qwen',  glyph:'◈' },
+  minimax:   { label:'MiniMax',       glyph:'◐' },
+  zai:       { label:'Z.AI',          glyph:'⬡' },
+  siliconflow:{ label:'SiliconFlow',  glyph:'◆' },
+  novita:    { label:'Novita AI',     glyph:'◐' },
+  fireworks: { label:'Fireworks AI',  glyph:'✦' },
+  local:     { label:'Local models',  glyph:'⌂' },
+  openrouter:{ label:'OpenRouter',    glyph:'◇' }
+};
+/* provider id → diagram node suffix */
+var PROV2DIAG = { openai:'openai', anthropic:'anthropic', gemini:'google', deepseek:'deepseek', mistral:'mistral', local:'local' };
+var VIRTUALS = ['auto','auto:cheap','auto:fast','auto:reasoning','auto:long-context'];
+
+// Community catalog (OpenRouter's 300+ long-tail models), fetched live from the
+// real gateway's public /v1/models endpoint. Kept entirely separate from the
+// curated MODELS object on purpose: listModels()/cheapestWithTag()/resolve()
+// below stay untouched and static-only, so "auto" and the primary model
+// dropdown never change behavior. getModel() gets one additive fallback so
+// a community model, once explicitly chosen, still displays/cost-estimates
+// correctly — mirrors the exact same safety boundary as the backend registry.
+var MODELS_COMMUNITY = {};
+var communityLoaded = false, communityLoading = false;
+/* One request for /v1/models, shared by the live-price sync and the availability check. */
+var _gwModels = null;
+function fetchGatewayModels(){
+  if(_gwModels) return _gwModels;
+  var ctl = new AbortController(), to = setTimeout(function(){ ctl.abort(); }, 9000);
+  _gwModels = fetch(gatewayBase.replace(/\/+$/,'') + '/v1/models', { signal: ctl.signal })
+    .then(function(r){ return r.ok ? r.json() : Promise.reject(new Error('HTTP '+r.status)); })
+    .finally(function(){ clearTimeout(to); });
+  return _gwModels;
+}
+function loadCommunityModels(){
+  if(communityLoaded || communityLoading) return;
+  communityLoading = true;
+  fetchGatewayModels()
+    .then(function(data){
+      var list = data.data || data.models || [];
+      list.forEach(function(m){
+        if(m.tags && m.tags.indexOf('community')>=0){ MODELS_COMMUNITY[m.id] = m; }
+        // Curated models: take pricing from the gateway, which is authoritative
+        // and already includes our margin. This keeps the pricing page honest
+        // if MARGIN_PCT changes server-side — the static values below are only
+        // a pre-fetch fallback.
+        else if(MODELS[m.id] && m.inr){ MODELS[m.id].inr = m.inr; }
+      });
+      communityLoaded = true;
+    })
+    .catch(function(){ /* gateway unreachable — both UI surfaces just show "couldn't load", nothing else on the page depends on this */ })
+    .finally(function(){
+      communityLoading = false;
+      var count = Object.keys(MODELS_COMMUNITY).length;
+      var chipCount = $('community-chip-count'); if(chipCount) chipCount.textContent = count ? '('+count+')' : '';
+      // Real, live number — not a rounded marketing figure. Grows/shrinks
+      // honestly as OpenRouter's own catalog does, no hardcoded "400+" to
+      // eventually be wrong in either direction.
+      // "350+" only displays while it's actually true. If the live total ever
+      // dips below that (OpenRouter's catalog shrinks, collisions increase,
+      // etc.) this automatically falls back to the exact honest number
+      // instead of silently becoming a false claim on the homepage.
+      var statEl = $('stat-models');
+      // Only touch the figure when the catalog genuinely loaded. A failed
+      // fetch must leave the existing value alone — otherwise a momentary
+      // network problem silently reports the static-only count.
+      if(statEl && communityLoaded){ var total=Object.keys(MODELS).length+count; statEl.textContent = total>=350 ? '350+' : String(total); }
+      renderTicker();
+      renderCommunityResults();
+      if(typeof renderModels==='function') renderModels();
+    });
+}
+
+function openCommunitySearch(){
+  openModal('modal-community');
+  $('community-search').value='';
+  loadCommunityModels(); // no-ops instantly if already loaded/loading
+  renderCommunityResults();
+  setTimeout(function(){ $('community-search').focus(); }, 50);
+}
+
+function filterCommunityModels(){ renderCommunityResults(); }
+
+function skeletonCards(n){
+  var out='';
+  for(var i=0;i<n;i++){
+    out+='<div class="skel-card">'
+      +'<div class="skel skel-line" style="width:52%;height:15px;margin-bottom:12px"></div>'
+      +'<div class="skel skel-line" style="width:78%"></div>'
+      +'<div class="skel skel-line" style="width:64%"></div>'
+      +'<div class="skel skel-line" style="width:36%;margin-top:14px;margin-bottom:0"></div>'
+      +'</div>';
+  }
+  return out;
+}
+function skeletonRows(n){
+  var out='';
+  for(var i=0;i<n;i++){
+    out+='<div style="padding:10px 8px;border-bottom:1px solid var(--border)">'
+      +'<div class="skel skel-line" style="width:46%;height:13px"></div>'
+      +'<div class="skel skel-line" style="width:70%;height:10px;margin-bottom:0"></div>'
+      +'</div>';
+  }
+  return out;
+}
+
+function renderCommunityResults(){
+  var el = $('community-results'); if(!el) return;
+  var q = ($('community-search').value||'').trim().toLowerCase();
+
+  if(communityLoading){ el.innerHTML=skeletonRows(5); return; }
+  var all = Object.keys(MODELS_COMMUNITY).map(function(id){ return MODELS_COMMUNITY[id]; });
+  if(!all.length){ el.innerHTML='<div class="dim" style="padding:20px;text-align:center;font-size:13px">Couldn\'t reach the live catalog right now — try again in a moment.</div>'; return; }
+
+  var matches = q ? all.filter(function(m){
+    return (m.label||m.id||'').toLowerCase().indexOf(q)>=0 || (m.id||'').toLowerCase().indexOf(q)>=0;
+  }) : [];
+
+  if(!q){ el.innerHTML='<div class="dim" style="padding:20px;text-align:center;font-size:13px">Type to search '+all.length+' community models…</div>'; return; }
+  if(!matches.length){ el.innerHTML='<div class="dim" style="padding:20px;text-align:center;font-size:13px">No matches for "'+esc(q)+'".</div>'; return; }
+
+  var shown = matches.slice(0, 40);
+  el.innerHTML = shown.map(function(m){
+    var priceIn = m.inr ? m.inr.in : 0, priceOut = m.inr ? m.inr.out : 0;
+    var tags = (m.tags||[]).slice(0,3).map(function(t){ return '<span class="mtag">'+esc(t)+'</span>'; }).join('');
+    return '<div class="community-card" onclick="selectCommunityModel(\''+esc(m.id)+'\')">'
+      + '<div class="cc-name">'+esc((m.label||m.id).replace(' (OpenRouter)',''))+'</div>'
+      + '<div class="cc-id mono">'+esc(m.id)+'</div>'
+      + (tags ? '<div class="cc-tags">'+tags+'</div>' : '')
+      + '<div class="cc-price">₹'+priceIn.toFixed(2)+' in · ₹'+priceOut.toFixed(2)+' out <span class="dim">/1M</span></div>'
+      + '</div>';
+  }).join('') + (matches.length>40 ? '<div class="dim" style="padding:10px;text-align:center;font-size:12px">+'+(matches.length-40)+' more — refine your search</div>' : '');
+}
+
+function selectCommunityModel(id){
+  var m = MODELS_COMMUNITY[id]; if(!m) return;
+  copyText(id, 'Model ID copied');
+  closeModals();
+}
+
+function listModels(){ return Object.keys(MODELS).map(function(id){ var o={id:id}; for(var k in MODELS[id]) o[k]=MODELS[id][k]; return o; }); }
+function getModel(id){ return MODELS[id] || MODELS_COMMUNITY[id] || null; }
+function cheapestWithTag(tag){
+  var best=null;
+  for(var id in MODELS){ var m=MODELS[id]; if(m.tags.indexOf(tag)<0) continue; var c=m.inr.in+m.inr.out; if(!best||c<best.cost) best={id:id,cost:c}; }
+  return best?best.id:null;
+}
+function resolve(field){
+  var m=(field||'').trim();
+  if(m==='auto'||m==='auto:balanced'){ return cheapestWithTag('balanced')||cheapestWithTag('cheap')||'openai/gpt-4o-mini'; }
+  if(m.indexOf('auto:')===0){ var tag=m.slice(5); return cheapestWithTag(tag)||'openai/gpt-4o-mini'; }
+  return MODELS[m]?m:null;
+}
+function fallbackChain(modelId, maxLen){
+  maxLen=maxLen||3;
+  var base=getModel(modelId); if(!base) return [modelId];
+  var priority=['reasoning','code','long-context','vision','balanced','fast','cheap'];
+  var tag='cheap'; for(var i=0;i<priority.length;i++){ if(base.tags.indexOf(priority[i])>=0){ tag=priority[i]; break; } }
+  var sib=Object.keys(MODELS)
+    .filter(function(id){ var m=MODELS[id]; return id!==modelId && m.tags.indexOf(tag)>=0 && m.provider!==base.provider; })
+    .sort(function(a,b){ return (MODELS[a].inr.in+MODELS[a].inr.out)-(MODELS[b].inr.in+MODELS[b].inr.out); });
+  return [modelId].concat(sib).slice(0,maxLen);
+}
+function costPaise(modelId,inTok,outTok){
+  var m=getModel(modelId); if(!m) return 0;
+  return Math.ceil((inTok/1e6*m.inr.in + outTok/1e6*m.inr.out)*100);
+}
+function estimateTokens(s){ return Math.max(1, Math.ceil(String(s||'').length/4)); }
+
+/* ════════════ config / local state ════════════ */
+var gatewayBase = 'https://api.aitklabs.in';
+
+/* ════════════ tiny helpers ════════════ */
+function $(id){ return document.getElementById(id); }
+function esc(s){ return String(s).replace(/[&<>"]/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
+function inr(paise, dp){ dp=(dp==null?2:dp); return '₹'+(paise/100).toLocaleString('en-IN',{minimumFractionDigits:dp,maximumFractionDigits:dp}); }
+function rupee(p){ return inr(p,2); }
+function rupee4(p){ return inr(p,4); }
+function sleep(ms){ return new Promise(function(r){ setTimeout(r,ms); }); }
+function nowStr(){ return new Date().toLocaleString('en-IN',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'}); }
+function toast(title,msg){
+  var t=$('toast'); if(!t) return;
+  t.innerHTML='<div class="tt">'+esc(title)+'</div>'+(msg?'<div class="tm">'+esc(msg)+'</div>':'');
+  t.classList.add('on'); clearTimeout(toast._t); toast._t=setTimeout(function(){ t.classList.remove('on'); },3200);
+}
+function copyText(text, okMsg){
+  if(navigator.clipboard && navigator.clipboard.writeText){ navigator.clipboard.writeText(text).then(function(){ toast(okMsg||'Copied'); }).catch(function(){ toast('Copy failed'); }); }
+  else { try{ var ta=document.createElement('textarea'); ta.value=text; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); ta.remove(); toast(okMsg||'Copied'); }catch(e){ toast('Copy failed'); } }
+}
+
+/* ════════════ navigation ════════════ */
+/* ════════════ routing diagram animation ════════════ */
+var ALL_DIAG=['n-dev','n-gateway','n-auth','n-router','n-formatter','n-user',
+  'p-openai','p-anthropic','p-google','p-deepseek','p-mistral','p-local',
+  'e-dev-gw','e-gw-auth','e-auth-router','e-fmt-user',
+  'er-openai','er-anthropic','er-google','er-deepseek','er-mistral','er-local',
+  'ef-openai','ef-anthropic','ef-google','ef-deepseek','ef-mistral','ef-local'];
+function clearDiagram(prefix){ for(var i=0;i<ALL_DIAG.length;i++){ var el=$(prefix+ALL_DIAG[i]); if(el) el.classList.remove('active'); } }
+function lightSeq(prefix, provSuffix){
+  clearDiagram(prefix);
+  var seq=['n-dev','e-dev-gw','n-gateway','e-gw-auth','n-auth','e-auth-router','n-router',
+    'er-'+provSuffix,'p-'+provSuffix,'ef-'+provSuffix,'n-formatter','e-fmt-user','n-user'];
+  var i=0;
+  (function step(){
+    if(i>=seq.length) return;
+    var el=$(prefix+seq[i]); if(el) el.classList.add('active');
+    i++; setTimeout(step, 140);
+  })();
+}
+function animateRoute(routedAs, providerId, fellBack, opts){
+  opts=opts||{}; var prefix=opts.prefix||''; var capId=opts.capId||'diagram-caption';
+  var provSuffix, caption;
+  if(!routedAs){ return; }
+  {
+    provSuffix=PROV2DIAG[providerId]||'openai';
+    var m=getModel(routedAs);
+    caption='Routed to <b>'+esc(m?m.label:routedAs)+'</b> · '+esc(PROVIDERS[providerId]?PROVIDERS[providerId].label:providerId)+(fellBack?' <span class="sf">· failover</span>':'');
+  }
+  lightSeq(prefix, provSuffix);
+  var cap=$(capId); if(cap) cap.innerHTML=caption;
+}
+
+/* ════════════ models page ════════════ */
+var modelFilter='all';
+function ctxLabel(n){ if(n>=1000000) return (n/1000000)+'M ctx'; if(n>=1000) return Math.round(n/1000)+'K ctx'; return n+' ctx'; }
+/* ═════ MODELS EXPLORER ═════ */
+(function(){
+  var S={cap:'all',prov:'all',view:null,inM:0.7,outM:0.3,cmp:[],ready:false,avail:null};
+  /* well-known models first in "Popular first"; anything not listed keeps the flagship/price order after these */
+  var POPULAR=['openai/gpt-6.1-sol','anthropic/claude-sonnet-5-5','anthropic/claude-opus-5-5','google/gemini-4-argon','google/gemini-3.1-pro','anthropic/claude-haiku-5-5','openai/gpt-6-luna','deepseek/deepseek-v4.1-flash','deepseek/deepseek-v4-pro','xai/grok-4.7','moonshot/kimi-k3.1-pro','qwen/qwen3.8-max','google/gemini-3.8-flash','openai/gpt-oss-120b','mistral/mistral-large-4','zai/glm-5.3','qwen/qwen3.8-flash','moonshot/kimi-k3','minimax/minimax-m3.1-flash'];
+  var LEGACY={'deepseek/deepseek-v4-flash':1};
+  /* introductory prices: the note disappears by itself once the date passes (the gateway switches the real price on the same day) */
+  var NOTES={'google/gemini-4-argon':['2026-11-30','Intro price until 30 Nov, doubles after'],'google/gemini-3.8-flash':['2026-12-31','Intro price until 31 Dec, doubles after'],'google/gemini-3.7-flash':['2026-12-31','Intro price until 31 Dec, doubles after'],'google/gemini-3.6-flash':['2026-12-31','Intro price until 31 Dec, doubles after']};
+  function noteFor(id){ var n=NOTES[id]; return n && new Date().toISOString().slice(0,10)<=n[0] ? n[1] : ''; }
+  var CAPS=[['all','All'],['reasoning','Reasoning'],['vision','Vision'],['tools','Tools'],['fast','Fast'],['cheap','Cheap'],['long-context','Long context'],['flagship','Flagship'],['local','Local'],['community','Community']];
+  function g(id){return document.getElementById(id);}
+  function e(s){return esc(String(s==null?'':s));}
+  function inr(n){ if(n===0) return '0'; var d=n>=100?0:2; return Number(n).toLocaleString('en-IN',{minimumFractionDigits:0,maximumFractionDigits:d}); }
+  function ctx(n){ if(n>=1e6) return +(n/1e6).toFixed(2)+'M'; if(n>=1e3) return Math.round(n/1e3)+'K'; return String(n||'—'); }
+  function slug(id){ return id.replace(/[^a-z0-9]+/gi,'-').toLowerCase(); }
+  function cost(m){ return m.inr.in*S.inM + m.inr.out*S.outM; }
+  function sync(){
+    var a=parseFloat(g('mx-in').value), b=parseFloat(g('mx-out').value);
+    S.inM=isFinite(a)&&a>=0?a:0; S.outM=isFinite(b)&&b>=0?b:0;
+  }
+  function pool(){
+    if(S.cap==='community'){
+      return Object.keys(MODELS_COMMUNITY).map(function(id){ var o={id:id}; for(var k in MODELS_COMMUNITY[id]) o[k]=MODELS_COMMUNITY[id][k]; return o; });
+    }
+    return listModels();
+  }
+  function provLabel(p){ return (PROVIDERS[p]||{label:p}).label; }
+  function buildChips(){
+    g('model-filters').innerHTML=CAPS.map(function(c){
+      return '<button type="button" class="chip'+(S.cap===c[0]?' on':'')+'" data-cap="'+c[0]+'">'+c[1]+(c[0]==='community'?' <span id="community-chip-count" class="dim"></span>':'')+'</button>';
+    }).join('');
+    var n=Object.keys(MODELS_COMMUNITY).length, el=g('community-chip-count'); if(el) el.textContent=n?'('+n+')':'';
+  }
+  function buildProv(){
+    var base=S.cap==='community'?pool():listModels(), cnt={};
+    base.forEach(function(m){ cnt[m.provider]=(cnt[m.provider]||0)+1; });
+    var keys=Object.keys(cnt).sort(function(a,b){ return provLabel(a).localeCompare(provLabel(b)); });
+    var cur=S.prov; if(cur!=='all' && !cnt[cur]) cur=S.prov='all';
+    g('mx-prov').innerHTML='<option value="all">All providers</option>'+keys.map(function(k){ return '<option value="'+e(k)+'"'+(cur===k?' selected':'')+'>'+e(provLabel(k))+' ('+cnt[k]+')</option>'; }).join('');
+  }
+  function row(m,lo,hi){
+    var free=(m.inr.in===0&&m.inr.out===0);
+    var pct=free?3:Math.max(4,Math.round(100*(Math.log(m.inr.out+1)-lo)/Math.max(.001,hi-lo)));
+    var sel=S.cmp.indexOf(m.id)>=0;
+    var tags=(m.tags||[]).filter(function(t){return t!=='community';}).slice(0,4).map(function(t){return '<span>'+e(t)+'</span>';}).join('');
+    var c=cost(m);
+    var off=!!(S.avail&&!MODELS_COMMUNITY[m.id]&&MODELS[m.id]&&!S.avail[m.id]);
+    return '<div class="mx-row'+(sel?' sel':'')+(off?' off':'')+'" data-id="'+e(m.id)+'">'
+      +'<div class="mx-ckw"><input class="mx-ck" type="checkbox" '+(sel?'checked ':'')+'aria-label="Compare '+e(m.label)+'"></div>'
+      +'<div class="mx-name"><a href="models/'+slug(m.id)+'.html">'+e(m.label)+'</a>'+(off?' <span class="mx-off-b" title="Every host for this model is failing right now. It comes back automatically.">Unavailable now</span>':'')+(LEGACY[m.id]?' <span class="mx-legacy-b" title="Old id, kept so existing code keeps working. Served by the newer model.">Legacy id</span>':'')
+        +'<div class="mx-meta"><span>'+e(provLabel(m.provider))+'</span><code>'+e(m.id)+'</code></div>'
+        +(tags?'<div class="mx-tags">'+tags+'</div>':'')+(noteFor(m.id)?'<div class="mx-note">'+e(noteFor(m.id))+'</div>':'')+'</div>'
+      +'<div class="mx-ctx r">'+ctx(m.ctx)+'</div>'
+      +'<div class="mx-p r pin">'+(free?'<span class="mx-free">Free</span>':'₹'+inr(m.inr.in))+'<small>input / 1M</small></div>'
+      +'<div class="mx-p r pout">'+(free?'<span class="mx-free">Free</span>':'₹'+inr(m.inr.out))+'<small>output / 1M</small>'+'<div class="mx-ruler" title="Output price, log scale"><i style="width:'+pct+'%"></i></div></div>'
+      +'<div class="mx-est-c r">'+(free?'Free':'₹'+inr(c))+'<small>per month</small></div>'
+      +'<div class="mx-cpw"><button type="button" class="mx-cp" data-copy="'+e(m.id)+'" title="Copy model ID" aria-label="Copy model ID of '+e(m.label)+'">⧉</button></div>'
+      +'</div>';
+  }
+  window.setModelFilter=function(btn,f){ S.cap=f; if(f==='community') loadCommunityModels(); window.renderModels(); };
+  window.renderModels=function(){
+    var host=g('models-grid'); if(!host||!g('mx-in')) return;
+    sync();
+    var q=(g('model-search').value||'').toLowerCase().trim();
+    var sort=g('model-sort').value;
+    var list=pool();
+    var all=list.length;
+    if(S.cap!=='all'&&S.cap!=='community') list=list.filter(function(m){ return (m.tags||[]).indexOf(S.cap)>=0; });
+    if(S.prov!=='all') list=list.filter(function(m){ return m.provider===S.prov; });
+    if(q) list=list.filter(function(m){ return (m.id+' '+m.label+' '+provLabel(m.provider)+' '+(m.tags||[]).join(' ')).toLowerCase().indexOf(q)>=0; });
+    var c2=function(m){ return m.inr.in+m.inr.out; };
+    if(sort==='cheapest') list.sort(function(a,b){ return cost(a)-cost(b); });
+    else if(sort==='priciest') list.sort(function(a,b){ return c2(b)-c2(a); });
+    else if(sort==='context') list.sort(function(a,b){ return (b.ctx||0)-(a.ctx||0); });
+    else if(sort==='az') list.sort(function(a,b){ return a.label.localeCompare(b.label); });
+    else { var sc=function(m){ return (m.tags||[]).indexOf('flagship')>=0?0:((m.tags||[]).indexOf('balanced')>=0?1:2); }, pr=function(m){ var i=POPULAR.indexOf(m.id); return LEGACY[m.id]?2000:(i<0?1000:i); }; list.sort(function(a,b){ return pr(a)-pr(b)||sc(a)-sc(b)||c2(b)-c2(a); }); }
+    if(S.avail){ var up=[],dn=[]; list.forEach(function(m){ (MODELS[m.id]&&!MODELS_COMMUNITY[m.id]&&!S.avail[m.id]?dn:up).push(m); }); list=up.concat(dn); }
+    var cnt=g('mx-count'); if(cnt) cnt.textContent=(list.length===all?all:list.length+' of '+all)+' models';
+    var cards=S.view==='cards';
+    host.className='mx-list'+(cards?' cards':'');
+    if(S.cap==='community'&&communityLoading){ host.innerHTML='<div class="mx-empty">Loading the community catalog…</div>'; return; }
+    if(!list.length){
+      host.innerHTML='<div class="mx-empty"><b>No models match.</b><br>'+(S.cap==='community'?'The community catalog could not be loaded. Try again in a moment.':'Clear the search or pick “All” to see every model.')+'<br><button type="button" onclick="resetModelFilters()">Reset filters</button></div>'; saveState(); return;
+    }
+    var shown=list.slice(0,80);
+    var outs=shown.map(function(m){return Math.log(m.inr.out+1);}), lo=Math.min.apply(null,outs), hi=Math.max.apply(null,outs);
+    host.innerHTML='<div class="mx-th" aria-hidden="true"><span></span><span>Model</span><span class="r">Context</span><span class="r">Input</span><span class="r">Output</span><span class="r">Your monthly cost</span><span></span></div>'
+      +shown.map(function(m){return row(m,lo,hi);}).join('')
+      +(list.length>shown.length?'<div class="mx-more">Showing '+shown.length+' of '+list.length+'. Search to narrow it down.</div>':'');
+    buildChips(); tray(); saveState();
+  };
+  /* filters live in the address bar (?q=&sort=&prov=&cap=&in=&out=) so a link, a refresh or the back button keeps your view */
+  var DEF={sort:'popular',prov:'all',cap:'all',inM:'0.7',outM:'0.3'};
+  function saveState(){
+    try{
+      var p=new URLSearchParams(), q=(g('model-search').value||'').trim(), so=g('model-sort').value;
+      if(q) p.set('q',q); if(so!==DEF.sort) p.set('sort',so); if(S.prov!==DEF.prov) p.set('prov',S.prov); if(S.cap!==DEF.cap) p.set('cap',S.cap);
+      if(g('mx-in').value!==DEF.inM) p.set('in',g('mx-in').value); if(g('mx-out').value!==DEF.outM) p.set('out',g('mx-out').value);
+      var s=p.toString(), url=location.pathname+(s?'?'+s:'')+location.hash;
+      if(url!==location.pathname+location.search+location.hash) history.replaceState(null,'',url);
+    }catch(x){}
+  }
+  function loadState(){
+    try{
+      var p=new URLSearchParams(location.search);
+      if(p.get('q')) g('model-search').value=p.get('q').slice(0,80);
+      var so=p.get('sort'); if(so && g('model-sort').querySelector('option[value="'+so.replace(/[^a-z]/g,'')+'"]')) g('model-sort').value=so.replace(/[^a-z]/g,'');
+      var cp=p.get('cap'); if(cp && CAPS.some(function(c){return c[0]===cp;})){ S.cap=cp; if(cp==='community') loadCommunityModels(); }
+      if(p.get('prov')) S.prov=p.get('prov').slice(0,40);
+      var a=parseFloat(p.get('in')), b=parseFloat(p.get('out'));
+      if(isFinite(a)&&a>=0) g('mx-in').value=String(a); if(isFinite(b)&&b>=0) g('mx-out').value=String(b);
+      var pb=g('mx-presets').querySelectorAll('button');
+      for(var i=0;i<pb.length;i++) pb[i].classList.toggle('on',parseFloat(pb[i].getAttribute('data-in'))===parseFloat(g('mx-in').value)&&parseFloat(pb[i].getAttribute('data-out'))===parseFloat(g('mx-out').value));
+    }catch(x){}
+  }
+  window.resetModelFilters=function(){
+    g('model-search').value=''; g('model-sort').value=DEF.sort; S.cap='all'; S.prov='all'; buildProv(); window.renderModels();
+  };
+  function tray(){
+    var t=g('mx-tray'); if(!t) return;
+    t.hidden=S.cmp.length<1;
+    g('mx-tray-n').textContent=S.cmp.length+' selected'+(S.cmp.length<2?' (pick 1 more)':'');
+    g('mx-tray-go').disabled=S.cmp.length<2; g('mx-tray-go').style.opacity=S.cmp.length<2?.5:1;
+  }
+  function compare(){
+    var ms=S.cmp.map(function(id){var m=getModel(id); if(!m) return null; var o={id:id}; for(var k in m) o[k]=m[k]; return o;}).filter(Boolean); if(ms.length<2) return;
+    var best=function(f,low){ var v=ms.map(f), t=low?Math.min.apply(null,v):Math.max.apply(null,v); return v.map(function(x){return x===t;}); };
+    var bi=best(function(m){return m.inr.in;},true), bo=best(function(m){return m.inr.out;},true), bc=best(function(m){return cost(m);},true), bx=best(function(m){return m.ctx||0;},false);
+    var tr=function(label,fn,flags){ return '<tr><th scope="row">'+label+'</th>'+ms.map(function(m,i){ return '<td'+(flags&&flags[i]?' class="best"':'')+'>'+fn(m)+'</td>'; }).join('')+'</tr>'; };
+    var cheapest=Math.min.apply(null,ms.map(cost));
+    g('mx-modal-b').innerHTML='<table class="mx-cmp"><thead><tr><th></th>'+ms.map(function(m){return '<th scope="col">'+e(m.label)+'</th>';}).join('')+'</tr></thead><tbody>'
+      +tr('Provider',function(m){return e(provLabel(m.provider));})
+      +tr('Model ID',function(m){return '<code>'+e(m.id)+'</code>';})
+      +tr('Context',function(m){return ctx(m.ctx)+' tokens';},bx)
+      +tr('Input / 1M',function(m){return '₹'+inr(m.inr.in);},bi)
+      +tr('Output / 1M',function(m){return '₹'+inr(m.inr.out);},bo)
+      +tr('Your monthly cost',function(m){var c=cost(m);return '₹'+inr(c)+(cheapest>0&&c>cheapest?' <small>('+(c/cheapest).toFixed(1)+'× the cheapest)</small>':'');},bc)
+      +tr('Good for',function(m){return e((m.tags||[]).join(', '))||'—';})
+      +tr('About',function(m){return e(m.blurb||'');})
+      +'</tbody></table><p style="font-size:12.5px;color:var(--text3);margin-top:12px">Monthly cost uses your usage above: '+S.inM+'M input and '+S.outM+'M output tokens.</p>';
+    g('mx-modal').hidden=false; g('mx-modal-x').focus();
+  }
+  function status(){
+    var el=g('mx-status'); if(!el) return;
+    var ctl=new AbortController(), to=setTimeout(function(){ctl.abort();},6000);
+    fetch(gatewayBase.replace(/\/+$/,'')+'/status.json',{signal:ctl.signal}).then(function(r){return r.ok?r.json():Promise.reject();}).then(function(d){
+      var o=d&&d.overall; if(!o) return;
+      el.className='mx-status'+(o==='degraded'?' degraded':o==='outage'?' outage':'');
+      el.querySelector('span').textContent=o==='operational'?'All systems operational':o==='degraded'?'Some providers degraded':'Service disruption';
+      el.hidden=false;
+    }).catch(function(){}).then(function(){clearTimeout(to);});
+  }
+  function init(){
+    if(S.ready||!g('mx-in')) return; S.ready=true;
+    S.view=(window.innerWidth<=900)?'cards':'table';
+    g('mx-v-table').classList.toggle('on',S.view==='table'); g('mx-v-cards').classList.toggle('on',S.view==='cards');
+    loadState(); buildChips(); buildProv();
+    var dbt; g('model-search').addEventListener('input',function(){ clearTimeout(dbt); dbt=setTimeout(window.renderModels,120); });
+    g('model-sort').addEventListener('change',window.renderModels);
+    g('mx-prov').addEventListener('change',function(){ S.prov=this.value; window.renderModels(); });
+    g('mx-in').addEventListener('input',function(){ clearPreset(); window.renderModels(); });
+    g('mx-out').addEventListener('input',function(){ clearPreset(); window.renderModels(); });
+    function clearPreset(){ var b=g('mx-presets').querySelectorAll('button'); for(var i=0;i<b.length;i++) b[i].classList.remove('on'); }
+    g('mx-presets').addEventListener('click',function(ev){ var b=ev.target.closest('button'); if(!b) return; clearPreset(); b.classList.add('on'); g('mx-in').value=b.getAttribute('data-in'); g('mx-out').value=b.getAttribute('data-out'); window.renderModels(); });
+    g('mx-v-table').addEventListener('click',function(){ S.view='table'; this.classList.add('on'); g('mx-v-cards').classList.remove('on'); window.renderModels(); });
+    g('mx-v-cards').addEventListener('click',function(){ S.view='cards'; this.classList.add('on'); g('mx-v-table').classList.remove('on'); window.renderModels(); });
+    g('model-filters').addEventListener('click',function(ev){ var b=ev.target.closest('.chip'); if(!b) return; S.cap=b.getAttribute('data-cap'); if(S.cap==='community') loadCommunityModels(); buildProv(); window.renderModels(); });
+    g('models-grid').addEventListener('change',function(ev){
+      if(!ev.target.classList.contains('mx-ck')) return;
+      var id=ev.target.closest('.mx-row').getAttribute('data-id'), i=S.cmp.indexOf(id);
+      if(ev.target.checked){ if(S.cmp.length>=3){ ev.target.checked=false; return; } if(i<0) S.cmp.push(id); } else if(i>=0) S.cmp.splice(i,1);
+      ev.target.closest('.mx-row').classList.toggle('sel',ev.target.checked); tray();
+    });
+    g('models-grid').addEventListener('click',function(ev){
+      var b=ev.target.closest('[data-copy]'); if(!b) return; var id=b.getAttribute('data-copy');
+      var done=function(){ var o=b.textContent; b.textContent='✓'; setTimeout(function(){b.textContent=o;},1200); };
+      if(navigator.clipboard&&navigator.clipboard.writeText) navigator.clipboard.writeText(id).then(done,function(){});
+      else { var t=document.createElement('textarea'); t.value=id; document.body.appendChild(t); t.select(); try{document.execCommand('copy');done();}catch(x){} t.remove(); }
+    });
+    g('mx-tray-go').addEventListener('click',compare);
+    g('mx-tray-clear').addEventListener('click',function(){ S.cmp=[]; window.renderModels(); });
+    g('mx-modal-x').addEventListener('click',function(){ g('mx-modal').hidden=true; });
+    g('mx-modal').addEventListener('click',function(ev){ if(ev.target===this) this.hidden=true; });
+    document.addEventListener('keydown',function(ev){ if(ev.key==='Escape') g('mx-modal').hidden=true; });
+    status();
+    /* The gateway hides a model from /v1/models when every host for it is down. Mirror that here: mark those rows instead of selling something that is failing. */
+    (function(){
+      fetchGatewayModels().then(function(d){
+        var a=(d&&d.data)||[]; if(a.length<20) return;      // a short/odd answer is not evidence that models are down
+        var set={}; a.forEach(function(m){ set[m.id]=true; });
+        var missing=Object.keys(MODELS).filter(function(id){ return !set[id]; });
+        if(missing.length>Math.ceil(Object.keys(MODELS).length*0.5)) return;   // half the catalogue "missing" means a stale/other server, not an outage
+        S.avail=set; window.renderModels();
+      }).catch(function(){});
+    })();
+    window.renderModels();
+  }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',init); else init();
+})();
+
+/* ════════════ nav balance ════════════
+   Real balance only: filled from /app/me when signed in (see the block at the end of the page). */
+function refreshBalance(){}
+
+/* ════════════ modals ════════════ */
+function openModal(id){
+  $('overlay').classList.add('on');
+  var ms=document.querySelectorAll('.modal'); for(var i=0;i<ms.length;i++) ms[i].classList.remove('on');
+  $(id).classList.add('on');
+}
+window.closeModals=function(){
+  $('overlay').classList.remove('on');
+  var ms=document.querySelectorAll('.modal'); for(var i=0;i<ms.length;i++) ms[i].classList.remove('on');
+};
+document.addEventListener('keydown', function(e){ if(e.key==='Escape') closeModals(); });
+
+/* ════════════ ticker ════════════ */
+function renderTicker(){
+  var el=$('ticker'); if(!el) return;
+  // Before the community catalog resolves we have no basis to claim a lower
+  // number, so show the same figure as the server-rendered stat card. Once
+  // real data is in, report exactly what's there.
+  var realTotal=Object.keys(MODELS).length+Object.keys(MODELS_COMMUNITY).length;
+  var modelCount=(!communityLoaded || realTotal>=350) ? '350+' : String(realTotal);
+  var items=[
+    ['MODELS', String(modelCount), false],
+    ['ONE KEY', 'yk_live_…', true],
+    ['PROVIDERS', String(Object.keys(PROVIDERS).length-1), false],
+    ['BILLING', 'UPI · INR', true],
+    ['API', 'OpenAI-compatible', false],
+    ['ROUTING', 'auto · failover', true],
+    ['MIN TOP-UP', '₹10', false],
+    ['REGION', 'IN 🇮🇳', false],
+    ['CHEAPEST', 'gpt-4o-mini', true],
+    ['LOCAL', 'Llama · Qwen · ₹0', false]
+  ];
+  function build(){
+    return items.map(function(it){
+      return '<span class="tk"><span class="tk-name">'+esc(it[0])+'</span> <span class="tk-val'+(it[2]?' grn':'')+'">'+esc(it[1])+'</span></span><span class="tk-sep">•</span>';
+    }).join('');
+  }
+  el.innerHTML=build()+build();
+}
+
+/* ════════════ background canvas ════════════ */
+function startCanvas(){
+  var c=$('bg-canvas'); if(!c) return; var ctx=c.getContext('2d'); if(!ctx) return;
+  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion:reduce)').matches;
+  var w,h,pts=[], stopped=false;
+  function size(){ w=c.width=window.innerWidth; h=c.height=window.innerHeight; }
+  size(); window.addEventListener('resize', size);
+  var N=Math.min(window.innerWidth<700?22:64, Math.floor(window.innerWidth/24));
+  for(var i=0;i<N;i++) pts.push({ x:Math.random()*w, y:Math.random()*h, vx:(Math.random()-0.5)*0.24, vy:(Math.random()-0.5)*0.24 });
+  function frame(){
+    ctx.clearRect(0,0,w,h);
+    for(var i=0;i<pts.length;i++){ var p=pts[i]; p.x+=p.vx; p.y+=p.vy;
+      if(p.x<0||p.x>w) p.vx*=-1; if(p.y<0||p.y>h) p.vy*=-1;
+      ctx.fillStyle='rgba(0,105,184,0.40)'; ctx.fillRect(p.x,p.y,1.5,1.5); }
+    for(var a=0;a<pts.length;a++) for(var b=a+1;b<pts.length;b++){
+      var dx=pts[a].x-pts[b].x, dy=pts[a].y-pts[b].y, d=Math.sqrt(dx*dx+dy*dy);
+      if(d<118){ ctx.strokeStyle='rgba(15,40,90,'+(0.12*(1-d/118)).toFixed(3)+')'; ctx.lineWidth=1;
+        ctx.beginPath(); ctx.moveTo(pts[a].x,pts[a].y); ctx.lineTo(pts[b].x,pts[b].y); ctx.stroke(); } }
+    if(!reduce && !document.hidden) requestAnimationFrame(frame); else stopped=true;
+  }
+  requestAnimationFrame(frame);
+  document.addEventListener('visibilitychange', function(){ if(!document.hidden && !reduce && stopped){ stopped=false; requestAnimationFrame(frame); } });
+}
+
+/* ════════════ init ════════════ */
+/* ════════════ hero diagram tilt (desktop mouse only) ════════════
+   The 3D entrance above plays for every visitor via CSS. This is a small
+   bonus layer only for devices with a precise hover-capable pointer — a real
+   mouse, not touch — so it never fires pointlessly on the mobile devices
+   most visitors are actually using. Respects prefers-reduced-motion. */
+/* ════════════ scroll reveal ════════════
+   Sections ease in as they enter the viewport — the single biggest
+   "feels premium" win available, and it's what Linear/Apple actually do
+   (subtle motion on real content, not decorative effects).
+   Fail-safe by construction: if IntersectionObserver is missing, reduced
+   motion is preferred, or anything throws, we never add the hiding class,
+   so all content stays visible. */
+function initScrollReveal(){
+  try{
+    if(!('IntersectionObserver' in window)) return;
+    if(window.matchMedia && window.matchMedia('(prefers-reduced-motion:reduce)').matches) return;
+    var targets = document.querySelectorAll('.section-head, .feat, .step, .trust-item');
+    if(!targets.length) return;
+    for(var i=0;i<targets.length;i++) targets[i].classList.add('reveal-ready');
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(entry, idx){
+        if(!entry.isIntersecting) return;
+        var el = entry.target;
+        // Small stagger so grouped cards cascade rather than snapping in together.
+        var delay = Math.min(idx * 70, 280);
+        setTimeout(function(){ el.classList.add('reveal-in'); }, delay);
+        io.unobserve(el); // reveal once, never re-hide on scroll back
+      });
+    }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+    for(var j=0;j<targets.length;j++) io.observe(targets[j]);
+  }catch(e){
+    // Never leave content hidden if anything goes wrong.
+    var stuck = document.querySelectorAll('.reveal-ready');
+    for(var k=0;k<stuck.length;k++) stuck[k].classList.add('reveal-in');
+  }
+}
+
+function initDiagramTilt(){
+  var card = document.querySelector('.diagram-card'); if(!card) return;
+  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion:reduce)').matches;
+  var canHover = window.matchMedia && window.matchMedia('(hover:hover) and (pointer:fine)').matches;
+  if(reduce || !canHover) return;
+  var rect;
+  function updateRect(){ rect = card.getBoundingClientRect(); }
+  updateRect();
+  window.addEventListener('resize', updateRect);
+  card.addEventListener('mousemove', function(e){
+    var px=(e.clientX-rect.left)/rect.width, py=(e.clientY-rect.top)/rect.height;
+    var rx=((py-0.5)*-6).toFixed(2), ry=((px-0.5)*6).toFixed(2);
+    card.style.transform='perspective(900px) rotateX('+rx+'deg) rotateY('+ry+'deg)';
+  });
+  card.addEventListener('mouseleave', function(){
+    card.style.transform='perspective(900px) rotateX(0deg) rotateY(0deg)';
+  });
+}
+
+function init(){
+  loadCommunityModels(); // updates stat-models to the real curated+community total once it resolves; silently keeps the curated-only count if the gateway is unreachable
+  refreshBalance();
+  renderTicker();
+  startCanvas();
+  initDiagramTilt();
+  initScrollReveal();
+  renderModels();
+}
+if(document.readyState==='loading') document.addEventListener('DOMContentLoaded', init);
+else init();
+
+})();
+</script><script>
+/* Shared session with dashboard.html (same-origin localStorage). Quietly syncs the
+   nav balance pill to the real account balance when signed in; otherwise it shows a dash. */
+(function(){
+  function $(id){ return document.getElementById(id); }
+  var jwt; try{ jwt = localStorage.getItem('yantra.jwt'); }catch(e){ jwt = null; }
+  var api = 'https://api.aitklabs.in';
+  if(jwt){
+    fetch(api + '/app/me', { headers: { 'Authorization': 'Bearer ' + jwt } })
+      .then(function(r){ if(!r.ok) throw 0; return r.json(); })
+      .then(function(me){
+        var bal = '₹' + (Number(me.account.balance_paise||0)/100).toFixed(2);
+        if($('nav-balance')) $('nav-balance').textContent = bal;
+      })
+      .catch(function(){});
+  }
+})();
+function ykGetKey(){ window.location.href = 'dashboard.html'; }
+</script>
+
+</body>
+</html>
