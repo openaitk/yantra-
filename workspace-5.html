@@ -1,0 +1,1268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Workspace — AI Coding Environment | Yantra AI</title>
+<meta name="description" content="A multi-file coding workspace with AI-applied diffs — write real projects, ask for changes, review and accept each edit. Powered by Yantra AI.">
+<link rel="canonical" href="https://apikeys.in/workspace.html">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Workspace — AI Coding Environment | Yantra AI">
+<meta property="og:description" content="A multi-file coding workspace with AI-applied diffs — write real projects, ask for changes, review and accept each edit.">
+<meta property="og:url" content="https://apikeys.in/workspace.html">
+<meta property="og:image" content="https://apikeys.in/assets/og-image.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@700;800&family=Instrument+Sans:wght@400;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<!--
+  Monaco is loaded from jsdelivr (already in this site's allowed script hosts)
+  via its AMD loader. Pinned to 0.45.0 deliberately — a known-stable, widely
+  used release — rather than "latest", since an unexpected major-version bump
+  could change internals the cross-origin worker fix below depends on. Worth
+  re-verifying this version still resolves if Monaco is ever touched again.
+-->
+<script src="https://cdn.jsdelivr.net/npm/monaco-editor@0.45.0/min/vs/loader.js"></script>
+<style>
+:root{
+  --bg:#eaeff7; --bg2:#e3e9f4; --card:#ffffff; --card2:#f3f6fb;
+  --border:rgba(15,40,90,0.14); --border2:rgba(15,40,90,0.26);
+  --cyan:#0069b8; --cyan2:#005599; --green:#009453; --red:#d10057;
+  --amber:#985f00; --saffron:#d16800; --purple:#7c3aed;
+  --text:#0f1e33; --text2:#4a5a75; --text3:#78889f;
+  --fd:'Bricolage Grotesque',sans-serif; --fm:'JetBrains Mono',monospace; --fb:'Instrument Sans',sans-serif;
+  --nav-h:60px;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{height:100%;overflow:hidden;}
+body{background:var(--bg);color:var(--text);font-family:var(--fb);-webkit-font-smoothing:antialiased;}
+a{color:inherit;}
+/* ── nav (same shell as the rest of the site) ── */
+nav{position:fixed;top:0;left:0;right:0;width:100%;height:var(--nav-h);z-index:200;
+  background:rgba(255,255,255,0.94);backdrop-filter:blur(18px) saturate(160%);-webkit-backdrop-filter:blur(18px) saturate(160%);
+  border-bottom:1px solid var(--border);}
+.nav-wrap{max-width:1500px;margin:0 auto;height:100%;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:0 20px;}
+.logo{display:flex;align-items:center;gap:10px;flex-shrink:0;min-width:0;text-decoration:none;}
+.logo-icon{width:34px;height:34px;border-radius:10px;background:linear-gradient(135deg,#00d4ff,#9d4edd);
+  display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-family:var(--fd);font-size:15px;flex-shrink:0;}
+.logo-name{font-family:var(--fd);font-weight:800;font-size:16px;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.logo-name b{color:var(--cyan);}
+.nav-tabs{display:flex;gap:2px;}
+.ntab{text-decoration:none;padding:7px 13px;border-radius:9px;font-size:13px;font-weight:600;color:var(--text2);
+  transition:all .2s;white-space:nowrap;}
+.ntab:hover{color:var(--text);background:rgba(15,40,90,0.035);}
+.ntab.on{background:rgba(0,105,184,0.09);color:var(--cyan);}
+.nav-right{display:flex;align-items:center;gap:8px;flex-shrink:0;}
+.bal-pill{background:var(--card2);border:1px solid var(--border);border-radius:9px;padding:6px 11px;font-family:var(--fm);font-size:12px;color:var(--text2);}
+.bal-pill b{color:var(--green);}
+@media(max-width:760px){ .nav-tabs{display:none;} .logo-name small{display:none;} }
+
+/* ── workspace shell ── */
+.ws-shell{position:fixed;top:var(--nav-h);left:0;right:0;bottom:0;display:flex;overflow:hidden;}
+.ws-side{width:230px;flex-shrink:0;background:var(--card);border-right:1px solid var(--border);
+  display:flex;flex-direction:column;overflow:hidden;transition:margin-left .2s;}
+.ws-main{flex:1;display:flex;flex-direction:column;overflow:hidden;min-width:0;}
+.ws-ai{width:380px;flex-shrink:0;background:var(--card);border-left:1px solid var(--border);
+  display:flex;flex-direction:column;overflow:hidden;transition:margin-right .2s;}
+
+.ws-block-head{padding:12px 14px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:8px;}
+.ws-block-head h2{font-family:var(--fd);font-size:12.5px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:var(--text3);}
+.ws-icon-btn{width:26px;height:26px;border-radius:7px;border:1px solid var(--border2);background:var(--card);
+  color:var(--text2);cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;}
+.ws-icon-btn:hover{background:var(--card2);color:var(--text);}
+
+/* project selector */
+.proj-sel{padding:10px 12px;border-bottom:1px solid var(--border);}
+.proj-sel select{width:100%;background:var(--card2);border:1px solid var(--border2);border-radius:8px;
+  padding:7px 9px;font-family:var(--fb);font-size:13px;color:var(--text);}
+
+/* file tree */
+.file-tree{flex:1;overflow-y:auto;padding:6px;}
+.file-row{display:flex;align-items:center;gap:7px;padding:7px 9px;border-radius:7px;cursor:pointer;
+  font-size:13px;color:var(--text2);font-family:var(--fm);}
+.file-row:hover{background:var(--card2);}
+.file-row.active{background:rgba(0,105,184,0.1);color:var(--cyan);font-weight:600;}
+.file-row .fn{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.file-row .fx{opacity:0;font-size:11px;color:var(--red);padding:2px 5px;border-radius:5px;}
+.file-row:hover .fx{opacity:.7;} .file-row .fx:hover{opacity:1;background:rgba(209,0,87,.1);}
+.new-file-row{padding:9px 12px;border-top:1px solid var(--border);}
+.new-file-row input{width:100%;background:var(--card2);border:1px solid var(--border2);border-radius:7px;
+  padding:6px 9px;font-family:var(--fm);font-size:12.5px;color:var(--text);}
+
+/* editor area */
+.tab-bar{display:flex;background:var(--card);border-bottom:1px solid var(--border);overflow-x:auto;flex-shrink:0;}
+.tab{display:flex;align-items:center;gap:8px;padding:9px 14px;border-right:1px solid var(--border);
+  font-family:var(--fm);font-size:12.5px;color:var(--text2);cursor:pointer;white-space:nowrap;flex-shrink:0;}
+.tab.active{color:var(--text);background:var(--card2);font-weight:600;}
+.tab .tc{opacity:.5;font-size:13px;} .tab .tc:hover{opacity:1;color:var(--red);}
+#monaco-host{flex:1;min-height:0;}
+.ws-empty{flex:1;display:flex;align-items:center;justify-content:center;color:var(--text3);font-size:14px;text-align:center;padding:30px;}
+
+/* AI panel */
+.ai-log{flex:1;overflow-y:auto;padding:12px;display:flex;flex-direction:column;gap:14px;}
+.ai-turn{display:flex;flex-direction:column;gap:8px;}
+.ai-you{background:var(--card2);border-radius:11px;padding:9px 12px;font-size:13px;color:var(--text);align-self:flex-end;max-width:92%;}
+.ai-said{font-size:13px;color:var(--text2);line-height:1.55;}
+.diff-card{background:var(--card2);border:1px solid var(--border);border-radius:10px;overflow:hidden;}
+.diff-head{display:flex;align-items:center;justify-content:space-between;padding:8px 10px;
+  border-bottom:1px solid var(--border);font-family:var(--fm);font-size:12px;font-weight:600;color:var(--text);}
+.diff-stat{font-size:11px;font-weight:400;color:var(--text3);}
+.diff-body{max-height:220px;overflow:auto;font-family:var(--fm);font-size:11.5px;line-height:1.6;}
+.diff-line{padding:1px 10px;white-space:pre-wrap;word-break:break-all;}
+.diff-line.add{background:rgba(0,148,83,0.1);color:#0a6b3d;}
+.diff-line.del{background:rgba(209,0,87,0.08);color:#a30049;text-decoration:line-through;opacity:.85;}
+.diff-line.same{color:var(--text3);}
+.diff-actions{display:flex;gap:6px;padding:8px 10px;border-top:1px solid var(--border);}
+.diff-btn{flex:1;border:none;border-radius:7px;padding:7px 0;font-family:var(--fd);font-weight:700;font-size:12px;cursor:pointer;}
+.diff-btn.accept{background:var(--green);color:#fff;}
+.diff-btn.reject{background:var(--card);border:1px solid var(--border2);color:var(--text2);}
+.diff-btn.applied{background:var(--card);border:1px solid var(--border);color:var(--text3);cursor:default;}
+.ai-input-wrap{border-top:1px solid var(--border);padding:10px;flex-shrink:0;}
+.ai-key-row{display:flex;gap:6px;margin-bottom:8px;}
+.ai-key-row input,.ai-key-row select{background:var(--card2);border:1px solid var(--border2);border-radius:7px;
+  padding:6px 8px;font-family:var(--fm);font-size:11.5px;color:var(--text);}
+.ai-key-row input{flex:1;min-width:0;} .ai-key-row select{max-width:130px;}
+.ai-textrow{display:flex;gap:7px;align-items:flex-end;}
+.ai-textrow textarea{flex:1;resize:none;background:var(--card2);border:1px solid var(--border2);border-radius:10px;
+  padding:9px 11px;font-family:var(--fb);font-size:13px;color:var(--text);max-height:100px;min-height:38px;}
+.ai-send{background:linear-gradient(135deg,var(--cyan),var(--cyan2));color:#fff;border:none;border-radius:10px;
+  width:38px;height:38px;flex-shrink:0;font-size:16px;cursor:pointer;}
+.ai-send:disabled{opacity:.5;}
+.ai-note{font-size:10.5px;color:var(--text3);margin-top:7px;line-height:1.5;}
+.spin{display:inline-block;width:13px;height:13px;border:2px solid rgba(0,105,184,.25);border-top-color:var(--cyan);
+  border-radius:50%;animation:sp 0.7s linear infinite;} @keyframes sp{to{transform:rotate(360deg);}}
+
+/* ── view bar + live preview ── */
+.view-bar{display:flex;align-items:center;gap:6px;padding:6px 10px;border-bottom:1px solid var(--border);background:var(--card);flex-shrink:0;flex-wrap:wrap;}
+.seg{display:flex;border:1px solid var(--border2);border-radius:8px;overflow:hidden;}
+.seg button{border:none;background:var(--card);padding:5px 11px;font-family:var(--fb);font-weight:600;font-size:12px;color:var(--text2);cursor:pointer;}
+.seg button+button{border-left:1px solid var(--border);}
+.seg button.on{background:rgba(0,105,184,.12);color:var(--cyan);}
+.vb-sp{flex:1;}
+.vb-btn{border:1px solid var(--border2);background:var(--card);border-radius:8px;padding:5px 10px;font-family:var(--fb);font-weight:600;font-size:12px;color:var(--text2);cursor:pointer;}
+.vb-btn:hover{background:var(--card2);color:var(--text);}
+.vb-btn.live-on{color:var(--green);border-color:rgba(0,148,83,.45);}
+.vb-sel{border:1px solid var(--border2);background:var(--card);border-radius:8px;padding:4px 8px;font-family:var(--fm);font-size:11.5px;color:var(--text);max-width:160px;}
+.ws-split{flex:1;display:flex;min-height:0;min-width:0;}
+.edit-pane{flex:1;display:flex;flex-direction:column;min-width:0;min-height:0;}
+.pv-pane{flex:1;display:none;flex-direction:column;min-width:0;min-height:0;border-left:1px solid var(--border);background:var(--card);}
+.ws-split.m-split .pv-pane,.ws-split.m-preview .pv-pane{display:flex;}
+.ws-split.m-preview .edit-pane{display:none;}
+.pv-stage{flex:1;min-height:0;background:var(--bg2);display:flex;justify-content:center;overflow:auto;}
+#pv-frame{border:0;background:#fff;height:100%;width:100%;max-width:100%;transition:width .2s;}
+.con-pane{flex-shrink:0;border-top:1px solid var(--border);background:var(--card);display:flex;flex-direction:column;}
+.con-head{display:flex;align-items:center;justify-content:space-between;padding:6px 10px;cursor:pointer;
+  font-family:var(--fd);font-weight:700;font-size:11.5px;letter-spacing:.5px;text-transform:uppercase;color:var(--text3);user-select:none;}
+.con-head .con-err{color:var(--red);}
+.con-log{height:140px;overflow:auto;font-family:var(--fm);font-size:11.5px;line-height:1.55;border-top:1px solid var(--border);}
+.con-pane.collapsed .con-log{display:none;}
+.con-line{padding:2px 10px;white-space:pre-wrap;word-break:break-word;border-bottom:1px solid rgba(15,40,90,.05);color:var(--text);}
+.con-line.warn{color:var(--amber);background:rgba(152,95,0,.07);}
+.con-line.error{color:var(--red);background:rgba(209,0,87,.06);}
+.con-line.sys{color:var(--text3);font-style:italic;}
+.ai-chips{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px;}
+.ai-chips button{border:1px solid var(--border2);background:var(--card2);border-radius:999px;padding:4px 10px;font-family:var(--fb);font-size:11.5px;color:var(--text2);cursor:pointer;}
+.ai-chips button:hover{color:var(--cyan);border-color:var(--cyan);}
+.diff-btn.all{width:100%;flex:none;padding:9px 0;}
+@media(max-width:900px){ .seg button[data-mode="split"]{display:none;} .vb-dev{display:none;} }
+
+/* ── live AI progress ── */
+.live-card{background:var(--card2);border:1px solid var(--border);border-radius:11px;padding:10px 12px;display:flex;flex-direction:column;gap:8px;}
+.live-head{display:flex;align-items:center;gap:8px;font-size:12.5px;font-weight:600;color:var(--text);}
+.live-head .live-stage{flex:1;min-width:0;}
+.live-head .live-time{font-family:var(--fm);font-size:11.5px;color:var(--text3);font-weight:400;}
+.live-stop{border:1px solid var(--border2);background:var(--card);border-radius:7px;padding:3px 9px;font-family:var(--fb);font-size:11.5px;font-weight:600;cursor:pointer;color:var(--red);}
+.live-sub{font-size:11.5px;color:var(--text3);margin-top:-4px;}
+.think{border:1px solid var(--border);border-radius:9px;background:var(--card);}
+.think summary{cursor:pointer;padding:6px 10px;font-size:12px;font-weight:700;color:var(--purple);}
+.think-body{max-height:150px;overflow:auto;padding:7px 10px 9px;font-size:12px;line-height:1.55;color:var(--text2);white-space:pre-wrap;word-break:break-word;border-top:1px solid var(--border);}
+.live-said{font-size:13px;color:var(--text2);line-height:1.55;white-space:pre-wrap;word-break:break-word;}
+.live-said:empty{display:none;}
+.live-files{display:flex;flex-direction:column;gap:4px;font-family:var(--fm);font-size:12px;}
+.live-files:empty{display:none;}
+.live-file{display:flex;align-items:center;gap:7px;color:var(--text2);}
+.live-file.done{color:var(--green);}
+.live-file .spin{width:11px;height:11px;border-width:2px;}
+.ai-meta{font-size:11px;color:var(--text3);font-family:var(--fm);line-height:1.5;}
+
+/* mobile: collapse side panels behind toggles */
+.ws-toggle{display:none;}
+@media(max-width:900px){
+  .ws-toggle{display:flex;}
+  .ws-side{position:fixed;top:var(--nav-h);bottom:0;left:0;z-index:50;margin-left:-230px;box-shadow:10px 0 30px rgba(15,40,90,.1);}
+  .ws-side.open{margin-left:0;}
+  .ws-ai{position:fixed;top:var(--nav-h);bottom:0;right:0;z-index:50;margin-right:-380px;width:92vw;max-width:380px;box-shadow:-10px 0 30px rgba(15,40,90,.1);}
+  .ws-ai.open{margin-right:0;}
+}
+#toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%) translateY(20px);opacity:0;
+  background:var(--text);color:#fff;padding:11px 18px;border-radius:11px;font-size:13px;z-index:500;
+  transition:all .25s;pointer-events:none;box-shadow:0 12px 30px rgba(15,40,90,.25);}
+#toast.on{opacity:1;transform:translateX(-50%) translateY(0);}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-wrap">
+    <a class="logo" href="index.html"><span class="logo-icon">य</span><span class="logo-name">Yantra <b>AI</b></span></a>
+    <div class="nav-tabs">
+      <a class="ntab" href="index.html">Home</a>
+      <a class="ntab" href="models.html">Models</a>
+      <a class="ntab" href="playground.html">Playground</a>
+      <a class="ntab on" href="workspace.html">Workspace</a>
+      <a class="ntab" href="docs.html">Docs</a>
+    </div>
+    <div class="nav-right">
+      <button class="ws-icon-btn ws-toggle" onclick="toggleSide()" title="Files">☰</button>
+      <span class="bal-pill" id="nav-balance">—</span>
+      <button class="ws-icon-btn ws-toggle" onclick="toggleAi()" title="AI panel">✦</button>
+    </div>
+  </div>
+</nav>
+
+<div class="ws-shell">
+
+  <!-- ══ FILE TREE ══ -->
+  <div class="ws-side" id="ws-side">
+    <div class="proj-sel">
+      <select id="proj-select" onchange="onProjectChange(this.value)"></select>
+    </div>
+    <div class="ws-block-head">
+      <h2>Files</h2>
+      <button class="ws-icon-btn" onclick="showNewFile()" title="New file">+</button>
+    </div>
+    <div class="file-tree" id="file-tree"></div>
+    <div class="new-file-row" id="new-file-row" style="display:none">
+      <input id="new-file-name" placeholder="path/to/file.js" onkeydown="if(event.key==='Enter')confirmNewFile()">
+    </div>
+    <div style="padding:9px 12px;border-top:1px solid var(--border);display:flex;gap:6px">
+      <button class="ws-icon-btn" style="flex:1;width:auto" onclick="promptNewProject()">+ Project</button>
+      <button class="ws-icon-btn" onclick="deleteCurrentProject()" title="Delete project">🗑</button>
+    </div>
+  </div>
+
+  <!-- ══ EDITOR + LIVE PREVIEW ══ -->
+  <div class="ws-main">
+    <div class="view-bar" id="view-bar">
+      <div class="seg" id="seg-mode">
+        <button data-mode="code">Code</button>
+        <button data-mode="split">Split</button>
+        <button data-mode="preview">Preview</button>
+      </div>
+      <span class="vb-sp"></span>
+      <select class="vb-sel" id="pv-entry" title="Page to preview"></select>
+      <div class="seg vb-dev" id="seg-dev">
+        <button data-w="100%" class="on" title="Desktop">🖥</button>
+        <button data-w="768px" title="Tablet">▭</button>
+        <button data-w="390px" title="Phone">📱</button>
+      </div>
+      <button class="vb-btn live-on" id="pv-live" title="Re-run automatically as you type or accept changes">● Live</button>
+      <button class="vb-btn" id="pv-run" title="Run again">↻ Run</button>
+      <button class="vb-btn" id="pv-export" title="Download as one standalone .html file">⬇ Export</button>
+    </div>
+    <div class="ws-split m-code" id="ws-split">
+      <div class="edit-pane" id="edit-pane">
+        <div class="tab-bar" id="tab-bar"></div>
+        <div id="monaco-host"></div>
+        <div class="ws-empty" id="ws-empty">No file open — pick one on the left, or create a new file.</div>
+      </div>
+      <div class="pv-pane" id="pv-pane">
+        <div class="pv-stage" id="pv-stage">
+          <iframe id="pv-frame" title="Project preview"
+            sandbox="allow-scripts allow-forms allow-modals allow-popups allow-popups-to-escape-sandbox"></iframe>
+        </div>
+        <div class="con-pane" id="con-pane">
+          <div class="con-head" id="con-head"><span id="con-title">Console</span><span><span id="con-clear" style="cursor:pointer;margin-right:10px">Clear</span><span id="con-caret">▾</span></span></div>
+          <div class="con-log" id="con-log"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══ AI PANEL ══ -->
+  <div class="ws-ai" id="ws-ai">
+    <div class="ws-block-head"><h2>AI — apply edits to this project</h2></div>
+    <div class="ai-log" id="ai-log"></div>
+    <div class="ai-input-wrap">
+      <div class="ai-key-row">
+        <input id="ai-key" placeholder="yk_live_… (your Yantra API key)" onchange="saveKey()">
+        <select id="ai-model"></select>
+      </div>
+      <div class="ai-chips">
+        <button data-prompt="Build a modern, responsive landing page for a coffee shop">☕ Landing page</button>
+        <button data-prompt="Make a to-do app with add, complete, delete and a dark mode toggle">✅ To-do app</button>
+        <button data-prompt="Create a personal portfolio website with about, projects and contact sections">🧑‍💻 Portfolio</button>
+      </div>
+      <div class="ai-textrow">
+        <textarea id="ai-text" placeholder="Describe what to build or change — e.g. make the header sticky" onkeydown="onAiKeydown(event)"></textarea>
+        <button class="ai-send" id="ai-send" onclick="sendAiTurn()">↑</button>
+      </div>
+      <div class="ai-note">Your code stays in this browser only — never uploaded to Yantra. The AI call itself goes through your own API key to whichever model you pick above.</div>
+    </div>
+  </div>
+
+</div>
+
+<div id="toast"></div>
+
+<script>
+var MODELS = {
+  'anthropic/claude-haiku-4-5':  { provider:'anthropic', label:'Claude Haiku 4.5', tags:['fast','cheap','tools'] },
+  'anthropic/claude-sonnet-5':   { provider:'anthropic', label:'Claude Sonnet 5', tags:['tools','vision','balanced','long-context','code'] },
+  'anthropic/claude-sonnet-4-6': { provider:'anthropic', label:'Claude Sonnet 4.6', tags:['tools','vision','long-context','code'] },
+  'anthropic/claude-opus-4-6':   { provider:'anthropic', label:'Claude Opus 4.6', tags:['reasoning','tools','long-context','code'] },
+  'anthropic/claude-opus-5':     { provider:'anthropic', label:'Claude Opus 5', tags:['reasoning','tools','flagship','long-context','code'] },
+  'anthropic/claude-opus-5-5':   { provider:'anthropic', label:'Claude Opus 5.5', tags:['reasoning','tools','flagship','long-context','code'] },
+  'anthropic/claude-sonnet-5-5': { provider:'anthropic', label:'Claude Sonnet 5.5', tags:['tools','vision','long-context','code'] },
+  'anthropic/claude-haiku-5-5':  { provider:'anthropic', label:'Claude Haiku 5.5 (100K max)', tags:['fast','cheap','tools'] },
+  'openai/gpt-6-astra':          { provider:'openai', label:'GPT-6 Astra', tags:['reasoning','vision','tools','flagship','long-context','code'] },
+  'openai/gpt-6.1-sol':          { provider:'openai', label:'GPT-6.1 Sol', tags:['reasoning','vision','tools','flagship','code'] },
+  'openai/gpt-4o-mini':          { provider:'openai', label:'GPT-4o mini', tags:['vision','tools','cheap','fast'] },
+  'openai/gpt-5.6-luna':         { provider:'openai', label:'GPT-5.6 Luna', tags:['fast','cheap','vision','long-context'] },
+  'openai/gpt-5.4-mini':         { provider:'openai', label:'GPT-5.4 Mini', tags:['reasoning','fast','cheap','code'] },
+  'openai/gpt-5.6-sol':          { provider:'openai', label:'GPT-5.6 Sol', tags:['reasoning','vision','tools','flagship','long-context','code'] },
+  'deepseek/deepseek-v4-flash':  { provider:'deepseek', label:'DeepSeek V4 Flash', tags:['cheap','fast','tools','long-context','code'] },
+  'deepseek/deepseek-v4-pro':    { provider:'deepseek', label:'DeepSeek V4 Pro', tags:['reasoning','tools','long-context','code'] },
+  'mistral/codestral':           { provider:'mistral', label:'Codestral', tags:['code','fast'] },
+  'mistral/mistral-medium-3.5':  { provider:'mistral', label:'Mistral Medium 3.5', tags:['reasoning','code','tools','vision'] },
+  'moonshot/kimi-k3.1-pro':      { provider:'moonshot', label:'Kimi K3.1 Pro', tags:['reasoning','vision','code','tools','long-context','flagship'] },
+  'moonshot/kimi-k2.7-code':     { provider:'moonshot', label:'Kimi K2.7 Code', tags:['code','tools','long-context'] },
+  'zai/glm-5.3':                 { provider:'zai', label:'GLM-5.3', tags:['reasoning','code','tools','long-context'] },
+  'fireworks/kimi-k3':           { provider:'fireworks', label:'Kimi K3', tags:['reasoning','code','tools','long-context'] },
+};
+</script>
+<script>
+/* ════════════════════════════════════════════════════════════════════════
+   YANTRA WORKSPACE
+   A multi-file project editor with an AI panel that proposes full-file
+   rewrites, shown as a reviewable diff per file, applied only on request.
+
+   PRIVACY: project files live in this browser's localStorage ONLY. They are
+   never sent to Yantra's own servers — the only outbound call is the user's
+   own browser calling Yantra's public gateway (with their own key) to ask a
+   model for a proposed change, exactly like the existing Playground already
+   does. Nothing new is stored server-side by this page.
+   ════════════════════════════════════════════════════════════════════════ */
+
+function $(id){ return document.getElementById(id); }
+function esc(s){ var d=document.createElement('div'); d.textContent=String(s==null?'':s); return d.innerHTML; }
+
+function toast(title,msg){
+  var t=$('toast'); if(!t) return;
+  t.innerHTML='<div style="font-weight:600">'+esc(title)+'</div>'+(msg?'<div style="opacity:.8;font-size:12px;margin-top:2px">'+esc(msg)+'</div>':'');
+  t.classList.add('on'); clearTimeout(toast._t); toast._t=setTimeout(function(){ t.classList.remove('on'); },3200);
+}
+
+function toggleSide(){ $('ws-side').classList.toggle('open'); }
+function toggleAi(){ $('ws-ai').classList.toggle('open'); }
+
+/* ═══════════════ STORAGE ═══════════════
+   One JSON blob under a single localStorage key. Every read/write is wrapped
+   in try/catch — a corrupted blob or a full/blocked storage quota degrades
+   to an empty default rather than crashing the page. */
+var STORE_KEY = 'yantra.workspace.v1';
+
+function seedDefault(){
+  var pid = 'proj_' + Date.now().toString(36);
+  return {
+    activeProjectId: pid,
+    projects: [{
+      id: pid, name: 'My First Project',
+      activeFile: 'index.html',
+      openTabs: ['index.html', 'style.css', 'script.js'],
+      files: {
+        'index.html': '<!DOCTYPE html>\n<html lang="en">\n<head>\n  <meta charset="UTF-8">\n  <meta name="viewport" content="width=device-width, initial-scale=1">\n  <title>My first site</title>\n  <link rel="stylesheet" href="style.css">\n</head>\n<body>\n  <main>\n    <h1>Hello from Yantra Workspace</h1>\n    <p>Edit the code, or ask the AI on the right to change it. The preview updates live.</p>\n    <button id="btn">Clicked 0 times</button>\n  </main>\n  <script src="script.js"><\/script>\n</body>\n</html>\n',
+        'style.css': 'body{margin:0;min-height:100vh;display:grid;place-items:center;font-family:system-ui,sans-serif;background:#0f1e33;color:#fff;text-align:center}\nmain{padding:24px;max-width:520px}\nh1{font-size:2rem;margin:0 0 .5rem}\np{opacity:.8;line-height:1.6}\nbutton{margin-top:1rem;padding:.7rem 1.2rem;border:0;border-radius:10px;background:#00d4ff;color:#06202e;font-weight:700;font-size:1rem;cursor:pointer}\n',
+        'script.js': "var n = 0;\ndocument.getElementById('btn').addEventListener('click', function(){\n  n++;\n  this.textContent = 'Clicked ' + n + (n === 1 ? ' time' : ' times');\n  console.log('button clicked', n);\n});\nconsole.log('script loaded');\n"
+      }
+    }]
+  };
+}
+
+function loadStore(){
+  try{
+    var raw = localStorage.getItem(STORE_KEY);
+    if(!raw) return seedDefault();
+    var parsed = JSON.parse(raw);
+    if(!parsed || !Array.isArray(parsed.projects) || !parsed.projects.length) return seedDefault();
+    return parsed;
+  }catch(e){
+    console.error('[workspace] storage load failed, starting fresh:', e.message);
+    return seedDefault();
+  }
+}
+function saveStore(){
+  try{ schedulePreview(); }catch(e){}
+  try{ localStorage.setItem(STORE_KEY, JSON.stringify(STATE)); }
+  catch(e){
+    // Most likely quota exceeded (very large files/projects). Never crash —
+    // warn once and keep working in-memory for the rest of the session.
+    console.error('[workspace] storage save failed:', e.message);
+    toast('Could not save', 'Your browser storage may be full — recent changes may not persist.');
+  }
+}
+
+var STATE = loadStore();
+function activeProject(){
+  return STATE.projects.find(function(p){ return p.id === STATE.activeProjectId; }) || STATE.projects[0];
+}
+
+/* ═══════════════ PROJECTS ═══════════════ */
+function renderProjectSelect(){
+  var sel = $('proj-select');
+  sel.innerHTML = STATE.projects.map(function(p){
+    return '<option value="'+esc(p.id)+'"'+(p.id===STATE.activeProjectId?' selected':'')+'>'+esc(p.name)+'</option>';
+  }).join('');
+}
+function onProjectChange(id){
+  STATE.activeProjectId = id;
+  saveStore();
+  renderFileTree(); renderTabs(); openActiveFileInEditor();
+}
+function promptNewProject(){
+  var name = (prompt('Project name:') || '').trim();
+  if(!name) return;
+  var pid = 'proj_' + Date.now().toString(36);
+  STATE.projects.push({ id: pid, name: name, activeFile: null, openTabs: [], files: {} });
+  STATE.activeProjectId = pid;
+  saveStore();
+  renderProjectSelect(); renderFileTree(); renderTabs(); openActiveFileInEditor();
+  toast('Project created', name);
+}
+function deleteCurrentProject(){
+  if(STATE.projects.length <= 1){ toast('This is your only project'); return; }
+  var p = activeProject();
+  if(!confirm('Delete "'+p.name+'" and all its files? This cannot be undone.')) return;
+  STATE.projects = STATE.projects.filter(function(x){ return x.id !== p.id; });
+  STATE.activeProjectId = STATE.projects[0].id;
+  saveStore();
+  renderProjectSelect(); renderFileTree(); renderTabs(); openActiveFileInEditor();
+}
+
+/* ═══════════════ FILES ═══════════════ */
+function langFromPath(path){
+  var ext = (path.split('.').pop() || '').toLowerCase();
+  var map = { js:'javascript', jsx:'javascript', mjs:'javascript', ts:'typescript', tsx:'typescript',
+    py:'python', html:'html', htm:'html', css:'css', json:'json', md:'markdown',
+    yml:'yaml', yaml:'yaml', sh:'shell', sql:'sql', java:'java', c:'c', cpp:'cpp', cs:'csharp',
+    go:'go', rs:'rust', php:'php', rb:'ruby' };
+  return map[ext] || 'plaintext';
+}
+
+function renderFileTree(){
+  var p = activeProject();
+  var paths = Object.keys(p.files).sort();
+  var tree = $('file-tree');
+  if(!paths.length){ tree.innerHTML = '<div style="padding:14px;color:var(--text3);font-size:12.5px">No files yet — click + to add one.</div>'; return; }
+  // Paths go into a data-* attribute (HTML-escaped via esc(), same as any
+  // other text) rather than being concatenated into an onclick="..." string.
+  // A path containing an apostrophe or quote used to break the generated
+  // JS — data attributes need no JS-string escaping at all, since the value
+  // is read back through .dataset, not re-parsed as code.
+  tree.innerHTML = paths.map(function(path){
+    var active = path === p.activeFile;
+    return '<div class="file-row'+(active?' active':'')+'" data-path="'+esc(path)+'">'
+      + '<span class="fn">'+esc(path)+'</span>'
+      + '<span class="fx" data-del="1">✕</span></div>';
+  }).join('');
+  tree.querySelectorAll('.file-row').forEach(function(row){
+    row.addEventListener('click', function(){ openFile(row.dataset.path); });
+    var delBtn = row.querySelector('.fx');
+    if(delBtn) delBtn.addEventListener('click', function(ev){ ev.stopPropagation(); deleteFile(row.dataset.path); });
+  });
+}
+function showNewFile(){ $('new-file-row').style.display='block'; $('new-file-name').focus(); }
+function confirmNewFile(){
+  var input = $('new-file-name');
+  var path = input.value.trim();
+  input.value=''; $('new-file-row').style.display='none';
+  if(!path) return;
+  var p = activeProject();
+  if(p.files.hasOwnProperty(path)){ toast('That file already exists'); openFile(path); return; }
+  p.files[path] = '';
+  p.activeFile = path;
+  if(p.openTabs.indexOf(path)===-1) p.openTabs.push(path);
+  saveStore();
+  renderFileTree(); renderTabs(); openActiveFileInEditor();
+}
+function deleteFile(path){
+  var p = activeProject();
+  if(!confirm('Delete "'+path+'"?')) return;
+  delete p.files[path];
+  p.openTabs = p.openTabs.filter(function(t){ return t!==path; });
+  if(p.activeFile===path) p.activeFile = p.openTabs[0] || null;
+  saveStore();
+  renderFileTree(); renderTabs(); openActiveFileInEditor();
+}
+function openFile(path){
+  var p = activeProject();
+  p.activeFile = path;
+  if(p.openTabs.indexOf(path)===-1) p.openTabs.push(path);
+  saveStore();
+  renderFileTree(); renderTabs(); openActiveFileInEditor();
+}
+function closeTab(path, ev){
+  if(ev) ev.stopPropagation();
+  var p = activeProject();
+  p.openTabs = p.openTabs.filter(function(t){ return t!==path; });
+  if(p.activeFile===path) p.activeFile = p.openTabs[p.openTabs.length-1] || null;
+  saveStore();
+  renderTabs(); openActiveFileInEditor();
+}
+function renderTabs(){
+  var p = activeProject();
+  var bar = $('tab-bar');
+  bar.innerHTML = p.openTabs.map(function(path){
+    var active = path === p.activeFile;
+    return '<div class="tab'+(active?' active':'')+'" data-path="'+esc(path)+'">'
+      + esc(path) + '<span class="tc" data-close="1">✕</span></div>';
+  }).join('');
+  bar.querySelectorAll('.tab').forEach(function(tabEl){
+    tabEl.addEventListener('click', function(){ openFile(tabEl.dataset.path); });
+    var closeBtn = tabEl.querySelector('.tc');
+    if(closeBtn) closeBtn.addEventListener('click', function(ev){ closeTab(tabEl.dataset.path, ev); });
+  });
+}
+
+/* ═══════════════ MONACO ═══════════════
+   Cross-origin worker fix: Monaco's language services run in a Worker, but
+   browsers refuse `new Worker(crossOriginUrl)` directly. The standard
+   workaround is to hand the Worker constructor a same-origin blob: URL whose
+   only job is to importScripts() the REAL worker file from the CDN. Without
+   this, the editor still loads and displays text fine, but things like
+   syntax validation / IntelliSense silently do nothing. */
+var MONACO_BASE = 'https://cdn.jsdelivr.net/npm/monaco-editor@0.45.0/min/vs';
+self.MonacoEnvironment = {
+  getWorkerUrl: function(moduleId, label){
+    var proxy = "self.MonacoEnvironment={baseUrl:'"+MONACO_BASE.replace('/vs','/')+"'};importScripts('"+MONACO_BASE+"/base/worker/workerMain.js');";
+    return 'data:text/javascript;charset=utf-8,' + encodeURIComponent(proxy);
+  }
+};
+
+var editor = null;
+var editorReady = false;
+var suppressChange = false;
+
+function initMonaco(){
+  require.config({ paths: { vs: MONACO_BASE } });
+  require(['vs/editor/editor.main'], function(){
+    editorReady = true;
+    editor = monaco.editor.create($('monaco-host'), {
+      value: '', language: 'plaintext', automaticLayout: true,
+      theme: 'vs', fontSize: 13, fontFamily: "'JetBrains Mono', monospace",
+      minimap: { enabled: false }, scrollBeyondLastLine: false,
+    });
+    editor.onDidChangeModelContent(function(){
+      if(suppressChange) return;
+      var p = activeProject();
+      if(!p.activeFile) return;
+      p.files[p.activeFile] = editor.getValue();
+      saveStore();
+    });
+    openActiveFileInEditor();
+  });
+}
+
+function openActiveFileInEditor(){
+  var p = activeProject();
+  var empty = $('ws-empty'), host = $('monaco-host');
+  if(!p.activeFile || !p.files.hasOwnProperty(p.activeFile)){
+    if(host) host.style.display='none';
+    if(empty) empty.style.display='flex';
+    return;
+  }
+  if(empty) empty.style.display='none';
+  if(host) host.style.display='block';
+  if(!editorReady || !editor) return;   // Monaco still loading — will call this again once ready
+  suppressChange = true;
+  var model = monaco.editor.createModel(p.files[p.activeFile], langFromPath(p.activeFile));
+  editor.setModel(model);
+  suppressChange = false;
+}
+
+/* ═══════════════ DIFF ALGORITHM ═══════════════
+   Classic LCS-based line diff. Verified against 9 cases (identical content,
+   pure insertion, pure deletion, single-line replace, empty-old/new for file
+   create/delete, trailing-newline handling, fully-different content, and a
+   50-line file with one changed line) before ever being wired to real files. */
+function diffLines(oldStr, newStr){
+  var a = (oldStr||'').split('\n'), b = (newStr||'').split('\n');
+  var n = a.length, m = b.length;
+  var dp = new Array(n+1);
+  for(var i=0;i<=n;i++) dp[i] = new Int32Array(m+1);
+  for(var i=n-1;i>=0;i--) for(var j=m-1;j>=0;j--)
+    dp[i][j] = a[i]===b[j] ? dp[i+1][j+1]+1 : Math.max(dp[i+1][j], dp[i][j+1]);
+  var ops=[], i=0, j=0;
+  while(i<n && j<m){
+    if(a[i]===b[j]){ ops.push({type:'same',line:a[i]}); i++; j++; }
+    else if(dp[i+1][j] >= dp[i][j+1]){ ops.push({type:'del',line:a[i]}); i++; }
+    else { ops.push({type:'add',line:b[j]}); j++; }
+  }
+  while(i<n){ ops.push({type:'del',line:a[i]}); i++; }
+  while(j<m){ ops.push({type:'add',line:b[j]}); j++; }
+  return ops;
+}
+function diffCounts(ops){
+  var c={add:0,del:0,same:0}; ops.forEach(function(o){ c[o.type]++; }); return c;
+}
+
+/* ═══════════════ AI RESPONSE PARSER ═══════════════
+   Verified against 7 cases including multi-file responses, plain-chat replies
+   with zero file blocks, nested paths, and content that itself contains
+   delimiter-like text inside a comment — the unusual %%%YANTRA_...%%% marker
+   is chosen specifically to make that collision vanishingly unlikely. */
+function parseAiResponse(text){
+  var re = /%%%YANTRA_FILE:\s*(.+?)\s*%%%\n([\s\S]*?)\n%%%YANTRA_END%%%/g;
+  var files=[], firstStart=-1, m;
+  while((m = re.exec(text)) !== null){
+    if(firstStart===-1) firstStart = m.index;
+    files.push({ path: m[1].trim(), content: m[2] });
+  }
+  var explanation = (firstStart===-1 ? text : text.slice(0,firstStart)).trim();
+  var opened = (text.match(/%%%YANTRA_FILE:/g)||[]).length;
+  return { explanation: explanation, files: files, truncated: opened > files.length };
+}
+
+/* ═══════════════ MODEL LIST + KEY ═══════════════ */
+function populateModels(){
+  var sel = $('ai-model');
+  var ids = Object.keys(MODELS);
+  // Prefer code-tagged models first, since that's what this page is for.
+  ids.sort(function(a,b){
+    var ac = MODELS[a].tags.indexOf('code')>=0 ? 0 : 1;
+    var bc = MODELS[b].tags.indexOf('code')>=0 ? 0 : 1;
+    return ac-bc;
+  });
+  sel.innerHTML = ids.map(function(id){ return '<option value="'+esc(id)+'">'+esc(MODELS[id].label)+'</option>'; }).join('');
+  var preferred = MODELS['anthropic/claude-sonnet-5'] ? 'anthropic/claude-sonnet-5' : ids.find(function(id){ return MODELS[id].tags.indexOf('code')>=0; });
+  if(preferred) sel.value = preferred;
+}
+function saveKey(){
+  try{ localStorage.setItem('yantra.workspace.key', $('ai-key').value.trim()); }catch(e){}
+}
+function loadKey(){
+  try{
+    var k = localStorage.getItem('yantra.workspace.key');
+    if(k) $('ai-key').value = k;
+  }catch(e){}
+}
+
+/* ═══════════════ AI TURN ═══════════════ */
+function gatewayBase(){ return 'https://api.aitklabs.in'; }
+
+function buildSystemPrompt(){
+  return "You are editing a real multi-file coding project inside an editor. "
+    + "The user will show you every current file, then ask for a change.\n\n"
+    + "Reply with a SHORT explanation first (1-3 sentences, plain text, no file content in it), "
+    + "then, for every file you want to add or change, include a block in EXACTLY this format:\n\n"
+    + "%%%YANTRA_FILE: relative/path.ext%%%\n<the file's complete new content>\n%%%YANTRA_END%%%\n\n"
+    + "Rules:\n"
+    + "- Include the COMPLETE new content of a file, not a snippet or a diff — the full file as it should look after your change.\n"
+    + "- Only include files you are actually changing or creating. Do not repeat files you are not touching.\n"
+    + "- If nothing needs to change, just explain why in plain text with no file blocks at all.\n"
+    + "- Never wrap the %%%YANTRA_FILE / %%%YANTRA_END markers in code fences or backticks.\n\n"
+    + "This editor has a LIVE PREVIEW that runs index.html in a sandbox. When asked to build a website or app, make a plain static site: "
+    + "an index.html that links style.css and script.js by relative path (CDN <script>/<link> tags are fine). "
+    + "No build step, no npm, no server code, and no ES-module imports between project files. Always keep a working index.html as the entry point. "
+    + "Browser storage (localStorage) may not persist between preview runs. Write complete, polished, responsive pages.";
+}
+function buildProjectContext(p){
+  var paths = Object.keys(p.files).sort();
+  if(!paths.length) return '(this project has no files yet)';
+  return paths.map(function(path){
+    return '--- ' + path + ' ---\n' + p.files[path];
+  }).join('\n\n');
+}
+
+function appendYouBubble(text){
+  var log = $('ai-log');
+  var div = document.createElement('div');
+  div.className = 'ai-turn';
+  div.innerHTML = '<div class="ai-you">'+esc(text)+'</div>';
+  log.appendChild(div);
+  log.scrollTop = log.scrollHeight;
+  return div;
+}
+function appendAiTurn(explanation, fileDiffs, extra){
+  var log = $('ai-log');
+  var wrap = document.createElement('div');
+  wrap.className = 'ai-turn';
+  var html = '';
+  if(extra && extra.thinking){
+    html += '<details class="think"><summary>💭 Thought for ' + (extra.seconds || '?') + 's</summary><div class="think-body">' + esc(extra.thinking) + '</div></details>';
+  }
+  html += explanation ? '<div class="ai-said" style="white-space:pre-wrap">'+esc(explanation)+'</div>' : '';
+  fileDiffs.forEach(function(fd, idx){
+    var c = diffCounts(fd.ops);
+    var bodyHtml = fd.ops.map(function(o){
+      var prefix = o.type==='add' ? '+ ' : o.type==='del' ? '- ' : '  ';
+      return '<div class="diff-line '+o.type+'">'+esc(prefix + o.line)+'</div>';
+    }).join('');
+    html += '<div class="diff-card" data-diff="'+idx+'">'
+      + '<div class="diff-head"><span>'+esc(fd.path)+'</span>'
+      + '<span class="diff-stat">+'+c.add+' / -'+c.del+'</span></div>'
+      + '<div class="diff-body">'+bodyHtml+'</div>'
+      + '<div class="diff-actions">'
+      + '<button class="diff-btn accept" onclick="applyDiff(this,'+idx+')">Accept</button>'
+      + '<button class="diff-btn reject" onclick="rejectDiff(this)">Reject</button>'
+      + '</div></div>';
+  });
+  if(fileDiffs.length > 1){
+    html = html.replace('<div class="diff-card"', '<button class="diff-btn accept all" onclick="acceptAll(this)">Accept all ' + fileDiffs.length + ' files</button><div class="diff-card"');
+  }
+  if(extra && extra.metaText) html += '<div class="ai-meta">' + esc(extra.metaText) + '</div>';
+  wrap.innerHTML = html;
+  log.appendChild(wrap);
+  log.scrollTop = log.scrollHeight;
+  // Stash the pending file writes on the DOM node itself so Accept/Reject
+  // can reach them without a separate global registry to keep in sync.
+  wrap._pendingFiles = fileDiffs;
+  wrap.querySelectorAll('.diff-card').forEach(function(card, idx){
+    card._apply = function(){
+      var fd = fileDiffs[idx];
+      var p = activeProject();
+      p.files[fd.path] = fd.newContent;
+      if(p.openTabs.indexOf(fd.path)===-1) p.openTabs.push(fd.path);
+      p.activeFile = fd.path;
+      saveStore();
+      renderFileTree(); renderTabs(); openActiveFileInEditor();
+      maybeShowPreview();
+    };
+  });
+}
+function acceptAll(btn){
+  var wrap = btn.closest('.ai-turn');
+  var n = 0;
+  wrap.querySelectorAll('.diff-card').forEach(function(card){
+    var act = card.querySelector('.diff-actions');
+    if(act && act.querySelector('.accept')){ card._apply(); act.innerHTML = '<button class="diff-btn applied" disabled>✓ Applied</button>'; n++; }
+  });
+  var p = activeProject();
+  if(p.files.hasOwnProperty('index.html')){ p.activeFile = 'index.html'; if(p.openTabs.indexOf('index.html')===-1) p.openTabs.push('index.html'); saveStore(); renderFileTree(); renderTabs(); openActiveFileInEditor(); }
+  btn.outerHTML = '<button class="diff-btn applied all" disabled>✓ Applied ' + n + ' files</button>';
+  toast('Applied', n + ' files updated');
+}
+function applyDiff(btn, idx){
+  var card = btn.closest('.diff-card');
+  card._apply();
+  var actions = btn.parentElement;
+  actions.innerHTML = '<button class="diff-btn applied" disabled>✓ Applied</button>';
+  toast('Applied', card.querySelector('.diff-head span').textContent);
+}
+function rejectDiff(btn){
+  var actions = btn.parentElement;
+  actions.innerHTML = '<button class="diff-btn applied" disabled>Rejected</button>';
+}
+
+/* ═══════════════ AI TURN (streamed) ═══════════════
+   The reply is streamed (SSE) so the user watches it arrive instead of staring
+   at a spinner: real progress stages, the reply text, each file as it is being
+   written, and — only when the model actually provides one — its reasoning.
+   Nothing here is invented: if a model doesn't expose its reasoning, no
+   "thinking" box appears. */
+var aiAbort = null;
+var AI_MARKER = '%%%YANTRA_FILE:';
+
+function fmtTok(n){ return n >= 1000 ? (n/1000).toFixed(n >= 10000 ? 0 : 1) + 'K' : String(n); }
+function stripPartialMarker(s){
+  for(var k = Math.min(AI_MARKER.length, s.length); k >= 1; k--){
+    if(AI_MARKER.indexOf(s.slice(-k)) === 0) return s.slice(0, s.length - k);
+  }
+  return s;
+}
+/* Pull progress out of the partially-received reply. */
+function scanStream(content){
+  var first = content.indexOf(AI_MARKER);
+  var said = stripPartialMarker(first === -1 ? content : content.slice(0, first)).trim();
+  var files = [], re = /%%%YANTRA_FILE:\s*(.+?)\s*%%%\n?/g, m;
+  while((m = re.exec(content)) !== null){
+    var bodyStart = m.index + m[0].length;
+    var end = content.indexOf('%%%YANTRA_END%%%', bodyStart);
+    var body = end === -1 ? content.slice(bodyStart) : content.slice(bodyStart, end);
+    files.push({ path: m[1], done: end !== -1, lines: body ? body.split('\n').length : 0 });
+  }
+  return { said: said, files: files };
+}
+
+function createLiveCard(nFiles, estTok, modelLabel){
+  var log = $('ai-log');
+  var el = document.createElement('div');
+  el.className = 'ai-turn';
+  el.innerHTML = '<div class="live-card">'
+    + '<div class="live-head"><span class="spin"></span><span class="live-stage">Reading ' + nFiles + ' file' + (nFiles===1?'':'s') + ' (~' + fmtTok(estTok) + ' tokens)…</span>'
+    + '<span class="live-time">0s</span><button class="live-stop" type="button">Stop</button></div>'
+    + '<details class="think" style="display:none"><summary>💭 Model’s thinking</summary><div class="think-body"></div></details>'
+    + '<div class="live-said"></div><div class="live-files"></div></div>';
+  log.appendChild(el);
+  log.scrollTop = log.scrollHeight;
+  var card = {
+    el: el, stage: el.querySelector('.live-stage'), time: el.querySelector('.live-time'),
+    think: el.querySelector('.think'), thinkBody: el.querySelector('.think-body'),
+    said: el.querySelector('.live-said'), files: el.querySelector('.live-files'),
+    modelLabel: modelLabel, thinkOpened: false, thinkClosed: false
+  };
+  el.querySelector('.live-stop').addEventListener('click', function(){ if(aiAbort) aiAbort.abort(); });
+  return card;
+}
+function renderLive(card, acc){
+  var stage;
+  var haveContent = acc.content.length > 0;
+  if(!acc.gotFirst){
+    stage = 'Waiting for ' + card.modelLabel + ' to start…';
+  } else if(acc.reasoning && !haveContent){
+    stage = 'Thinking…';
+  } else {
+    var sc = scanStream(acc.content);
+    var active = sc.files.filter(function(f){ return !f.done; })[0];
+    if(active) stage = 'Writing ' + active.path + ' · ' + active.lines + ' line' + (active.lines===1?'':'s');
+    else if(sc.files.length) stage = 'Finishing up…';
+    else stage = 'Writing reply…';
+    card.said.textContent = sc.said;
+    card.files.innerHTML = sc.files.map(function(f){
+      return '<div class="live-file' + (f.done ? ' done' : '') + '">' + (f.done ? '✓' : '<span class="spin"></span>') + ' ' + esc(f.path)
+        + ' <span style="color:var(--text3)">' + f.lines + ' lines</span></div>';
+    }).join('');
+  }
+  card.stage.textContent = stage;
+  if(acc.reasoning){
+    card.think.style.display = '';
+    if(!card.thinkOpened){ card.think.open = true; card.thinkOpened = true; }
+    card.thinkBody.textContent = acc.reasoning;
+    card.thinkBody.scrollTop = card.thinkBody.scrollHeight;
+    // once the answer itself starts, tuck the reasoning away (user can reopen it)
+    if(haveContent && !card.thinkClosed){ card.think.open = false; card.thinkClosed = true; }
+  }
+  var log = $('ai-log'); log.scrollTop = log.scrollHeight;
+}
+
+/* Read an SSE body, folding frames into `acc`. Chunk boundaries land mid-frame,
+   so the trailing partial frame stays buffered. */
+function readSse(body, acc, onUpdate){
+  var reader = body.getReader(), decoder = new TextDecoder(), buffer = '';
+  function pump(){
+    return reader.read().then(function(r){
+      if(r.done) return;
+      buffer += decoder.decode(r.value, { stream: true });
+      var frames = buffer.split('\n\n');
+      buffer = frames.pop() || '';
+      frames.forEach(function(frame){
+        frame.split('\n').forEach(function(line){
+          if(line.indexOf('data:') !== 0) return;
+          var payload = line.slice(5).trim();
+          if(!payload || payload === '[DONE]') return;
+          var j; try{ j = JSON.parse(payload); }catch(e){ return; }
+          if(j.error){ acc.error = j.error.message || 'The model returned an error'; return; }
+          var ch = j.choices && j.choices[0];
+          if(ch && ch.delta){
+            if(ch.delta.reasoning_content){ acc.reasoning += ch.delta.reasoning_content; acc.gotFirst = true; }
+            if(ch.delta.content){ acc.content += ch.delta.content; acc.gotFirst = true; }
+          }
+          if(ch && ch.finish_reason) acc.finish = ch.finish_reason;
+          if(j.usage) acc.usage = j.usage;
+          if(j.yantra) acc.meta = j.yantra;
+        });
+      });
+      onUpdate();
+      return pump();
+    });
+  }
+  return pump();
+}
+
+function onAiKeydown(ev){
+  if(ev.key==='Enter' && !ev.shiftKey){ ev.preventDefault(); sendAiTurn(); }
+}
+
+function sendAiTurn(){
+  if(aiAbort) return;                       // a turn is already running
+  var text = $('ai-text').value.trim();
+  var key = $('ai-key').value.trim();
+  if(!text) return;
+  if(!key){ toast('Add your API key first', 'Paste a yk_live_… key above.'); return; }
+
+  var p = activeProject();
+  var model = $('ai-model').value;
+  var modelLabel = (MODELS[model] && MODELS[model].label) || model;
+  $('ai-text').value = '';
+  appendYouBubble(text);
+
+  var sendBtn = $('ai-send');
+  sendBtn.disabled = true;
+  sendBtn.innerHTML = '<span class="spin"></span>';
+
+  var ctx = buildProjectContext(p);
+  var messages = [
+    { role: 'system', content: buildSystemPrompt() },
+    { role: 'user', content: 'Current project files:\n\n' + ctx + '\n\nRequested change:\n' + text }
+  ];
+  var estTok = Math.ceil((ctx.length + text.length + buildSystemPrompt().length) / 4);
+  var card = createLiveCard(Object.keys(p.files).length, estTok, modelLabel);
+  var t0 = Date.now();
+  var acc = { content:'', reasoning:'', finish:null, usage:null, meta:null, error:null, gotFirst:false };
+  var raf = false;
+  function schedule(){ if(raf) return; raf = true; requestAnimationFrame(function(){ raf = false; renderLive(card, acc); }); }
+  var tick = setInterval(function(){
+    card.time.textContent = Math.round((Date.now() - t0) / 1000) + 's';
+    if(!acc.gotFirst) renderLive(card, acc);
+  }, 500);
+  aiAbort = new AbortController();
+  var stopped = false;
+
+  function finish(errMsg){
+    clearInterval(tick);
+    var secs = Math.max(1, Math.round((Date.now() - t0) / 1000));
+    aiAbort = null;
+    sendBtn.disabled = false; sendBtn.innerHTML = '↑';
+    if(card.el.parentNode) card.el.parentNode.removeChild(card.el);
+    if(errMsg && !acc.content){ appendAiTurn('⚠ ' + errMsg, [], { thinking: acc.reasoning, seconds: secs }); return; }
+    var parsed = parseAiResponse(acc.content);
+    var notes = [];
+    if(errMsg) notes.push('⚠ ' + errMsg);
+    if(stopped) notes.push('⏹ Stopped early — any unfinished file was discarded.');
+    else if(parsed.truncated || acc.finish === 'length' || acc.finish === 'max_tokens') notes.push('⚠ The reply was cut off before it finished, so some files were skipped. Ask for a smaller change, or one file at a time.');
+    if(!acc.content && !errMsg && !stopped) notes.push('⚠ The model returned no text' + (acc.finish ? ' (finish: ' + acc.finish + ')' : '') + '. Models that think before answering can use up the whole output limit — try again, ask for a smaller change, or pick another model.');
+    var explanation = [parsed.explanation].concat(notes).filter(Boolean).join('\n\n');
+    var fileDiffs = parsed.files.map(function(f){
+      var oldContent = p.files.hasOwnProperty(f.path) ? p.files[f.path] : '';
+      return { path: f.path, newContent: f.content, ops: diffLines(oldContent, f.content) };
+    });
+    var meta = [];
+    if(acc.meta){
+      if(acc.meta.fell_back) meta.push('⚠ Served by ' + acc.meta.routed_to + ' (fallback)');
+      else if(acc.meta.routed_to) meta.push(acc.meta.routed_to);
+      if(typeof acc.meta.cost_paise === 'number') meta.push('₹' + (acc.meta.cost_paise / 100).toFixed(2));
+      if(typeof acc.meta.balance_paise === 'number'){
+        try{ $('nav-balance').innerHTML = 'Balance <b>₹' + (acc.meta.balance_paise / 100).toFixed(2) + '</b>'; }catch(e){}
+      }
+    }
+    if(acc.usage) meta.push(fmtTok((acc.usage.prompt_tokens||0) + (acc.usage.completion_tokens||0)) + ' tokens');
+    meta.push(secs + 's');
+    appendAiTurn(explanation, fileDiffs, { thinking: acc.reasoning, seconds: secs, metaText: meta.join(' · ') });
+  }
+
+  fetch(gatewayBase() + '/v1/chat/completions', {
+    method: 'POST',
+    headers: { 'Content-Type':'application/json', 'Authorization':'Bearer '+key },
+    body: JSON.stringify({ model: model, messages: messages, max_tokens: 8000, stream: true }),
+    signal: aiAbort.signal
+  })
+  .then(function(r){
+    var ct = r.headers.get('content-type') || '';
+    if(!r.ok || ct.indexOf('text/event-stream') === -1){
+      // Error (auth, balance, bad model…) or a gateway that answered without streaming.
+      return r.json().then(function(b){
+        if(!r.ok) throw new Error((b && b.error && b.error.message) || 'Request failed');
+        var m = b.choices && b.choices[0];
+        acc.content = (m && m.message && m.message.content) || '';
+        acc.finish = m && m.finish_reason;
+        acc.usage = b.usage || null;
+        acc.gotFirst = true;
+      });
+    }
+    return readSse(r.body, acc, schedule);
+  })
+  .then(function(){ finish(acc.error); })
+  .catch(function(e){
+    if(e && e.name === 'AbortError'){ stopped = true; finish(null); }
+    else finish(acc.error || ('Network error: ' + (e && e.message)));
+  });
+}
+
+/* ═══════════════ LIVE PREVIEW + CONSOLE ═══════════════
+   The project is assembled into ONE html document (linked .css/.js files are
+   inlined, svg images become data URIs) and loaded into a sandboxed iframe via
+   srcdoc.
+
+   SECURITY: the iframe deliberately has NO allow-same-origin. Project code —
+   which may be AI-written — therefore runs in an opaque origin and cannot read
+   this page's localStorage (which holds the user's API key). The cost is that
+   localStorage/sessionStorage throw inside it, so the injected runtime swaps
+   in an in-memory shim; data saved by the previewed app resets on each run.
+
+   Limits (by design, no server): HTML/CSS/JS only; no Python/Node execution;
+   ES-module imports between project files are not resolved; images other than
+   .svg can't be stored in a text project. */
+var pvMode = 'code', pvLive = true, pvEntry = null, pvTimer = null, pvErrors = 0, pvLines = 0;
+
+function pvHtmlFiles(p){ return Object.keys(p.files).filter(function(f){ return /\.html?$/i.test(f); }).sort(); }
+function pvPickEntry(p){
+  var h = pvHtmlFiles(p);
+  if(!h.length) return null;
+  if(pvEntry && p.files.hasOwnProperty(pvEntry) && /\.html?$/i.test(pvEntry)) return pvEntry;
+  if(h.indexOf('index.html')>=0) return 'index.html';
+  var idx = h.filter(function(f){ return /(^|\/)index\.html?$/i.test(f); })[0];
+  return idx || h[0];
+}
+function pvJsEntry(p){
+  var names = ['index.js','main.js','script.js','app.js'];
+  for(var i=0;i<names.length;i++) if(p.files.hasOwnProperty(names[i])) return names[i];
+  return Object.keys(p.files).sort().filter(function(f){ return /\.(m?js)$/i.test(f); })[0] || null;
+}
+function pvResolve(base, href){
+  if(!href) return null;
+  if(/^([a-z][a-z0-9+.-]*:|\/\/|#)/i.test(href)) return null;
+  var clean = href.split('#')[0].split('?')[0];
+  if(!clean) return null;
+  var parts = clean.charAt(0)==='/' ? [] : base.split('/').slice(0,-1);
+  clean.split('/').forEach(function(seg){
+    if(seg==='..') parts.pop(); else if(seg && seg!=='.') parts.push(seg);
+  });
+  return parts.join('/');
+}
+function pvSafeScript(code){ return String(code).replace(/<\/script/gi, '<\\/script'); }
+
+/* Runs INSIDE the iframe (stringified and injected) — never called on this page. */
+function pvRuntime(){
+  function send(m){ m.yantra = 1; try{ parent.postMessage(m, '*'); }catch(e){} }
+  function fmt(a){
+    try{
+      if(typeof a === 'string') return a;
+      if(a instanceof Error) return a.stack || String(a);
+      return JSON.stringify(a, function(k,v){ return typeof v === 'function' ? '[Function]' : v; }, 2);
+    }catch(e){ return String(a); }
+  }
+  ['log','info','warn','error','debug'].forEach(function(l){
+    var orig = console[l];
+    console[l] = function(){
+      send({ type:'console', level: l==='debug' ? 'log' : l, text: [].slice.call(arguments).map(fmt).join(' ') });
+      try{ orig.apply(console, arguments); }catch(e){}
+    };
+  });
+  window.addEventListener('error', function(e){
+    send({ type:'console', level:'error', text: (e.message || 'Script error') + (e.lineno ? '  (line ' + e.lineno + ')' : '') });
+  });
+  window.addEventListener('unhandledrejection', function(e){
+    send({ type:'console', level:'error', text:'Unhandled promise rejection: ' + fmt(e.reason) });
+  });
+  function mem(){
+    var d = {};
+    return {
+      getItem:function(k){ return Object.prototype.hasOwnProperty.call(d,k) ? d[k] : null; },
+      setItem:function(k,v){ d[k] = String(v); },
+      removeItem:function(k){ delete d[k]; },
+      clear:function(){ d = {}; },
+      key:function(i){ return Object.keys(d)[i] || null; },
+      get length(){ return Object.keys(d).length; }
+    };
+  }
+  ['localStorage','sessionStorage'].forEach(function(n){
+    try{ window[n].getItem('x'); }
+    catch(e){ try{ Object.defineProperty(window, n, { value: mem(), configurable: true }); }catch(e2){} }
+  });
+  document.addEventListener('click', function(e){
+    var a = e.target && e.target.closest ? e.target.closest('a[href]') : null;
+    if(!a) return;
+    var h = a.getAttribute('href');
+    if(!h || h.charAt(0) === '#') return;
+    if(/^([a-z][a-z0-9+.-]*:|\/\/)/i.test(h)){
+      if(/^(https?:|\/\/)/i.test(h)){ a.target = '_blank'; a.rel = 'noopener'; }
+      return;
+    }
+    e.preventDefault();
+    send({ type:'nav', href:h });
+  }, true);
+}
+
+function pvShell(inner, bodyStyle){
+  return '<!DOCTYPE html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>'
+    + '<body style="font-family:system-ui,sans-serif;color:#4a5a75;'+(bodyStyle||'padding:24px;line-height:1.6')+'">'+inner+'</body></html>';
+}
+
+/* Returns { html, kind } where kind is 'site' | 'js' | 'none'. forExport omits the console/nav runtime. */
+function buildPreviewDoc(p, forExport){
+  var files = p.files;
+  var entry = pvPickEntry(p);
+  if(!entry){
+    var js = pvJsEntry(p);
+    if(!js){
+      return { kind:'none', html: pvShell('<h3 style="color:#0f1e33;margin-bottom:8px">Nothing to preview yet</h3>'
+        + 'The preview runs <b>HTML, CSS and JavaScript</b>. Create an <code>index.html</code>, or ask the AI: '
+        + '<i>“Build a landing page for a coffee shop”</i>.<br><br><span style="font-size:13px;color:#78889f">Python and other languages can’t run here — this workspace has no server.</span>') };
+    }
+    var d0 = new DOMParser().parseFromString(pvShell('<div style="font-size:13px">Running <b>'+esc(js)+'</b> — output appears in the Console below.</div>'), 'text/html');
+    var s0 = d0.createElement('script');
+    s0.textContent = pvSafeScript(files[js]);
+    d0.body.appendChild(s0);
+    if(!forExport) pvInject(d0);
+    return { kind:'js', html: '<!DOCTYPE html>\n' + d0.documentElement.outerHTML };
+  }
+  var doc = new DOMParser().parseFromString(files[entry], 'text/html');
+  doc.querySelectorAll('link[href]').forEach(function(l){
+    var rel = (l.getAttribute('rel')||'').toLowerCase();
+    var path = pvResolve(entry, l.getAttribute('href'));
+    if(!path || !files.hasOwnProperty(path)) return;
+    if(rel.indexOf('stylesheet')>=0){
+      var st = doc.createElement('style');
+      st.textContent = files[path];
+      l.replaceWith(st);
+    } else if(rel.indexOf('icon')>=0 && /\.svg$/i.test(path)){
+      l.setAttribute('href', 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(files[path]));
+    }
+  });
+  doc.querySelectorAll('script[src]').forEach(function(s){
+    var path = pvResolve(entry, s.getAttribute('src'));
+    if(!path || !files.hasOwnProperty(path)) return;
+    s.removeAttribute('src');
+    s.textContent = pvSafeScript(files[path]);
+  });
+  doc.querySelectorAll('img[src],source[src]').forEach(function(im){
+    var path = pvResolve(entry, im.getAttribute('src'));
+    if(path && files.hasOwnProperty(path) && /\.svg$/i.test(path)){
+      im.setAttribute('src', 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(files[path]));
+    }
+  });
+  if(!forExport) pvInject(doc);
+  return { kind:'site', html: '<!DOCTYPE html>\n' + doc.documentElement.outerHTML };
+}
+function pvInject(doc){
+  var s = doc.createElement('script');
+  s.textContent = '(' + pvRuntime.toString() + ')();';
+  doc.head.insertBefore(s, doc.head.firstChild);
+}
+
+function pvVisible(){ return pvMode !== 'code'; }
+function schedulePreview(){
+  if(!pvVisible() || !pvLive) return;
+  clearTimeout(pvTimer);
+  pvTimer = setTimeout(function(){ refreshPreview(false); }, 700);
+}
+function refreshEntrySelect(p, entry){
+  var sel = $('pv-entry');
+  var h = pvHtmlFiles(p);
+  if(h.length < 2){ sel.style.display = 'none'; return; }
+  sel.style.display = '';
+  sel.innerHTML = h.map(function(f){ return '<option value="'+esc(f)+'"'+(f===entry?' selected':'')+'>'+esc(f)+'</option>'; }).join('');
+}
+function refreshPreview(manual){
+  if(!pvVisible()) return;
+  clearTimeout(pvTimer);
+  var p = activeProject();
+  var entry = pvPickEntry(p);
+  refreshEntrySelect(p, entry);
+  conClear();
+  var built;
+  try{ built = buildPreviewDoc(p, false); }
+  catch(e){ conAdd('error', 'Could not build preview: ' + e.message); return; }
+  if(built.kind === 'site') conAdd('sys', 'Running ' + entry);
+  $('pv-frame').srcdoc = built.html;
+}
+
+function conAdd(level, text){
+  var log = $('con-log');
+  var div = document.createElement('div');
+  div.className = 'con-line ' + level;
+  div.textContent = text;
+  log.appendChild(div);
+  pvLines++;
+  while(log.childNodes.length > 500) log.removeChild(log.firstChild);
+  log.scrollTop = log.scrollHeight;
+  if(level === 'error'){ pvErrors++; $('con-pane').classList.remove('collapsed'); $('con-caret').textContent = '▾'; }
+  conTitle();
+}
+function conTitle(){
+  var visible = $('con-log').childNodes.length;
+  $('con-title').innerHTML = 'Console' + (visible ? ' · ' + visible : '') + (pvErrors ? ' <span class="con-err">· ' + pvErrors + ' error' + (pvErrors>1?'s':'') + '</span>' : '');
+}
+function conClear(){ $('con-log').innerHTML = ''; pvErrors = 0; pvLines = 0; conTitle(); }
+
+function setMode(m){
+  if(window.innerWidth < 900 && m === 'split') m = 'preview';
+  pvMode = m;
+  $('ws-split').className = 'ws-split m-' + m;
+  document.querySelectorAll('#seg-mode button').forEach(function(b){ b.classList.toggle('on', b.dataset.mode === m); });
+  try{ localStorage.setItem('yantra.workspace.view', m); }catch(e){}
+  if(m !== 'code') refreshPreview(true);
+  if(m !== 'preview' && editor){ setTimeout(function(){ try{ editor.layout(); }catch(e){} }, 30); }
+}
+/* After the AI's changes are accepted: if the project is a site and the user is
+   looking at code only, reveal the result (wide screens), so "create a website"
+   ends with the website on screen. */
+function maybeShowPreview(){
+  var p = activeProject();
+  if(pvMode === 'code' && window.innerWidth >= 900 && pvPickEntry(p)) setMode('split');
+}
+function exportHtml(){
+  var p = activeProject();
+  var built = buildPreviewDoc(p, true);
+  if(built.kind !== 'site'){ toast('Nothing to export', 'Add an index.html first.'); return; }
+  var blob = new Blob([built.html], { type:'text/html' });
+  var a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = (p.name || 'project').replace(/[^a-z0-9._-]+/gi,'-').toLowerCase() + '.html';
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(function(){ URL.revokeObjectURL(a.href); }, 2000);
+  toast('Exported', 'One standalone HTML file — CSS and JS are inlined.');
+}
+function initPreview(){
+  var saved = null;
+  try{ saved = localStorage.getItem('yantra.workspace.view'); }catch(e){}
+  var wide = window.innerWidth >= 1100;
+  setMode(saved === 'code' || saved === 'split' || saved === 'preview' ? saved : (wide ? 'split' : 'code'));
+  document.querySelectorAll('#seg-mode button').forEach(function(b){
+    b.addEventListener('click', function(){ setMode(b.dataset.mode); });
+  });
+  document.querySelectorAll('#seg-dev button').forEach(function(b){
+    b.addEventListener('click', function(){
+      document.querySelectorAll('#seg-dev button').forEach(function(x){ x.classList.toggle('on', x === b); });
+      $('pv-frame').style.width = b.dataset.w;
+    });
+  });
+  $('pv-live').addEventListener('click', function(){
+    pvLive = !pvLive;
+    this.classList.toggle('live-on', pvLive);
+    this.textContent = pvLive ? '● Live' : '○ Live off';
+    if(pvLive) refreshPreview(false);
+  });
+  $('pv-run').addEventListener('click', function(){ refreshPreview(true); });
+  $('pv-export').addEventListener('click', exportHtml);
+  $('pv-entry').addEventListener('change', function(){ pvEntry = this.value; refreshPreview(true); });
+  $('con-head').addEventListener('click', function(ev){
+    if(ev.target && ev.target.id === 'con-clear'){ conClear(); return; }
+    var pane = $('con-pane');
+    pane.classList.toggle('collapsed');
+    $('con-caret').textContent = pane.classList.contains('collapsed') ? '▸' : '▾';
+  });
+  window.addEventListener('message', function(ev){
+    var d = ev.data;
+    if(!d || d.yantra !== 1 || ev.source !== $('pv-frame').contentWindow) return;
+    if(d.type === 'console'){ conAdd(d.level === 'warn' ? 'warn' : d.level === 'error' ? 'error' : 'log', String(d.text).slice(0, 4000)); }
+    else if(d.type === 'nav'){
+      var p = activeProject();
+      var base = pvPickEntry(p) || 'index.html';
+      var target = pvResolve(base, d.href);
+      if(target && !p.files.hasOwnProperty(target) && p.files.hasOwnProperty(target + '/index.html')) target = target + '/index.html';
+      if(target && p.files.hasOwnProperty(target) && /\.html?$/i.test(target)){ pvEntry = target; refreshPreview(true); }
+      else conAdd('warn', 'Link target not found in this project: ' + d.href);
+    }
+  });
+  document.querySelectorAll('.ai-chips button').forEach(function(b){
+    b.addEventListener('click', function(){ $('ai-text').value = b.dataset.prompt; $('ai-text').focus(); });
+  });
+}
+
+/* ═══════════════ NAV BALANCE (same pattern as the rest of the site) ═══════════════ */
+(function(){
+  var jwt; try{ jwt = localStorage.getItem('yantra.jwt'); }catch(e){ jwt = null; }
+  if(!jwt) return;
+  fetch(gatewayBase() + '/app/me', { headers: { 'Authorization': 'Bearer ' + jwt } })
+    .then(function(r){ if(!r.ok) throw 0; return r.json(); })
+    .then(function(me){
+      var bal = '₹' + (Number(me.account.balance_paise||0)/100).toFixed(2);
+      $('nav-balance').innerHTML = 'Balance <b>'+bal+'</b>';
+    }).catch(function(){});
+})();
+
+/* ═══════════════ INIT ═══════════════ */
+function init(){
+  renderProjectSelect();
+  renderFileTree();
+  renderTabs();
+  populateModels();
+  loadKey();
+  initMonaco();
+  initPreview();
+}
+if(document.readyState==='loading') document.addEventListener('DOMContentLoaded', init);
+else init();
+</script>
+</body>
+</html>
