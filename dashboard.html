@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<meta name="robots" content="noindex, nofollow">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Dashboard — Yantra AI</title>
 <meta name="description" content="Yantra AI dashboard — manage API keys, top up with UPI, track usage.">
@@ -191,6 +192,50 @@ main{padding:30px 0 80px}
   .view-head h1{font-size:22px}
   #usage-charts-grid{grid-template-columns:1fr!important}
 }
+
+/* ---------- get started ---------- */
+.gs{padding:22px;margin-bottom:6px}
+.gs-head{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap;margin-bottom:16px}
+.gs-head h2{font-family:var(--disp);font-size:20px;font-weight:700;letter-spacing:-.01em}
+.gs-head p{color:var(--mut);font-size:13.5px;margin-top:3px}
+.gs-prog{display:flex;align-items:center;gap:10px;font-size:12.5px;font-weight:600;color:var(--mut)}
+.gs-bar{width:120px;height:6px;border-radius:6px;background:var(--bg3);overflow:hidden}
+.gs-bar i{display:block;height:100%;width:0;background:var(--green);border-radius:6px;transition:width .4s}
+.gs-steps{list-style:none;display:grid;gap:8px;margin-bottom:18px}
+.gs-step{display:flex;align-items:center;gap:14px;padding:12px 14px;border:1px solid var(--line);border-radius:12px;background:var(--card2)}
+.gs-step.done{background:rgba(10,157,92,.06);border-color:rgba(10,157,92,.25)}
+.gs-dot{width:22px;height:22px;border-radius:50%;border:2px solid var(--border2);flex-shrink:0;display:flex;align-items:center;justify-content:center;background:var(--card)}
+.gs-step.done .gs-dot{background:var(--green);border-color:var(--green)}
+.gs-step.done .gs-dot::after{content:"";width:6px;height:11px;border:solid #fff;border-width:0 2.5px 2.5px 0;transform:rotate(45deg) translate(-1px,-1px)}
+.gs-body{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px}
+.gs-body b{font-size:14.5px}
+.gs-body span{font-size:13px;color:var(--mut)}
+.gs-step.done .btn{display:none}
+.gs-tabs{display:flex;gap:4px;margin-bottom:8px}
+.gs-tabs button{padding:7px 14px;border-radius:9px;font-size:13px;font-weight:600;color:var(--mut);border:1px solid transparent}
+.gs-tabs button[aria-selected="true"]{background:var(--card);border-color:var(--line);color:var(--cyan)}
+.gs-code .codebox{white-space:pre;overflow-x:auto;font-size:12.5px;line-height:1.6;padding-right:70px}
+.gs-run{margin-top:12px}
+.gs-keyrow{margin-bottom:10px}
+.gs-actions{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.gs-hint{font-size:12.5px;color:var(--dim)}
+.gs-out{margin-top:12px;border:1px solid var(--line);border-radius:12px;background:var(--card);padding:14px 16px}
+.gs-out.err{border-color:rgba(217,45,75,.35);background:rgba(217,45,75,.04)}
+#gs-out-text{font-size:15px;line-height:1.55;white-space:pre-wrap;word-break:break-word}
+.gs-meta{margin-top:8px;font:500 12px var(--mono);color:var(--dim)}
+.gs-meta a{font-family:var(--sans);font-weight:600}
+.gs.compact .gs-steps,.gs.compact .gs-prog{display:none}
+@media(max-width:560px){.gs{padding:16px}.gs-step{flex-wrap:wrap}.gs-step .btn{width:100%}.gs-bar{width:90px}}
+
+.auth-tag{text-align:center;color:var(--mut);font-size:14px;margin:-4px 0 16px}
+.pw-wrap{position:relative}
+.pw-wrap .inp{padding-right:64px}
+.pw-toggle{position:absolute;right:6px;top:50%;transform:translateY(-50%);font-size:12.5px;font-weight:600;color:var(--cyan);padding:6px 10px;border-radius:8px}
+.pw-toggle:hover{background:var(--bg3)}
+.pw-toggle:focus-visible,.gs-tabs button:focus-visible,.btn:focus-visible,.inp:focus-visible{outline:2px solid var(--cyan);outline-offset:2px}
+.field-hint{font-size:12px;color:var(--dim);margin-top:6px}
+.ck-next{font-size:12.5px;color:var(--dim);margin:10px 0 0}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 </style>
 </head>
 <body>
@@ -199,8 +244,9 @@ main{padding:30px 0 80px}
 <div id="auth-screen">
   <div class="auth-card">
     <div class="brand"><div class="glyph">य</div><b>Yantra AI</b></div>
+    <p class="auth-tag">Get your key in under a minute. UPI top-ups start at ₹10.</p>
     <div class="card pad">
-      <div class="tabs">
+      <div class="tabs" id="auth-tabs">
         <button id="tab-login" class="on" onclick="setMode('login')">Sign in</button>
         <button id="tab-signup" onclick="setMode('signup')">Create account</button>
       </div>
@@ -209,13 +255,15 @@ main{padding:30px 0 80px}
         <label>Name</label>
         <input class="inp" id="f-name" placeholder="Your name" autocomplete="name">
       </div>
+      <div class="auth-head" id="auth-head" style="display:none"></div>
       <div class="field">
         <label>Email</label>
         <input class="inp" id="f-email" type="email" placeholder="you@example.com" autocomplete="email">
       </div>
-      <div class="field">
+      <div class="field" id="pass-field">
         <label>Password</label>
-        <input class="inp" id="f-pass" type="password" placeholder="At least 8 characters" autocomplete="current-password">
+        <div class="pw-wrap"><input class="inp" id="f-pass" type="password" placeholder="At least 8 characters" autocomplete="current-password"><button type="button" class="pw-toggle" id="pw-toggle" aria-label="Show password" aria-pressed="false" onclick="togglePw()">Show</button></div>
+        <div class="field-hint" id="pw-hint" style="display:none">Use 8 or more characters.</div>
       </div>
       <!-- honeypot: invisible to people, bots fill it -->
       <div aria-hidden="true" style="position:absolute;left:-9999px;top:auto;width:1px;height:1px;overflow:hidden">
@@ -223,7 +271,29 @@ main{padding:30px 0 80px}
       </div>
       <div id="cf-box" style="display:none;margin:0 0 12px"></div>
       <button class="btn btn-pri" id="auth-submit" onclick="submitAuth()" style="width:100%">Sign in</button>
-      <div class="subtle" id="forgot-row"><a onclick="doForgot()">Forgot password?</a></div>
+      <div class="subtle" id="forgot-row"><a onclick="setMode('forgot')">Forgot password?</a></div>
+      <div class="subtle" id="back-row" style="display:none"><a onclick="setMode('login')">&larr; Back to sign in</a></div>
+
+      <!-- shown after a reset link has been requested -->
+      <div id="sent-panel" style="display:none">
+        <div class="msg ok" style="margin-bottom:12px"><b>Check your inbox.</b><br>If <span id="sent-email" style="word-break:break-all"></span> has an account, a reset link is on its way. It works once and expires in 30 minutes.</div>
+        <div class="field-hint" style="margin:0 0 12px">Nothing after a minute? Look in spam or promotions.</div>
+        <button class="btn btn-ghost" id="resend-btn" onclick="sendReset(true)" style="width:100%" disabled>Send again</button>
+      </div>
+
+      <!-- reached from the link in the email (dashboard.html#reset=TOKEN) -->
+      <div id="reset-panel" style="display:none">
+        <div class="field">
+          <label>New password</label>
+          <div class="pw-wrap"><input class="inp" id="rp-new" type="password" placeholder="At least 8 characters" autocomplete="new-password"><button type="button" class="pw-toggle" id="rp-toggle" aria-label="Show password" onclick="toggleRp()">Show</button></div>
+        </div>
+        <div class="field">
+          <label>Type it again</label>
+          <input class="inp" id="rp-new2" type="password" placeholder="Repeat the new password" autocomplete="new-password">
+          <div class="field-hint" id="rp-hint">Use 8 or more characters. A phrase of a few words works well.</div>
+        </div>
+        <button class="btn btn-pri" id="rp-submit" onclick="submitReset()" style="width:100%">Set new password</button>
+      </div>
 
     </div>
     <div class="subtle">One key for every AI model. Pay with UPI.</div>
@@ -271,10 +341,35 @@ main{padding:30px 0 80px}
         <div class="stat"><div class="k">Total spent</div><div class="v sf" id="ov-spent">₹0.00</div></div>
         <div class="stat"><div class="k">Active keys</div><div class="v pu" id="ov-keys">0</div></div>
       </div>
-      <div class="card pad">
-        <div class="t1" style="font-weight:600;margin-bottom:6px">Quick start</div>
-        <p class="mut" style="font-size:13.5px;margin-bottom:14px">Drop your key into the OpenAI SDK — just change the base URL. <code class="mono cy">model:"auto"</code> lets the router pick the best provider.</p>
-        <div class="codebox" id="quickstart-code"><button class="btn btn-ghost btn-sm copy-ic" onclick="copyEl('quickstart-code-pre')">Copy</button><span id="quickstart-code-pre"></span></div>
+      <div class="card gs" id="gs">
+        <div class="gs-head">
+          <div><h2 id="gs-title">Get started</h2><p id="gs-sub">Three steps to your first answer. It takes about a minute.</p></div>
+          <div class="gs-prog" id="gs-prog" aria-live="polite"><span id="gs-count">0 of 3</span><div class="gs-bar"><i id="gs-fill"></i></div></div>
+        </div>
+        <ol class="gs-steps">
+          <li class="gs-step" id="gs-s1"><span class="gs-dot" aria-hidden="true"></span>
+            <div class="gs-body"><b>Create an API key</b><span id="gs-s1-t">Your key lets your app call every model.</span></div>
+            <button class="btn btn-pri btn-sm" id="gs-s1-b" onclick="openCreateKey()">Create key</button></li>
+          <li class="gs-step" id="gs-s2"><span class="gs-dot" aria-hidden="true"></span>
+            <div class="gs-body"><b>Add credits</b><span id="gs-s2-t">Pay with UPI. The minimum is ₹10 and you only pay for what you use.</span></div>
+            <button class="btn btn-saf btn-sm" id="gs-s2-b" onclick="showView('billing')">Add credits</button></li>
+          <li class="gs-step" id="gs-s3"><span class="gs-dot" aria-hidden="true"></span>
+            <div class="gs-body"><b>Send your first request</b><span id="gs-s3-t">Run it here, or copy the code into your project.</span></div></li>
+        </ol>
+        <div class="gs-code">
+          <div class="gs-tabs" role="tablist" aria-label="Language">
+            <button role="tab" id="gs-t-python" onclick="gsLang('python')">Python</button>
+            <button role="tab" id="gs-t-node" onclick="gsLang('node')">Node.js</button>
+            <button role="tab" id="gs-t-curl" onclick="gsLang('curl')">curl</button>
+          </div>
+          <div class="codebox" id="quickstart-code"><button class="btn btn-ghost btn-sm copy-ic" onclick="copyEl('gs-code')">Copy</button><span id="gs-code"></span></div>
+          <div class="gs-run">
+            <div id="gs-keyrow" class="gs-keyrow hide"><input class="inp mono" id="gs-key" placeholder="Paste your API key (yk_live_…) to run the test" autocomplete="off" spellcheck="false"></div>
+            <div class="gs-actions"><button class="btn btn-pri" id="gs-run" onclick="gsRun()">Run this test here</button>
+              <span class="gs-hint" id="gs-hint">Uses a few paise. Model: auto:cheap.</span></div>
+            <div class="gs-out hide" id="gs-out" role="status"><div id="gs-out-text"></div><div class="gs-meta" id="gs-out-meta"></div></div>
+          </div>
+        </div>
       </div>
     </section>
 
@@ -368,7 +463,8 @@ main{padding:30px 0 80px}
       <div class="sub">Copy it now — for security, you won't be able to see it again.</div>
       <div class="codebox"><button class="btn btn-ghost btn-sm copy-ic" onclick="copyEl('ck-secret')">Copy</button><span id="ck-secret" style="color:var(--green)"></span></div>
       <div class="warnote"><span>⚠️</span><span>This secret is shown only once. If you lose it, revoke the key and create a new one.</span></div>
-      <div class="modal-actions"><button class="btn btn-pri" onclick="closeOverlays()">Done</button></div>
+      <p class="ck-next">This browser remembers the key so the examples and the test button on Overview use it. You can remove it there.</p>
+      <div class="modal-actions"><button class="btn btn-ghost" onclick="closeOverlays();showView('billing')">Add credits</button><button class="btn btn-pri" onclick="closeOverlays();showView('overview')">Done</button></div>
     </div>
   </div>
 </div>
@@ -494,13 +590,31 @@ main{padding:30px 0 80px}
     $('tab-signup').className = m==='signup'?'on':'';
     $('name-field').style.display = m==='signup'?'block':'none';
     $('forgot-row').style.display = m==='login'?'block':'none';
-    $('auth-submit').textContent = m==='login'?'Sign in':'Create account';
+    $('auth-submit').textContent = m==='login'?'Sign in':(m==='forgot'?'Send reset link':'Create account');
+    // forgot / reset screens drop the tabs and the password box
+    var fr=(m==='forgot'), tabs=$('auth-tabs');
+    tabs.style.display = fr?'none':'flex';
+    $('pass-field').style.display = fr?'none':'block';
+    $('back-row').style.display = fr?'block':'none';
+    $('sent-panel').style.display='none'; $('reset-panel').style.display='none';
+    $('f-email').parentNode.style.display='block'; $('auth-submit').style.display='';
+    var head=$('auth-head');
+    if(fr){ head.style.display='block'; head.innerHTML='<b>Reset your password</b><br><span class="field-hint">Enter your email and we will send you a link.</span>'; }
+    else { head.style.display='none'; }
     $('f-pass').setAttribute('autocomplete', m==='login'?'current-password':'new-password');
+    $('pw-hint').style.display = m==='signup'?'block':'none';
     authMsg('');
   };
   function authMsg(msg,kind){ var el=$('auth-msg'); if(!msg){el.innerHTML='';return;} el.innerHTML='<div class="msg '+(kind||'err')+'">'+esc(msg)+'</div>'; }
 
+  window.togglePw=function(){
+    var i=$('f-pass'), show=i.type==='password'; i.type=show?'text':'password';
+    var b=$('pw-toggle'); b.textContent=show?'Hide':'Show'; b.setAttribute('aria-pressed',String(show)); b.setAttribute('aria-label',show?'Hide password':'Show password');
+  };
+  ['f-email','f-pass','f-name'].forEach(function(id){ var el=$(id); if(el) el.addEventListener('keydown',function(e){ if(e.key==='Enter'){ e.preventDefault(); submitAuth(); } }); });
+  var FIRST_RUN=false;
   window.submitAuth=function(){
+    if(mode==='forgot'){ sendReset(false); return; }
     var email=($('f-email').value||'').trim(), pass=$('f-pass').value||'';
     var name=($('f-name').value||'').trim();
     if(!email||!pass){ authMsg('Email and password are required.'); return; }
@@ -514,7 +628,7 @@ main{padding:30px 0 80px}
     }
     api(path,{method:'POST',auth:false,body:body})
       .then(function(d){
-        store.set('yantra.jwt', d.token); boot();
+        store.set('yantra.jwt', d.token); FIRST_RUN=(mode==='signup'); boot();
         if(mode==='signup' && d.welcome){
           setTimeout(function(){ toast(d.welcome.granted ? 'Welcome! ₹'+(d.welcome.amount_paise/100).toFixed(2)+' free credit added' : d.welcome.message, d.welcome.granted?'good':''); }, 900);
         }
@@ -526,12 +640,83 @@ main{padding:30px 0 80px}
       .then(function(){ btn.disabled=false; btn.textContent=old; });
   };
 
-  window.doForgot=function(){
+  // ---------- forgot password ----------
+  var resendTimer=null;
+  function startResendCountdown(sec){
+    var b=$('resend-btn'); clearInterval(resendTimer);
+    function tick(){ if(sec<=0){ clearInterval(resendTimer); b.disabled=false; b.textContent='Send again'; return; } b.disabled=true; b.textContent='Send again in '+sec+'s'; sec--; }
+    tick(); resendTimer=setInterval(tick,1000);
+  }
+  window.sendReset=function(again){
     var email=($('f-email').value||'').trim();
-    if(!email){ authMsg('Enter your email above, then click "Forgot password".'); return; }
+    if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){ authMsg('Enter the email you signed up with.'); return; }
+    var btn=$('auth-submit'), rb=$('resend-btn');
+    if(again){ rb.disabled=true; } else { btn.disabled=true; btn.innerHTML='<span class="spin"></span>'; }
     api('/app/auth/forgot',{method:'POST',auth:false,body:{email:email}})
-      .then(function(){ authMsg('If that email exists, a reset link is on its way.','ok'); })
-      .catch(function(e){ authMsg(e.message); });
+      .then(function(d){
+        authMsg('');
+        $('sent-email').textContent=email;
+        $('sent-panel').style.display='block';
+        $('f-email').parentNode.style.display='none'; btn.style.display='none'; $('auth-head').style.display='none';
+        startResendCountdown((d&&d.retry_after)||60);
+      })
+      .catch(function(e){ authMsg(e.message||'Could not send the link. Try again in a minute.'); if(again) rb.disabled=false; })
+      .then(function(){ btn.disabled=false; btn.textContent='Send reset link'; });
+  };
+
+  // ---------- reset password (arrives from the email link) ----------
+  var RESET_TOKEN=null;
+  window.toggleRp=function(){
+    var i=$('rp-new'), show=i.type==='password'; i.type=show?'text':'password'; $('rp-new2').type=i.type;
+    $('rp-toggle').textContent=show?'Hide':'Show'; $('rp-toggle').setAttribute('aria-label',show?'Hide password':'Show password');
+  };
+  function rpHint(){
+    var a=$('rp-new').value, b=$('rp-new2').value, h=$('rp-hint');
+    if(!a){ h.style.color=''; h.textContent='Use 8 or more characters. A phrase of a few words works well.'; return false; }
+    if(a.length<8){ h.style.color='#a8142f'; h.textContent=(8-a.length)+' more character'+(8-a.length>1?'s':'')+' needed.'; return false; }
+    if(b && a!==b){ h.style.color='#a8142f'; h.textContent='The two passwords do not match.'; return false; }
+    if(!b){ h.style.color=''; h.textContent='Looks good. Type it once more to confirm.'; return false; }
+    h.style.color='#07683c'; h.textContent='Passwords match.'; return true;
+  }
+  function openReset(token){
+    RESET_TOKEN=token;
+    $('auth-tabs').style.display='none'; $('pass-field').style.display='none'; $('forgot-row').style.display='none';
+    $('f-email').parentNode.style.display='none'; $('auth-submit').style.display='none'; $('back-row').style.display='none';
+    authMsg('');
+    var head=$('auth-head'); head.style.display='block'; head.innerHTML='<b>Checking your link…</b>';
+    api('/app/auth/reset/check',{method:'POST',auth:false,body:{token:token}})
+      .then(function(d){
+        head.innerHTML='<b>Choose a new password</b><br><span class="field-hint">for '+esc(d.email||'your account')+'</span>';
+        $('reset-panel').style.display='block'; $('rp-new').focus();
+      })
+      .catch(function(e){
+        head.style.display='none'; RESET_TOKEN=null;
+        history.replaceState(null,'',location.pathname+location.search);
+        setMode('forgot'); authMsg((e&&e.message)||'This reset link is invalid or has expired. Request a new one.');
+      });
+  }
+  window.submitReset=function(){
+    if(!RESET_TOKEN) return;
+    if(!rpHint()){ if($('rp-new').value.length<8) authMsg('Use at least 8 characters.'); else authMsg('The two passwords must match.'); return; }
+    var btn=$('rp-submit'); btn.disabled=true; btn.innerHTML='<span class="spin"></span>';
+    api('/app/auth/reset',{method:'POST',auth:false,body:{token:RESET_TOKEN,password:$('rp-new').value}})
+      .then(function(){
+        RESET_TOKEN=null; store.del('yantra.jwt');
+        history.replaceState(null,'',location.pathname+location.search);
+        $('rp-new').value=''; $('rp-new2').value='';
+        setMode('login'); authMsg('Password changed. Every other device was signed out. Sign in with your new password.','ok');
+        $('f-pass').focus();
+      })
+      .catch(function(e){ authMsg(e.message||'Could not change the password.'); if(e && /expired|invalid/i.test(e.message||'')) { RESET_TOKEN=null; setTimeout(function(){ setMode('forgot'); authMsg(e.message); },1500); } })
+      .then(function(){ btn.disabled=false; btn.textContent='Set new password'; });
+  };
+  ['rp-new','rp-new2'].forEach(function(id){ var el=$(id); if(el){ el.addEventListener('input',rpHint); el.addEventListener('keydown',function(e){ if(e.key==='Enter'){ e.preventDefault(); submitReset(); } }); } });
+  window.openResetFromHash=function(){
+    var m=(location.hash||'').match(/reset=([^&]+)/);
+    if(!m) return false;
+    var tk=decodeURIComponent(m[1]);
+    history.replaceState(null,'',location.pathname+location.search);   // keep the token out of the address bar and history
+    openReset(tk); return true;
   };
 
   window.signOut=function(){ store.del('yantra.jwt'); ME=null; location.reload(); };
@@ -566,19 +751,7 @@ main{padding:30px 0 80px}
       // Key creation is open to unverified users on purpose — trying the product
       // is the aha moment. Verification gates adding money instead.
       $('newkey-btn').disabled = false;
-      // quick-start snippet
-      var base=gatewayBase();
-      $('quickstart-code-pre').textContent =
-        'from openai import OpenAI\n'+
-        'client = OpenAI(\n'+
-        '    base_url="'+base+'/v1",\n'+
-        '    api_key="yk_live_xxx"   # your Yantra key\n'+
-        ')\n'+
-        'r = client.chat.completions.create(\n'+
-        '    model="auto",          # router picks the best provider\n'+
-        '    messages=[{"role":"user","content":"Hello!"}]\n'+
-        ')\n'+
-        'print(r.choices[0].message.content)';
+      renderOnboarding();
     });
   }
 
@@ -586,6 +759,7 @@ main{padding:30px 0 80px}
     return api('/app/usage').then(function(d){
       $('ov-requests').textContent=fmtNum(d.totals.requests);
       $('ov-spent').textContent=inr(d.totals.cost_paise);
+      renderOnboarding();
     }).catch(function(){});
   }
 
@@ -594,13 +768,74 @@ main{padding:30px 0 80px}
       .catch(function(e){ toast(e.message,'bad'); });
   };
 
+
+  // ================= GET STARTED =================
+  var GS_LANG='python';
+  function lastKey(){ var k=store.get('yantra.lastkey')||''; return /^yk_/.test(k)?k:''; }
+  function gsSnippet(lang){
+    var key=lastKey()||'yk_live_YOUR_KEY', base=gatewayBase()+'/v1';
+    if(lang==='node') return 'import OpenAI from "openai";\n\nconst client = new OpenAI({\n  baseURL: "'+base+'",\n  apiKey: "'+key+'",\n});\n\nconst r = await client.chat.completions.create({\n  model: "auto",\n  messages: [{ role: "user", content: "Hello!" }],\n});\nconsole.log(r.choices[0].message.content);';
+    if(lang==='curl') return 'curl '+base+'/chat/completions \\\n  -H "Authorization: Bearer '+key+'" \\\n  -H "Content-Type: application/json" \\\n  -d \'{"model":"auto","messages":[{"role":"user","content":"Hello!"}]}\'';
+    return 'from openai import OpenAI\n\nclient = OpenAI(\n    base_url="'+base+'",\n    api_key="'+key+'",\n)\n\nr = client.chat.completions.create(\n    model="auto",\n    messages=[{"role": "user", "content": "Hello!"}],\n)\nprint(r.choices[0].message.content)';
+  }
+  window.gsLang=function(l){ GS_LANG=l; renderOnboarding(); };
+  window.gsForget=function(){ store.del('yantra.lastkey'); renderOnboarding(); toast('Saved key removed from this browser','good'); };
+  function renderOnboarding(){
+    if(!$('gs')||!ME) return;
+    var hasKey=KEYS.filter(function(k){return !k.revoked;}).length>0;
+    var hasMoney=Number(ME.account.balance_paise||0)>0;
+    var used=Number(($('ov-requests').textContent||'0').replace(/,/g,''))>0;
+    var n=(hasKey?1:0)+(hasMoney?1:0)+(used?1:0);
+    $('gs-s1').classList.toggle('done',hasKey); $('gs-s2').classList.toggle('done',hasMoney); $('gs-s3').classList.toggle('done',used);
+    $('gs-count').textContent=n+' of 3'; $('gs-fill').style.width=Math.round(n*100/3)+'%';
+    $('gs-s1-t').textContent=hasKey?'You have a key. Keep it secret.':'Your key lets your app call every model.';
+    $('gs-s2-t').textContent=hasMoney?('Balance: '+inr(ME.account.balance_paise)+'. You only pay for what you use.'):'Pay with UPI. The minimum is ₹10 and you only pay for what you use.';
+    $('gs-s3-t').textContent=used?'Done. Your requests appear under Usage.':'Run it here, or copy the code into your project.';
+    var all=(n===3);
+    $('gs').classList.toggle('compact',all);
+    $('gs-title').textContent=all?'Quick start':'Get started';
+    $('gs-sub').textContent=all?'Drop your key into the OpenAI SDK. Set model to "auto" to let the router choose.':'Three steps to your first answer. It takes about a minute.';
+    ['python','node','curl'].forEach(function(l){ var b=$('gs-t-'+l); b.setAttribute('aria-selected',String(l===GS_LANG)); });
+    $('gs-code').textContent=gsSnippet(GS_LANG);
+    var have=!!lastKey();
+    $('gs-keyrow').classList.toggle('hide',have);
+    $('gs-hint').innerHTML=have?('Uses a few paise with the key you created here. <a href="#" onclick="gsForget();return false">Remove it from this browser</a>'):'Uses a few paise. Model: auto:cheap.';
+    $('gs-run').disabled=!hasMoney && !used;
+    if(!hasMoney && !used) $('gs-hint').textContent='Add credits first, then run the test.';
+  }
+  window.gsRun=function(){
+    var key=lastKey()||(($('gs-key').value||'').trim());
+    if(!/^yk_/.test(key)){ toast('Paste your API key first. Create one above if you do not have one.','bad'); return; }
+    var btn=$('gs-run'), out=$('gs-out'), txt=$('gs-out-text'), meta=$('gs-out-meta');
+    btn.disabled=true; btn.textContent='Sending…'; out.classList.remove('hide','err'); txt.textContent='Waiting for the model…'; meta.textContent='';
+    fetch(gatewayBase()+'/v1/chat/completions',{method:'POST',headers:{'Content-Type':'application/json',Authorization:'Bearer '+key},
+      body:JSON.stringify({model:'auto:cheap',messages:[{role:'user',content:'Say hello in one short sentence.'}],max_tokens:80})})
+    .then(function(r){ return r.json().catch(function(){return {};}).then(function(j){ return {r:r,j:j}; }); })
+    .then(function(o){
+      if(!o.r.ok){
+        out.classList.add('err');
+        var m=(o.j&&o.j.error&&o.j.error.message)||('Request failed ('+o.r.status+').');
+        txt.textContent=m;
+        meta.innerHTML=o.r.status===402?'<a href="#" onclick="showView(\'billing\');return false">Add credits</a>':(o.r.status===401?'That key was not accepted. Check it and try again.':'');
+        return;
+      }
+      var c=o.j.choices&&o.j.choices[0]&&o.j.choices[0].message&&o.j.choices[0].message.content;
+      txt.textContent=c||'(The model returned an empty reply. Try again.)';
+      var routed=o.r.headers.get('x-yantra-routed-to'), cost=o.r.headers.get('x-yantra-cost-paise');
+      meta.textContent=[routed?'Model: '+routed:'',cost!=null?'Cost: '+inr(Number(cost)):''].filter(Boolean).join('  ·  ');
+      loadMe().then(loadOverviewStats).catch(function(){});
+    })
+    .catch(function(){ out.classList.add('err'); txt.textContent='Could not reach the gateway. Check your connection and try again.'; })
+    .then(function(){ btn.textContent='Run this test here'; btn.disabled=false; renderOnboarding(); });
+  };
+
   // ================= KEYS =================
   function loadKeys(){
     return api('/app/keys').then(function(d){
       KEYS=d.keys||[];
       var active=KEYS.filter(function(k){return !k.revoked;}).length;
       $('ov-keys').textContent=active;
-      renderKeys(); renderCurl();
+      renderKeys(); renderCurl(); renderOnboarding();
     });
   }
   function renderKeys(){
@@ -656,6 +891,7 @@ main{padding:30px 0 80px}
     api('/app/keys',{method:'POST',body:body})
       .then(function(d){
         $('ck-secret').textContent=d.secret;
+        store.set('yantra.lastkey',d.secret);
         $('ck-step1').classList.add('hide'); $('ck-step2').classList.remove('hide');
         loadKeys();
       })
@@ -847,8 +1083,8 @@ main{padding:30px 0 80px}
   function boot(){
     $('auth-screen').classList.add('hide');
     $('app-screen').classList.remove('hide');
-    loadMe().then(function(){ return loadOverviewStats(); })
-      .then(function(){ showView('overview'); })
+    loadMe().then(function(){ return loadOverviewStats(); }).then(function(){ return loadKeys().catch(function(){}); })
+      .then(function(){ showView('overview'); if(FIRST_RUN){ FIRST_RUN=false; if(!KEYS.some(function(k){return !k.revoked;})){ openCreateKey(); $('ck-name').value='My first key'; } } })
       .catch(function(e){
         // token invalid/expired → back to auth
         if(e.status===401){ store.del('yantra.jwt'); showAuth(); }
@@ -859,12 +1095,11 @@ main{padding:30px 0 80px}
     $('app-screen').classList.add('hide');
     $('auth-screen').classList.remove('hide');
     setMode('login');
-    // handle a password-reset link: #reset=TOKEN
-    var m=(location.hash||'').match(/reset=([^&]+)/);
-    if(m){ var tk=decodeURIComponent(m[1]); var pw=prompt('Enter a new password (min 8 chars):'); if(pw){ api('/app/auth/reset',{method:'POST',auth:false,body:{token:tk,password:pw}}).then(function(){authMsg('Password reset. Sign in with your new password.','ok');location.hash='';}).catch(function(e){authMsg(e.message);}); } }
+    // a password-reset link from the email: dashboard.html#reset=TOKEN
+    openResetFromHash();
   }
 
-  function init(){ if(token()) boot(); else showAuth(); }
+  function init(){ if(/reset=/.test(location.hash||'')){ showAuth(); return; } if(token()) boot(); else showAuth(); }
   init();
 })();
 </script>
