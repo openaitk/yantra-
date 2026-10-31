@@ -91,6 +91,14 @@
         "@type": "Answer",
         "text": "Yes — the catalog includes models priced at ₹0 per token, so you can test the integration end to end without spending your balance. You still need an account and an API key to call them."
       }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I generate images or voice with the same key?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. Use /v1/images/generations for images (FLUX models) and /v1/audio/speech for text-to-speech. Both bill in rupees from the same wallet, and you are charged only when a result is returned."
+      }
     }
   ]
 }
@@ -787,6 +795,7 @@ html{scroll-behavior:smooth;}
 .prov-after{padding-top:0;padding-bottom:0}
 </style>
 
+<style>html,body{overflow-x:clip}</style>
 </head>
 <body>
 <canvas id="bg-canvas"></canvas>
@@ -833,24 +842,6 @@ html{scroll-behavior:smooth;}
 <!-- ═══════ HOME ═══════ -->
 <main class="page on" id="page-home">
 
-  <section class="prov-top prov-after">
-    <div class="wrap">
-      <div class="prov-strip-label">Supports models from</div>
-        <div class="prov-logos prov-logos-top">
-          <span class="prov-logo"><img class="pl-img" src="assets/logos/openai.png" alt="OpenAI logo" loading="lazy" onerror="this.remove()"><span class="pl-name">OpenAI</span></span>
-          <span class="prov-logo"><img class="pl-img" src="assets/logos/anthropic.png" alt="Anthropic logo" loading="lazy" onerror="this.remove()"><span class="pl-name">Anthropic</span></span>
-          <span class="prov-logo"><img class="pl-img" src="assets/logos/google.png" alt="Google logo" loading="lazy" onerror="this.remove()"><span class="pl-name">Google</span></span>
-          <span class="prov-logo"><img class="pl-img" src="assets/logos/meta.png" alt="Meta logo" loading="lazy" onerror="this.remove()"><span class="pl-name">Meta</span></span>
-          <span class="prov-logo"><img class="pl-img" src="assets/logos/mistral.png" alt="Mistral AI logo" loading="lazy" onerror="this.remove()"><span class="pl-name">Mistral AI</span></span>
-          <span class="prov-logo"><img class="pl-img" src="assets/logos/xai.png" alt="xAI logo" loading="lazy" onerror="this.remove()"><span class="pl-name">xAI</span></span>
-          <span class="prov-logo"><img class="pl-img" src="assets/logos/deepseek.png" alt="DeepSeek logo" loading="lazy" onerror="this.remove()"><span class="pl-name">DeepSeek</span></span>
-          <span class="prov-logo"><img class="pl-img" src="assets/logos/moonshot.png" alt="Kimi logo" loading="lazy" onerror="this.remove()"><span class="pl-name">Kimi</span></span>
-          <span class="prov-logo"><img class="pl-img" src="assets/logos/nvidia.png" alt="NVIDIA logo" loading="lazy" onerror="this.remove()"><span class="pl-name">NVIDIA</span></span>
-          <span class="prov-logo"><img class="pl-img" src="assets/logos/qwen.png" alt="Qwen logo" loading="lazy" onerror="this.remove()"><span class="pl-name">Qwen</span></span>
-          <span class="prov-logo pl-more">+ 11 more labs</span>
-        </div>
-    </div>
-  </section>
   <section class="hero">
     <div class="wrap">
       <div class="hero-grid">
@@ -903,25 +894,45 @@ html{scroll-behavior:smooth;}
             <g class="flow-node" id="n-user"><rect x="40" y="458" width="100" height="30" rx="7"></rect><text class="flow-label" x="90" y="477" text-anchor="middle">User</text></g>
 
             <!-- provider nodes -->
-            <g class="flow-node prov" id="p-openai"><rect x="220" y="180" width="120" height="28" rx="7"></rect><text class="flow-label" x="280" y="198" text-anchor="middle">OpenAI</text></g>
-            <g class="flow-node prov" id="p-anthropic"><rect x="220" y="216" width="120" height="28" rx="7"></rect><text class="flow-label" x="280" y="234" text-anchor="middle">Anthropic</text></g>
-            <g class="flow-node prov" id="p-google"><rect x="220" y="252" width="120" height="28" rx="7"></rect><text class="flow-label" x="280" y="270" text-anchor="middle">Google Gemini</text></g>
-            <g class="flow-node prov" id="p-deepseek"><rect x="220" y="288" width="120" height="28" rx="7"></rect><text class="flow-label" x="280" y="306" text-anchor="middle">DeepSeek</text></g>
-            <g class="flow-node prov" id="p-mistral"><rect x="220" y="324" width="120" height="28" rx="7"></rect><text class="flow-label" x="280" y="342" text-anchor="middle">Mistral</text></g>
-            <g class="flow-node prov" id="p-local"><rect x="220" y="360" width="120" height="28" rx="7"></rect><text class="flow-label" x="280" y="378" text-anchor="middle">Local Models</text></g>
+            <g class="flow-node prov" id="p-openai"><rect x="220" y="180" width="120" height="28" rx="7"></rect><circle cx="238" cy="194" r="10" style="fill:#fff;stroke:#d5deee;stroke-width:1"></circle><image href="assets/logos/openai.png" x="228" y="186" width="16" height="16" preserveAspectRatio="xMidYMid meet" onerror="this.remove()"></image><text class="flow-label" x="291" y="198" text-anchor="middle">OpenAI</text></g>
+            <g class="flow-node prov" id="p-anthropic"><rect x="220" y="216" width="120" height="28" rx="7"></rect><circle cx="238" cy="230" r="10" style="fill:#fff;stroke:#d5deee;stroke-width:1"></circle><image href="assets/logos/anthropic.png" x="228" y="222" width="16" height="16" preserveAspectRatio="xMidYMid meet" onerror="this.remove()"></image><text class="flow-label" x="291" y="234" text-anchor="middle">Anthropic</text></g>
+            <g class="flow-node prov" id="p-google"><rect x="220" y="252" width="120" height="28" rx="7"></rect><circle cx="238" cy="266" r="10" style="fill:#fff;stroke:#d5deee;stroke-width:1"></circle><image href="assets/logos/google.png" x="228" y="258" width="16" height="16" preserveAspectRatio="xMidYMid meet" onerror="this.remove()"></image><text class="flow-label" x="291" y="270" text-anchor="middle">Google Gemini</text></g>
+            <g class="flow-node prov" id="p-deepseek"><rect x="220" y="288" width="120" height="28" rx="7"></rect><circle cx="238" cy="302" r="10" style="fill:#fff;stroke:#d5deee;stroke-width:1"></circle><image href="assets/logos/deepseek.png" x="228" y="294" width="16" height="16" preserveAspectRatio="xMidYMid meet" onerror="this.remove()"></image><text class="flow-label" x="291" y="306" text-anchor="middle">DeepSeek</text></g>
+            <g class="flow-node prov" id="p-mistral"><rect x="220" y="324" width="120" height="28" rx="7"></rect><circle cx="238" cy="338" r="10" style="fill:#fff;stroke:#d5deee;stroke-width:1"></circle><image href="assets/logos/mistral.png" x="228" y="330" width="16" height="16" preserveAspectRatio="xMidYMid meet" onerror="this.remove()"></image><text class="flow-label" x="291" y="342" text-anchor="middle">Mistral</text></g>
+            <g class="flow-node prov" id="p-local"><rect x="220" y="360" width="120" height="28" rx="7"></rect><circle cx="238" cy="374" r="10" style="fill:#0b2a52;stroke:none"></circle><text x="238" y="378" text-anchor="middle" font-size="12" style="fill:#fff;stroke:none">⌂</text><text class="flow-label" x="291" y="378" text-anchor="middle">Local Models</text></g>
           </svg>
           <div class="diagram-caption" id="diagram-caption">Idle — send a request in the playground to watch a live route.</div>
         </div>
       </div>
     </div>
   </section>
+  <div style="padding-top:18px">
+  <section class="prov-top prov-after">
+    <div class="wrap">
+      <div class="prov-strip-label">Supports models from</div>
+        <div class="prov-logos prov-logos-top">
+          <span class="prov-logo"><img class="pl-img" src="assets/logos/openai.png" alt="OpenAI logo" loading="lazy" onerror="this.remove()"><span class="pl-name">OpenAI</span></span>
+          <span class="prov-logo"><img class="pl-img" src="assets/logos/anthropic.png" alt="Anthropic logo" loading="lazy" onerror="this.remove()"><span class="pl-name">Anthropic</span></span>
+          <span class="prov-logo"><img class="pl-img" src="assets/logos/google.png" alt="Google logo" loading="lazy" onerror="this.remove()"><span class="pl-name">Google</span></span>
+          <span class="prov-logo"><img class="pl-img" src="assets/logos/meta.png" alt="Meta logo" loading="lazy" onerror="this.remove()"><span class="pl-name">Meta</span></span>
+          <span class="prov-logo"><img class="pl-img" src="assets/logos/mistral.png" alt="Mistral AI logo" loading="lazy" onerror="this.remove()"><span class="pl-name">Mistral AI</span></span>
+          <span class="prov-logo"><img class="pl-img" src="assets/logos/xai.png" alt="xAI logo" loading="lazy" onerror="this.remove()"><span class="pl-name">xAI</span></span>
+          <span class="prov-logo"><img class="pl-img" src="assets/logos/deepseek.png" alt="DeepSeek logo" loading="lazy" onerror="this.remove()"><span class="pl-name">DeepSeek</span></span>
+          <span class="prov-logo"><img class="pl-img" src="assets/logos/moonshot.png" alt="Kimi logo" loading="lazy" onerror="this.remove()"><span class="pl-name">Kimi</span></span>
+          <span class="prov-logo"><img class="pl-img" src="assets/logos/nvidia.png" alt="NVIDIA logo" loading="lazy" onerror="this.remove()"><span class="pl-name">NVIDIA</span></span>
+          <span class="prov-logo"><img class="pl-img" src="assets/logos/qwen.png" alt="Qwen logo" loading="lazy" onerror="this.remove()"><span class="pl-name">Qwen</span></span>
+          <span class="prov-logo pl-more">+ more labs</span>
+        </div>
+    </div>
+  </section>
+  </div>
 
   <section class="section ct" aria-labelledby="ct-h">
     <div class="wrap"><div class="ct-box">
       <h2 id="ct-h"><span class="iq-sq" aria-hidden="true"></span>Intelligence</h2>
       <p>Independent benchmark scores for the models you can call with one key. Higher is better.</p>
       <div class="iq" id="iq" role="img" aria-label="Bar chart of Artificial Analysis Intelligence Index scores"></div>
-      <div class="ct-foot"><span>Source: Artificial Analysis Intelligence Index, October 2026. Each model at its highest reasoning setting.</span><a href="models.html">Compare prices for every model</a></div>
+      <div class="ct-foot"><span>Source: Artificial Analysis Intelligence Index, October 2026. Each model at its highest reasoning setting.</span> <a href="models.html">Compare prices for every model</a></div>
     </div></div>
   </section>
   <script>
@@ -1053,6 +1064,7 @@ html{scroll-behavior:smooth;}
         <div class="feat"><div class="feat-icon">◎</div><div class="feat-title">OpenAI-compatible</div><div class="feat-desc">Drop-in <span class="mono">/v1/chat/completions</span>, streaming included. Change two lines — base URL and key — and your existing code just works.</div></div>
         <div class="feat"><div class="feat-icon sf">₹</div><div class="feat-title">Rupee billing over UPI</div><div class="feat-desc">No cards, no forex. Recharge with UPI and get transparent per-token pricing in INR, metered to the paisa.</div></div>
         <div class="feat"><div class="feat-icon">↯</div><div class="feat-title">Cost-saving auto mode</div><div class="feat-desc">Let Yantra pick the cheapest model that satisfies the request, so routine calls cost a fraction of always-on flagship pricing.</div></div>
+        <div class="feat"><div class="feat-icon">✦</div><div class="feat-title">Images &amp; voice too</div><div class="feat-desc">Generate images with FLUX and speak text with ElevenLabs voices — same key, same ₹ wallet, OpenAI-style endpoints. <a href="models.html#media" style="color:var(--cyan);font-weight:700;text-decoration:none">See image &amp; voice models →</a></div></div>
         <div class="feat"><div class="feat-icon">⌂</div><div class="feat-title">Local & private models</div><div class="feat-desc">Route sensitive workloads to self-hosted Llama or Qwen on your own hardware — same key, same API, zero per-token cost.</div></div>
       </div>
     </div>
@@ -1067,10 +1079,17 @@ html{scroll-behavior:smooth;}
         <details class="faq-item"><summary class="faq-q">What is the minimum amount I can add?</summary><div class="faq-a">₹10. There is no monthly fee and no subscription — you pay per token used, billed in rupees, and whatever you top up stays in your wallet until you spend it.</div></details>
         <details class="faq-item"><summary class="faq-q">Which AI models can I use with one key?</summary><div class="faq-a">GPT (OpenAI), Claude (Anthropic), Gemini (Google), DeepSeek, Mistral, Grok (xAI), Kimi (Moonshot), GLM (Z.AI), Qwen, Llama and 350+ more — across more than 20 AI labs, all through a single API key.</div></details>
         <details class="faq-item"><summary class="faq-q">How is the cost calculated?</summary><div class="faq-a">Per token, in rupees, at the rate shown on the Models page for each model. Input and output tokens are priced separately. Your dashboard shows exactly what each request cost, so there are no surprise bills at the end of the month.</div></details>
+        <details class="faq-item"><summary class="faq-q">Can I generate images or voice with the same key?</summary><div class="faq-a">Yes. Use <code>/v1/images/generations</code> for images (FLUX models) and <code>/v1/audio/speech</code> for text-to-speech. Both bill in rupees from the same wallet, and you are charged only when a result is returned. Live models and prices are on the <a href="models.html#media">Models page</a>.</div></details>
         <details class="faq-item"><summary class="faq-q">Are there any free models?</summary><div class="faq-a">Yes — the catalog includes models priced at ₹0 per token, so you can test the integration end to end without spending your balance. You still need an account and an API key to call them.</div></details>
       </div>
     </div>
   </section>
+  <section class="section" id="final-cta"><div class="wrap" style="text-align:center">
+    <h2 class="s-title">Make your first call in 2 minutes</h2>
+    <div class="s-sub" style="margin-bottom:22px">Sign up, add ₹10 with UPI, change one line of code.</div>
+    <a class="btn btn-primary" href="dashboard.html" style="display:inline-block;text-decoration:none;padding:14px 26px;border-radius:12px;background:linear-gradient(135deg,#0070c0,#0050a0);color:#fff;font-weight:700">Generate your API key →</a>
+    <a href="docs.html" style="display:inline-block;margin-left:10px;padding:13px 22px;border-radius:12px;border:1.5px solid var(--border2);color:var(--text);font-weight:600;text-decoration:none">Read the docs</a>
+  </div></section>
 <footer style="border-top:1px solid var(--border);padding:34px 20px 100px;text-align:center;font-family:var(--fb)">
   <div style="display:flex;gap:22px;justify-content:center;flex-wrap:wrap;margin-bottom:14px;font-size:13px">
     <a href="legal/terms.html" style="color:var(--text2)">Terms</a>
