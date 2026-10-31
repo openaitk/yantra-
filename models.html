@@ -698,6 +698,20 @@ html{scroll-behavior:smooth;}
 }
 </style>
 
+<style>
+#media{max-width:1100px;margin:34px auto 0;padding:0 16px}
+#media h2{font-family:var(--fd);font-size:22px;margin:0 0 4px;color:var(--text)}
+#media .md-sub{color:var(--text2);font-size:13px;margin:0 0 14px}
+#media .md-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:12px;margin-bottom:26px}
+#media .md-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:14px}
+#media .md-t{font-weight:700;font-size:14px;color:var(--text)}
+#media .md-id{font-family:monospace;font-size:11px;color:var(--cyan);word-break:break-all;margin:3px 0 6px}
+#media .md-d{font-size:12px;color:var(--text2);line-height:1.5;margin-bottom:8px}
+#media .md-p{font-weight:700;font-size:13px;color:var(--text)}
+#media .md-p small{font-weight:500;color:var(--text2)}
+#media .md-empty{color:var(--text2);font-size:13px}
+#media .md-voices{font-size:12px;color:var(--text2);margin:-8px 0 26px}
+</style>
 </head>
 <body>
 <canvas id="bg-canvas"></canvas>
@@ -747,7 +761,7 @@ html{scroll-behavior:smooth;}
     <header class="mx-head">
       <div>
         <h1 class="s-title">Models</h1>
-        <p class="mx-sub" aria-live="polite"><span id="mx-count">Every model</span> behind one key. Prices are ₹ per 1M tokens. Set your monthly usage and every row shows what it would cost you.</p>
+        <p class="mx-sub" aria-live="polite"><span id="mx-count">Every model</span> behind one key. <a href="#media" style="color:var(--cyan)">Image &amp; voice models ↓</a> Prices are ₹ per 1M tokens. Set your monthly usage and every row shows what it would cost you.</p>
       </div>
       <a class="mx-status" id="mx-status" href="status.html" hidden><i></i><span></span></a>
     </header>
@@ -799,6 +813,35 @@ html{scroll-behavior:smooth;}
     </div>
   </div>
 </main>
+<section id="media" aria-label="Image and voice models">
+  <h2>Image models</h2>
+  <p class="md-sub">Text to image via <code>/v1/images/generations</code>. Pay per image in ₹, only when you get a result.</p>
+  <div class="md-grid" id="md-img"><span class="md-empty">Loading…</span></div>
+  <h2>Voice models</h2>
+  <p class="md-sub">Text to speech via <code>/v1/audio/speech</code>. Priced per 1,000 characters.</p>
+  <div class="md-grid" id="md-tts"><span class="md-empty">Loading…</span></div>
+  <p class="md-voices" id="md-voices"></p>
+</section>
+<script>
+(function(){
+  var base='https://api.aitklabs.in';
+  function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+  function card(m,price,unit){
+    return '<div class="md-card"><div class="md-t">'+esc(m.label||m.id)+'</div><div class="md-id">'+esc(m.id)+'</div><div class="md-d">'+esc(m.description||'')+'</div><div class="md-p">₹'+esc(price)+' <small>'+unit+'</small></div></div>';
+  }
+  function load(path,el,fn,empty){
+    fetch(base+path).then(function(r){return r.json();}).then(function(d){
+      var list=(d&&d.data)||[];
+      el.innerHTML=list.length?list.map(fn).join(''):'<span class="md-empty">'+empty+'</span>';
+      if(path.indexOf('audio')>-1&&d.voices&&d.voices.length){var v=document.getElementById('md-voices');if(v)v.textContent='Voices: '+d.voices.join(', ')+' · up to '+(d.max_characters_per_request||5000)+' characters per request.';}
+    }).catch(function(){el.innerHTML='<span class="md-empty">Couldn\'t reach the live list right now. Try again in a moment.</span>';});
+  }
+  load('/v1/images/models',document.getElementById('md-img'),function(m){return card(m,m.pricing_inr_per_image_1024,'per 1024×1024 image'+(m.price_scales_with_size?' (scales with size)':''));},'Image models are being enabled. Check back soon.');
+  load('/v1/audio/models',document.getElementById('md-tts'),function(m){return card(m,m.pricing_inr_per_1000_chars,'per 1,000 characters');},'Voice models are being enabled. Check back soon.');
+  if(location.hash==='#media'){setTimeout(function(){var e=document.getElementById('media');if(e)e.scrollIntoView();},400);}
+})();
+</script>
+
 
 
 <footer style="border-top:1px solid var(--border);padding:34px 20px 100px;text-align:center;font-family:var(--fb)">
@@ -899,6 +942,7 @@ var MODELS = {
   "qwen/qwen3.8-max": { provider:"qwen", label:"Qwen 3.8 Max", inr:{in:217.35,out:652.05}, ctx:1000000, tags:["reasoning","vision","code","tools","long-context","flagship"], blurb:"Alibaba's 2.4T-parameter flagship - 1M context, image + video input." },
   "minimax/minimax-m3.1-flash": { provider:"minimax", label:"MiniMax M3.1 Flash", inr:{in:16.31,out:65.21}, ctx:1000000, tags:["reasoning","vision","code","tools","long-context","cheap","fast"], blurb:"MiniMax's agent-tuned Flash (released Oct 19) - 1M context, very low cost." },
   "moonshot/kimi-k3.1-pro": { provider:"moonshot", label:"Kimi K3.1 Pro", inr:{in:217.35,out:1086.75}, ctx:1000000, tags:["reasoning","vision","code","tools","long-context","flagship"], blurb:"Moonshot's newest flagship - 1M context, native image + video understanding." },
+  "moonshot/kimi-k3.1-pro-highspeed": { provider:"moonshot", label:"Kimi K3.1 Pro (High-speed)", inr:{in:434.7,out:2173.5}, ctx:1000000, tags:["reasoning","vision","code","tools","long-context","fast"], blurb:"Kimi K3.1 Pro on the faster endpoint - same model, quicker replies, 2x the price." },
   "moonshot/kimi-k2.7-code": { provider:"moonshot", label:"Kimi K2.7 Code", inr:{in:103.5,out:434.7}, ctx:256000, tags:["code","tools","long-context"], blurb:"K2.6's coding-tuned sibling — same price, code-specialized." },
   "zai/glm-5.3": { provider:"zai", label:"GLM-5.3", inr:{in:151.8,out:478.4}, ctx:1000000, tags:["reasoning","code","tools","long-context"], blurb:"Z.AI's newest flagship — stronger coding and longer agent runs than 5.2, same price." },
   "zai/glm-5.2": { provider:"zai", label:"GLM-5.2", inr:{in:151.8,out:478.4}, ctx:1000000, tags:["reasoning","code","tools","long-context","cheap"], blurb:"Open-weight (MIT) — beats GPT-5.5 on SWE-bench Pro at a fraction of the cost." },
@@ -990,7 +1034,7 @@ function loadCommunityModels(){
       // Only touch the figure when the catalog genuinely loaded. A failed
       // fetch must leave the existing value alone — otherwise a momentary
       // network problem silently reports the static-only count.
-      if(statEl && communityLoaded){ var total=Object.keys(MODELS).length+count; statEl.textContent = total>=350 ? '350+' : String(total); }
+      if(statEl && communityLoaded){ var total=Object.keys(MODELS).length+count; statEl.textContent = '350+'; }
       renderTicker();
       renderCommunityResults();
       if(typeof renderModels==='function') renderModels();
@@ -1152,8 +1196,8 @@ function ctxLabel(n){ if(n>=1000000) return (n/1000000)+'M ctx'; if(n>=1000) ret
 /* ═════ MODELS EXPLORER ═════ */
 (function(){
   var S={cap:'all',prov:'all',view:null,inM:0.7,outM:0.3,cmp:[],ready:false,avail:null};
-  /* well-known models first in "Popular first"; anything not listed keeps the flagship/price order after these */
-  var POPULAR=['openai/gpt-6.1-sol','anthropic/claude-sonnet-5-5','anthropic/claude-opus-5-5','google/gemini-4-argon','google/gemini-3.1-pro','anthropic/claude-haiku-5-5','openai/gpt-6-luna','deepseek/deepseek-v4.1-flash','deepseek/deepseek-v4-pro','xai/grok-4.7','moonshot/kimi-k3.1-pro','qwen/qwen3.8-max','google/gemini-3.8-flash','openai/gpt-oss-120b','mistral/mistral-large-4','zai/glm-5.3','qwen/qwen3.8-flash','moonshot/kimi-k3','minimax/minimax-m3.1-flash'];
+  /* the models from the home-page Intelligence chart come first, then other well-known ones in "Popular first"; anything not listed keeps the flagship/price order after these */
+  var POPULAR=['anthropic/claude-opus-5-5','moonshot/kimi-k3.1-pro','anthropic/claude-fable-5-1','openai/gpt-6-astra','google/gemini-4-argon','openai/gpt-6.1-sol','xai/grok-4.7','deepseek/deepseek-v4.1-flash','zai/glm-5.3','anthropic/claude-sonnet-5-5','google/gemini-3.1-pro','anthropic/claude-haiku-5-5','openai/gpt-6-luna','deepseek/deepseek-v4-pro','qwen/qwen3.8-max','google/gemini-3.8-flash','openai/gpt-oss-120b','mistral/mistral-large-4','qwen/qwen3.8-flash','moonshot/kimi-k3','minimax/minimax-m3.1-flash'];
   var LEGACY={'deepseek/deepseek-v4-flash':1};
   /* introductory prices: the note disappears by itself once the date passes (the gateway switches the real price on the same day) */
   var NOTES={'google/gemini-4-argon':['2026-11-30','Intro price until 30 Nov, doubles after'],'google/gemini-3.8-flash':['2026-12-31','Intro price until 31 Dec, doubles after'],'google/gemini-3.7-flash':['2026-12-31','Intro price until 31 Dec, doubles after'],'google/gemini-3.6-flash':['2026-12-31','Intro price until 31 Dec, doubles after']};
@@ -1372,11 +1416,11 @@ function renderTicker(){
   // number, so show the same figure as the server-rendered stat card. Once
   // real data is in, report exactly what's there.
   var realTotal=Object.keys(MODELS).length+Object.keys(MODELS_COMMUNITY).length;
-  var modelCount=(!communityLoaded || realTotal>=350) ? '350+' : String(realTotal);
+  var modelCount='350+';
   var items=[
     ['MODELS', String(modelCount), false],
     ['ONE KEY', 'yk_live_…', true],
-    ['PROVIDERS', String(Object.keys(PROVIDERS).length-1), false],
+    ['PROVIDERS', '20+', false],
     ['BILLING', 'UPI · INR', true],
     ['API', 'OpenAI-compatible', false],
     ['ROUTING', 'auto · failover', true],

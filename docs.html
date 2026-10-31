@@ -246,7 +246,7 @@ html{scroll-behavior:smooth;}
 @media(prefers-reduced-motion:reduce){ .skel{animation:none;} }
 .skel-card{border:1px solid var(--border);border-radius:var(--r2);padding:20px;}
 .skel-line{height:11px;margin-bottom:9px;}
-.flow-node rect{transition:all .35s;}
+.flow-node rect{transition:all .35s;fill:#fff;stroke:var(--border2);stroke-width:1;}
 .flow-label{font-family:var(--fm);font-size:9px;fill:var(--text2);font-weight:600;}
 .flow-node.active rect{stroke:var(--cyan);fill:rgba(0,105,184,0.10);}
 .flow-node.active .flow-label{fill:var(--cyan);}
@@ -566,6 +566,7 @@ html{scroll-behavior:smooth;}
 .pg-settings.on{display:block;}
 .toast-note{display:none;}
 .toast-note.on{display:flex;flex-direction:column;}
+.page-head .s-sub{margin-left:0;margin-right:0;max-width:64ch;font-size:15px}
 </style>
 
 </head>
@@ -648,6 +649,21 @@ print(resp.yantra)                   # which model/provider we routed to + ₹ c
   }'</pre></div>
     </div></div>
 
+    <div class="panel"><div class="panel-head"><span class="panel-title">Images &amp; voice</span></div><div class="panel-body">
+      <p class="dim" style="margin:0 0 12px">Same key, same ₹ wallet. Image generation follows the OpenAI <span class="mono">/v1/images/generations</span> shape and text-to-speech follows <span class="mono">/v1/audio/speech</span>. You are charged only when a result is returned. List live models and prices at <span class="mono">GET /v1/images/models</span> and <span class="mono">GET /v1/audio/models</span>, or see the <a href="models.html#media" style="color:var(--cyan)">models page</a>.</p>
+      <div class="codeblock"><button class="cp" onclick="copyCode(this)">copy</button><pre>curl https://api.aitklabs.in/v1/images/generations \
+  -H "Authorization: Bearer yk_live_xxxxxxxxxxxx" \
+  -H "Content-Type: application/json" \
+  -d '{"model":"black-forest-labs/flux-1-schnell","prompt":"A diya on a rainy window, photo","size":"1024x1024","n":1}'
+# returns {"data":[{"b64_json":"..."}]}  (add "response_format":"url" for a hosted link, valid 1 hour)</pre></div>
+      <div class="codeblock" style="margin-top:12px"><button class="cp" onclick="copyCode(this)">copy</button><pre>curl https://api.aitklabs.in/v1/audio/speech \
+  -H "Authorization: Bearer yk_live_xxxxxxxxxxxx" \
+  -H "Content-Type: application/json" \
+  -d '{"model":"elevenlabs/flash-v2.5","input":"Namaste! Welcome to Yantra.","voice":"rachel"}' \
+  --output hello.mp3</pre></div>
+      <p class="dim" style="margin:12px 0 0">Limits: up to 4 images per request, sizes 256–2048 px; speech up to 5,000 characters per request, MP3 output, speed 0.7–1.2. Use the exact model ids from the list endpoints.</p>
+    </div></div>
+
     <div class="panel"><div class="panel-head"><span class="panel-title">Routing modes</span></div><div class="panel-body">
       <div class="kv"><span class="k mono">openai/gpt-4o-mini</span><span class="v dim">Explicit — route to exactly this model</span></div>
       <div class="kv"><span class="k mono">auto</span><span class="v dim">Balanced default pick</span></div>
@@ -656,6 +672,22 @@ print(resp.yantra)                   # which model/provider we routed to + ₹ c
       <div class="kv"><span class="k mono">auto:reasoning</span><span class="v dim">Strong step-by-step reasoning</span></div>
       <div class="kv"><span class="k mono">auto:long-context</span><span class="v dim">Largest context window</span></div>
       <p class="dim" style="margin:12px 0 0">If the chosen provider returns a retryable error (429/5xx/timeout), Yantra automatically fails over to a sibling model of the same class and tells you via <span class="mono">x-yantra-fell-back</span>.</p>
+    </div></div>
+
+    <div class="panel"><div class="panel-head"><span class="panel-title">Open-weight models: one id, many hosts</span></div><div class="panel-body">
+      <p class="dim" style="margin:0 0 12px">Open-weight models such as <span class="mono">openai/gpt-oss-120b</span> or <span class="mono">qwen/qwen3.6-27b</span> have one id, named after the lab that made them. Yantra picks the host that serves it (cheapest healthy host first) and fails over to another host of the <b>same</b> model if one is down. You are billed the same price either way.</p>
+      <p class="dim" style="margin:0 0 10px">To choose hosts yourself, add an optional <span class="mono">provider</span> object (the same idea as OpenRouter):</p>
+      <div class="codeblock"><button class="cp" onclick="copyCode(this)">copy</button><pre>{
+  "model": "openai/gpt-oss-120b",
+  "messages": [{"role":"user","content":"Hello"}],
+  "provider": {
+    "order": ["fireworks", "siliconflow"],   // try these first, in this order
+    "only": ["fireworks"],                   // or: use only these hosts
+    "ignore": ["siliconflow"],               // or: never use these
+    "allow_fallbacks": false                 // never switch to a different model
+  }
+}</pre></div>
+      <p class="dim" style="margin:12px 0 0"><span class="mono">GET /v1/models</span> lists each open-weight model's <span class="mono">hosts</span>. If none of a model's hosts match your preferences you get a <span class="mono">400 no_matching_provider</span> error. Older ids such as <span class="mono">fireworks/gpt-oss-20b</span> keep working.</p>
     </div></div>
 
     <div class="panel"><div class="panel-head"><span class="panel-title">Response headers</span></div><div class="panel-body">
@@ -764,7 +796,7 @@ var MODELS = {
   "openai/gpt-5.5": { provider:"openai", label:"GPT-5.5", inr:{in:543.95,out:3260.25}, ctx:1000000, tags:["reasoning","vision","tools","long-context"], blurb:"Still current — same tier as Sol, slightly different behavior profile." },
   "openai/gpt-4o-mini": { provider:"openai", label:"GPT-4o mini", inr:{in:14.95,out:57.5}, ctx:128000, tags:["vision","tools","cheap","fast"], blurb:"Cheapest OpenAI multimodal — great default." },
   "openai/gpt-5.4-mini": { provider:"openai", label:"GPT-5.4 Mini", inr:{in:81.65,out:488.75}, ctx:128000, tags:["reasoning","fast","cheap"], blurb:"Budget reasoning tier — between Luna and GPT-4o mini." },
-  "openai/gpt-5.6-terra": { provider:"openai", label:"GPT-5.6 Terra", inr:{in:271.4,out:1630.7}, ctx:1000000, tags:["reasoning","vision","tools","balanced","long-context"], blurb:"OpenAI's new production default — balanced cost + capability." },
+  "openai/gpt-5.6-terra": { provider:"openai", label:"GPT-5.6 Terra", inr:{in:217.35,out:1304.1}, ctx:1000000, tags:["reasoning","vision","tools","balanced","long-context"], blurb:"OpenAI's new production default — balanced cost + capability." },
   "openai/gpt-5.6-luna": { provider:"openai", label:"GPT-5.6 Luna", inr:{in:21.85,out:129.95}, ctx:1000000, tags:["fast","cheap","vision","long-context"], blurb:"Cost-sensitive volume tier — 1M context, now far cheaper after the Jul 30 cut." },
   "anthropic/claude-fable-5-1": { provider:"anthropic", label:"Claude Fable 5.1", inr:{in:1086.75,out:5433.75}, ctx:1000000, tags:["reasoning","tools","vision","flagship","long-context"], blurb:"Same tier as Fable 5, cheaper on cache-heavy workloads." },
   "anthropic/claude-fable-5": { provider:"anthropic", label:"Claude Fable 5", inr:{in:1086.75,out:5433.75}, ctx:1000000, tags:["reasoning","tools","vision","flagship","long-context"], blurb:"Anthropic's top published tier — hardest reasoning + agentic work." },
@@ -785,30 +817,35 @@ var MODELS = {
   "google/gemini-3.5-flash-lite": { provider:"gemini", label:"Gemini 3.5 Flash-Lite", inr:{in:32.2,out:271.4}, ctx:1000000, tags:["fast","cheap"], blurb:"Google's newer budget tier — high-throughput, low-latency." },
   "google/gemini-3.5-flash": { provider:"gemini", label:"Gemini 3.5 Flash", inr:{in:163.01,out:978.08}, ctx:1000000, tags:["fast","vision","long-context","code"], blurb:"Previous-gen Flash — still current, not deprecated." },
   "google/gemini-3.1-flash-lite": { provider:"gemini", label:"Gemini 3.1 Flash-Lite", inr:{in:27.6,out:163.3}, ctx:1000000, tags:["fast","cheap"], blurb:"Google's most cost-efficient tier for high-volume traffic." },
-  "google/gemini-2.5-pro": { provider:"gemini", label:"Gemini 2.5 Pro", inr:{in:124.2,out:989}, ctx:1000000, tags:["reasoning","vision","long-context"], blurb:"Previous-gen — 1M context, strong reasoning + multimodal." },
-  "google/gemini-2.5-flash": { provider:"gemini", label:"Gemini 2.5 Flash", inr:{in:29.9,out:120.75}, ctx:1000000, tags:["fast","cheap","vision","long-context"], blurb:"Ultra-low-cost 1M-context workhorse." },
+  "google/gemini-2.5-pro": { provider:"gemini", label:"Gemini 2.5 Pro", inr:{in:135.85,out:1086.75}, ctx:1000000, tags:["reasoning","vision","long-context"], blurb:"Previous-gen — 1M context, strong reasoning + multimodal." },
+  "google/gemini-2.5-flash": { provider:"gemini", label:"Gemini 2.5 Flash", inr:{in:32.6,out:271.69}, ctx:1000000, tags:["fast","cheap","vision","long-context"], blurb:"Ultra-low-cost 1M-context workhorse." },
   "deepseek/deepseek-v4.1-flash": { provider:"deepseek", label:"DeepSeek V4.1 Flash", inr:{in:32.6,out:130.41}, ctx:1000000, tags:["cheap","fast","tools","long-context"], blurb:"Latest DeepSeek Flash - 1M context, very low cost." },
   "deepseek/deepseek-v4-flash": { provider:"deepseek", label:"DeepSeek V4 Flash (-> V4.1)", inr:{in:32.6,out:130.41}, ctx:1000000, tags:["tools","long-context"], blurb:"Legacy id - now served by V4.1 Flash." },
   "deepseek/deepseek-v4-pro": { provider:"deepseek", label:"DeepSeek V4 Pro (0813)", inr:{in:143.45,out:430.35}, ctx:1000000, tags:["reasoning","tools","long-context"], blurb:"Open-weight reasoning grade, 1M context." },
   "mistral/mistral-large-4": { provider:"mistral", label:"Mistral Large 4 (preview)", inr:{in:147.8,out:454.26}, ctx:128000, tags:["tools","multilingual","vision"], blurb:"Mistral flagship, open-weight multimodal - public preview." },
   "mistral/mistral-large": { provider:"mistral", label:"Mistral Large", inr:{in:54.34,out:163.01}, ctx:128000, tags:["tools","multilingual"], blurb:"Strong multilingual + function calling." },
-  "mistral/mistral-small": { provider:"mistral", label:"Mistral Small", inr:{in:19.55,out:57.5}, ctx:128000, tags:["cheap","fast","tools"], blurb:"Cheap, fast, capable for most tasks." },
+  "mistral/mistral-small": { provider:"mistral", label:"Mistral Small", inr:{in:16.31,out:65.21}, ctx:128000, tags:["cheap","fast","tools"], blurb:"Cheap, fast, capable for most tasks." },
   "mistral/mistral-medium-3.5": { provider:"mistral", label:"Mistral Medium 3.5", inr:{in:163.3,out:815.35}, ctx:256000, tags:["reasoning","code","tools","vision"], blurb:"Mistral's own pick for coding + agentic work." },
-  "mistral/codestral": { provider:"mistral", label:"Codestral", inr:{in:29.9,out:89.7}, ctx:256000, tags:["code","fast"], blurb:"Code specialist — 256K context." },
+  "mistral/codestral": { provider:"mistral", label:"Codestral", inr:{in:32.6,out:97.81}, ctx:256000, tags:["code","fast"], blurb:"Code specialist — 256K context." },
   "xai/grok-4.5": { provider:"xai", label:"Grok 4.5", inr:{in:217.35,out:652.05}, ctx:500000, tags:["reasoning","tools","flagship"], blurb:"xAI's flagship — agentic tool calling, minimal hallucinations." },
   "xai/grok-4.7": { provider:"xai", label:"Grok 4.7", inr:{in:217.35,out:652.05}, ctx:200000, tags:["reasoning","tools","flagship"], blurb:"xAI's newest flagship for code and general use." },
   "xai/grok-4.6": { provider:"xai", label:"Grok 4.6", inr:{in:217.35,out:652.05}, ctx:500000, tags:["reasoning","tools","flagship"], blurb:"xAI's newest flagship — stronger agentic coding than 4.5, same price." },
   "moonshot/kimi-k2.6": { provider:"moonshot", label:"Kimi K2.6", inr:{in:103.5,out:434.7}, ctx:256000, tags:["reasoning","code","tools","long-context"], blurb:"Strong long-horizon coding + multi-agent workflows." },
+  "qwen/qwen3.8-flash": { provider:"qwen", label:"Qwen 3.8 Flash", inr:{in:16.31,out:51.08}, ctx:1000000, tags:["reasoning","vision","code","tools","long-context","cheap","fast"], blurb:"Alibaba's newest Flash - 1M context, image + video input, very low cost." },
+  "qwen/qwen3.8-max": { provider:"qwen", label:"Qwen 3.8 Max", inr:{in:217.35,out:652.05}, ctx:1000000, tags:["reasoning","vision","code","tools","long-context","flagship"], blurb:"Alibaba's 2.4T-parameter flagship - 1M context, image + video input." },
+  "minimax/minimax-m3.1-flash": { provider:"minimax", label:"MiniMax M3.1 Flash", inr:{in:16.31,out:65.21}, ctx:1000000, tags:["reasoning","vision","code","tools","long-context","cheap","fast"], blurb:"MiniMax's agent-tuned Flash (released Oct 19) - 1M context, very low cost." },
+  "moonshot/kimi-k3.1-pro": { provider:"moonshot", label:"Kimi K3.1 Pro", inr:{in:217.35,out:1086.75}, ctx:1000000, tags:["reasoning","vision","code","tools","long-context","flagship"], blurb:"Moonshot's newest flagship - 1M context, native image + video understanding." },
+  "moonshot/kimi-k3.1-pro-highspeed": { provider:"moonshot", label:"Kimi K3.1 Pro (High-speed)", inr:{in:434.7,out:2173.5}, ctx:1000000, tags:["reasoning","vision","code","tools","long-context","fast"], blurb:"Kimi K3.1 Pro on the faster endpoint - same model, quicker replies, 2x the price." },
   "moonshot/kimi-k2.7-code": { provider:"moonshot", label:"Kimi K2.7 Code", inr:{in:103.5,out:434.7}, ctx:256000, tags:["code","tools","long-context"], blurb:"K2.6's coding-tuned sibling — same price, code-specialized." },
   "zai/glm-5.3": { provider:"zai", label:"GLM-5.3", inr:{in:151.8,out:478.4}, ctx:1000000, tags:["reasoning","code","tools","long-context"], blurb:"Z.AI's newest flagship — stronger coding and longer agent runs than 5.2, same price." },
   "zai/glm-5.2": { provider:"zai", label:"GLM-5.2", inr:{in:151.8,out:478.4}, ctx:1000000, tags:["reasoning","code","tools","long-context","cheap"], blurb:"Open-weight (MIT) — beats GPT-5.5 on SWE-bench Pro at a fraction of the cost." },
   "zai/glm-4.5-air": { provider:"zai", label:"GLM-4.5 Air", inr:{in:21.85,out:119.6}, ctx:128000, tags:["fast","cheap"], blurb:"Z.AI's budget tier — high volume, low cost." },
-  "siliconflow/qwen3.6-27b": { provider:"siliconflow", label:"Qwen3.6 27B", inr:{in:32.2,out:347.3}, ctx:262000, tags:["reasoning","code","tools","long-context"], blurb:"Alibaba's Qwen — no other direct route to this family yet." },
-  "siliconflow/minimax-m3": { provider:"siliconflow", label:"MiniMax M3", inr:{in:32.2,out:129.95}, ctx:1000000, tags:["reasoning","vision","long-context"], blurb:"MiniMax's multimodal specialist — 1M context." },
-  "siliconflow/gpt-oss-120b": { provider:"siliconflow", label:"GPT-OSS 120B", inr:{in:5.75,out:49.45}, ctx:131000, tags:["cheap","fast","tools"], blurb:"OpenAI's open-weight line — a different product from their hosted GPT API." },
-  "fireworks/kimi-k3": { provider:"fireworks", label:"Kimi K3", inr:{in:326.6,out:1630.7}, ctx:256000, tags:["reasoning","code","tools","long-context"], blurb:"Moonshot's newest flagship — hosted on Fireworks." },
-  "fireworks/qwen3.7-plus": { provider:"fireworks", label:"Qwen 3.7 Plus", inr:{in:43.7,out:173.65}, ctx:262000, tags:["reasoning","code","cheap","long-context"], blurb:"Newest Qwen tier — cheap, strong at code." },
-  "fireworks/gpt-oss-20b": { provider:"fireworks", label:"GPT-OSS 20B", inr:{in:8.05,out:32.2}, ctx:131000, tags:["cheap","fast"], blurb:"OpenAI's smaller open-weight model — cheapest paid tier here." },
+  "qwen/qwen3.6-27b": { provider:"qwen", label:"Qwen3.6 27B", inr:{in:32.2,out:347.3}, ctx:262000, tags:["reasoning","code","tools","long-context"], blurb:"Alibaba's Qwen — no other direct route to this family yet." },
+  "minimax/minimax-m3": { provider:"minimax", label:"MiniMax M3", inr:{in:32.2,out:129.95}, ctx:1000000, tags:["reasoning","vision","long-context"], blurb:"MiniMax's multimodal specialist — 1M context." },
+  "openai/gpt-oss-120b": { provider:"openai", label:"GPT-OSS 120B", inr:{in:5.75,out:49.45}, ctx:131000, tags:["cheap","fast","tools"], blurb:"OpenAI's open-weight line — a different product from their hosted GPT API." },
+  "moonshot/kimi-k3": { provider:"moonshot", label:"Kimi K3", inr:{in:326.6,out:1630.7}, ctx:256000, tags:["reasoning","code","tools","long-context"], blurb:"Moonshot's newest flagship." },
+  "qwen/qwen3.7-plus": { provider:"qwen", label:"Qwen 3.7 Plus", inr:{in:43.7,out:173.65}, ctx:262000, tags:["reasoning","code","cheap","long-context"], blurb:"Newest Qwen tier — cheap, strong at code." },
+  "openai/gpt-oss-20b": { provider:"openai", label:"GPT-OSS 20B", inr:{in:8.05,out:32.2}, ctx:131000, tags:["cheap","fast"], blurb:"OpenAI's smaller open-weight model — cheapest paid tier here." },
   "fireworks/nemotron-3-ultra": { provider:"fireworks", label:"Nemotron 3 Ultra", inr:{in:65.55,out:261.05}, ctx:128000, tags:["reasoning","tools"], blurb:"NVIDIA's Nemotron line — no other route to this family (preview)." },
   "fireworks/nemotron-nano-v2-12b-vl": { provider:"fireworks", label:"Nemotron Nano V2 12B Vl", inr:{in:21.85,out:21.85}, ctx:128000, tags:["vision","cheap"], blurb:"Served on Fireworks AI." },
   "fireworks/nemotron-nano-3-30b-a3b": { provider:"fireworks", label:"Nemotron Nano 3 30B A3B", inr:{in:54.05,out:54.05}, ctx:128000, tags:["reasoning","tools"], blurb:"Served on Fireworks AI." },
@@ -826,6 +863,8 @@ var PROVIDERS = {
   mistral:   { label:'Mistral',       glyph:'▲' },
   xai:       { label:'xAI',           glyph:'✕' },
   moonshot:  { label:'Moonshot AI',   glyph:'☾' },
+  qwen:      { label:'Alibaba Qwen',  glyph:'◈' },
+  minimax:   { label:'MiniMax',       glyph:'◐' },
   zai:       { label:'Z.AI',          glyph:'⬡' },
   siliconflow:{ label:'SiliconFlow',  glyph:'◆' },
   novita:    { label:'Novita AI',     glyph:'◐' },
@@ -879,7 +918,7 @@ function loadCommunityModels(){
       // Only touch the figure when the catalog genuinely loaded. A failed
       // fetch must leave the existing value alone — otherwise a momentary
       // network problem silently reports the static-only count.
-      if(statEl && communityLoaded){ var total=Object.keys(MODELS).length+count; statEl.textContent = total>=350 ? '350+' : String(total); }
+      if(statEl && communityLoaded){ var total=Object.keys(MODELS).length+count; statEl.textContent = '350+'; }
       renderTicker();
       renderCommunityResults();
       if(typeof renderModels==='function') renderModels();
@@ -1453,11 +1492,11 @@ function renderTicker(){
   // number, so show the same figure as the server-rendered stat card. Once
   // real data is in, report exactly what's there.
   var realTotal=Object.keys(MODELS).length+Object.keys(MODELS_COMMUNITY).length;
-  var modelCount=(!communityLoaded || realTotal>=350) ? '350+' : String(realTotal);
+  var modelCount='350+';
   var items=[
     ['MODELS', String(modelCount), false],
     ['ONE KEY', 'yk_live_…', true],
-    ['PROVIDERS', String(Object.keys(PROVIDERS).length-1), false],
+    ['PROVIDERS', '20+', false],
     ['BILLING', 'UPI · INR', true],
     ['API', 'OpenAI-compatible', false],
     ['ROUTING', 'auto · failover', true],
