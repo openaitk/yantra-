@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<script>if(/[#&]reset=/.test(location.hash))location.replace('dashboard.html'+location.hash);</script>
+
 
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
@@ -1282,7 +1284,7 @@ function loadCommunityModels(){
       // Only touch the figure when the catalog genuinely loaded. A failed
       // fetch must leave the existing value alone — otherwise a momentary
       // network problem silently reports the static-only count.
-      if(statEl && communityLoaded){ var total=Object.keys(MODELS).length+count; statEl.textContent = total>=350 ? '350+' : String(total); }
+      if(statEl && communityLoaded){ var total=Object.keys(MODELS).length+count; statEl.textContent = '350+'; }
       renderTicker();
       renderCommunityResults();
       if(typeof renderModels==='function') renderModels();
@@ -1907,7 +1909,7 @@ function renderSwitchboard(){
   var tiles = grid.querySelectorAll('.swb-tile');
   var now = $('swb-now');
   if(!tiles.length) return;
-  if(now) now.textContent = order.length + ' labs · one key';
+  if(now) now.textContent = '20+ labs · one key';
 
   var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion:reduce)').matches;
   if(reduce) return;   // static board; the data is the point, the motion is a bonus
@@ -1937,11 +1939,11 @@ function renderTicker(){
   // number, so show the same figure as the server-rendered stat card. Once
   // real data is in, report exactly what's there.
   var realTotal=Object.keys(MODELS).length+Object.keys(MODELS_COMMUNITY).length;
-  var modelCount=(!communityLoaded || realTotal>=350) ? '350+' : String(realTotal);
+  var modelCount='350+';
   var items=[
     ['MODELS', String(modelCount), false],
     ['ONE KEY', 'yk_live_…', true],
-    ['PROVIDERS', String(Object.keys(PROVIDERS).length-1), false],
+    ['PROVIDERS', '20+', false],
     ['BILLING', 'UPI · INR', true],
     ['API', 'OpenAI-compatible', false],
     ['ROUTING', 'auto · failover', true],
