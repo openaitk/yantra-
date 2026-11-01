@@ -144,6 +144,13 @@ main{padding:30px 0 80px}
 .tag.green{background:rgba(10,157,92,.12);color:var(--green)}
 .tag.dim{background:var(--card2);color:var(--mut)}
 .tag.red{background:rgba(217,45,75,.10);color:var(--red)}
+.role-member .nav button[data-view="billing"],.role-member .js-addcredits{display:none!important}
+.ws-sw{padding:8px 10px;border-bottom:1px solid var(--line)}
+.ws-sw .ws-l{font-size:11px;text-transform:uppercase;letter-spacing:.06em;color:var(--dim);margin:4px 0}
+.ws-sw button{display:flex;width:100%;justify-content:space-between;align-items:center;gap:8px;text-align:left}
+.ws-sw button.on{font-weight:700;color:var(--cyan)}
+.team-form{display:flex;flex-wrap:wrap;gap:10px;align-items:flex-end}
+.team-form .field{margin:0;flex:1;min-width:200px}
 .empty{text-align:center;padding:46px 20px;color:var(--dim)}
 .empty .big{font-size:30px;margin-bottom:10px;opacity:.6}
 
@@ -250,6 +257,7 @@ main{padding:30px 0 80px}
         <button id="tab-login" class="on" onclick="setMode('login')">Sign in</button>
         <button id="tab-signup" onclick="setMode('signup')">Create account</button>
       </div>
+      <div id="invite-note" class="hide" style="background:rgba(0,105,184,.08);border:1px solid rgba(0,105,184,.25);border-radius:10px;padding:10px 12px;font-size:13px;margin-bottom:12px">You were invited to a team. Sign in, or create an account with the invited email address, to accept.</div>
       <div id="auth-msg"></div>
       <div class="field" id="name-field" style="display:none">
         <label>Name</label>
@@ -310,6 +318,7 @@ main{padding:30px 0 80px}
         <button data-view="keys" onclick="showView('keys')">API Keys</button>
         <button data-view="billing" onclick="showView('billing')">Billing</button>
         <button data-view="usage" onclick="showView('usage')">Usage</button>
+        <button data-view="team" onclick="showView('team')">Team</button>
       </nav>
       <div class="spacer"></div>
       <div class="bal-pill"><span class="lbl">Balance</span><span class="amt" id="top-balance">₹0.00</span></div>
@@ -317,6 +326,7 @@ main{padding:30px 0 80px}
         <button class="acct-btn" id="acct-initial" onclick="toggleMenu()">U</button>
         <div class="menu hide" id="acct-menu">
           <div class="em" id="menu-email">—</div>
+          <div class="ws-sw" id="ws-switch"></div>
           <button onclick="window.open(gatewayBase()+'/health','_blank')">↗ Gateway status</button>
           <button onclick="signOut()" style="color:var(--red)">Sign out</button>
         </div>
@@ -325,6 +335,11 @@ main{padding:30px 0 80px}
   </header>
 
   <main class="wrap">
+    <div class="vbanner hide" id="ws-banner" style="background:rgba(0,105,184,.08);border-color:rgba(0,105,184,.25)">
+      <span class="ic">👥</span>
+      <div class="tx" id="ws-banner-tx"></div>
+      <button class="btn btn-ghost btn-sm" onclick="switchWs('')">Back to my account</button>
+    </div>
     <div class="vbanner hide" id="verify-banner">
       <span class="ic">✉️</span>
       <div class="tx"><b>Verify your email</b> to add credit. You can create keys and test with your free credit right now. Check your inbox for the link.</div>
@@ -334,7 +349,7 @@ main{padding:30px 0 80px}
     <!-- OVERVIEW -->
     <section id="view-overview">
       <div class="view-head"><div><h1>Overview</h1><p>Your account at a glance.</p></div>
-        <button class="btn btn-saf" onclick="showView('billing')">+ Add credits</button></div>
+        <button class="btn btn-saf js-addcredits" onclick="showView('billing')">+ Add credits</button></div>
       <div class="stats">
         <div class="stat"><div class="k">Balance</div><div class="v gr" id="ov-balance">₹0.00</div></div>
         <div class="stat"><div class="k">Total requests</div><div class="v cy" id="ov-requests">0</div></div>
@@ -352,7 +367,7 @@ main{padding:30px 0 80px}
             <button class="btn btn-pri btn-sm" id="gs-s1-b" onclick="openCreateKey()">Create key</button></li>
           <li class="gs-step" id="gs-s2"><span class="gs-dot" aria-hidden="true"></span>
             <div class="gs-body"><b>Add credits</b><span id="gs-s2-t">Pay with UPI. The minimum is ₹10 and you only pay for what you use.</span></div>
-            <button class="btn btn-saf btn-sm" id="gs-s2-b" onclick="showView('billing')">Add credits</button></li>
+            <button class="btn btn-saf btn-sm js-addcredits" id="gs-s2-b" onclick="showView('billing')">Add credits</button></li>
           <li class="gs-step" id="gs-s3"><span class="gs-dot" aria-hidden="true"></span>
             <div class="gs-body"><b>Send your first request</b><span id="gs-s3-t">Run it here, or copy the code into your project.</span></div></li>
         </ol>
@@ -403,6 +418,31 @@ main{padding:30px 0 80px}
       </div>
     </section>
 
+    <!-- TEAM -->
+    <section id="view-team" class="hide">
+      <div class="view-head"><div><h1>Team</h1><p id="team-sub">Share one balance with your team. Everyone gets their own login and API keys.</p></div></div>
+      <div class="card pad hide" id="team-invite-card">
+        <div class="t1" style="font-weight:600;margin-bottom:12px">Invite someone</div>
+        <div class="team-form">
+          <div class="field"><label>Email</label><input class="inp" id="tm-email" type="email" placeholder="teammate@company.com" autocomplete="off"></div>
+          <div class="field" style="max-width:190px"><label>Role</label>
+            <select class="inp" id="tm-role"><option value="member">Member</option><option value="admin" id="tm-role-admin">Admin</option></select></div>
+          <button class="btn btn-pri" id="tm-send" onclick="sendInvite()">Send invite</button>
+        </div>
+        <div style="margin-top:10px;font-size:12.5px;color:var(--dim)"><b>Member</b>: creates and manages only their own keys and sees only their own usage. <b>Admin</b>: also adds credits, sees every key and can invite members. Everyone spends from the shared balance, so set a credit limit on keys.</div>
+        <div class="hide" id="tm-result" style="margin-top:12px">
+          <div style="font-size:13px;margin-bottom:6px" id="tm-result-t"></div>
+          <div class="codebox"><button class="btn btn-ghost btn-sm copy-ic" onclick="copyEl('tm-link')">Copy</button><span id="tm-link"></span></div>
+        </div>
+      </div>
+      <div class="card pad" style="margin-top:18px"><div class="list" id="team-list"></div></div>
+      <div class="card pad hide" id="team-leave-card" style="margin-top:18px">
+        <div class="t1" style="font-weight:600;margin-bottom:6px">Leave this team</div>
+        <div class="t2" style="color:var(--dim);font-size:13px;margin-bottom:12px">You will lose access to the team balance and your keys on it stop working for you.</div>
+        <button class="btn btn-danger btn-sm" onclick="leaveTeam()">Leave team</button>
+      </div>
+    </section>
+
     <!-- USAGE -->
     <section id="view-usage" class="hide">
       <div class="view-head"><div><h1>Usage</h1><p>Recent requests, metered by real token usage.</p></div></div>
@@ -419,6 +459,7 @@ main{padding:30px 0 80px}
           <div class="empty" id="chart-trend-empty" style="display:none;padding:24px 0"><div class="big">📈</div>No spend yet</div>
         </div>
       </div>
+      <div class="card pad hide" id="usage-bykey" style="margin-bottom:18px"><div class="t1" style="font-weight:600;margin-bottom:6px;font-size:14px">Spend by API key</div><div class="list" id="usage-bykey-list"></div></div>
       <div class="card pad"><div class="list" id="usage-list"></div></div>
     </section>
   </main>
@@ -469,6 +510,14 @@ main{padding:30px 0 80px}
   </div>
 </div>
 
+<div class="overlay" id="ov-invite">
+  <div class="modal">
+    <h3 id="inv-title">Team invite</h3>
+    <div class="sub" id="inv-sub"></div>
+    <div class="modal-actions" id="inv-actions"></div>
+  </div>
+</div>
+
 <div class="overlay" id="ov-upi" onclick="if(event.target===this)closeOverlays()">
   <div class="modal">
     <h3>Scan to pay <span class="sf" id="upi-amt"></span></h3>
@@ -499,6 +548,8 @@ main{padding:30px 0 80px}
 
   // ---------- state ----------
   var ME=null, KEYS=[], CFG=null, selectedPaise=50000;
+  var MULTI = false;   // true once the workspace has more than one person
+  var TEAM = store.get('yantra.team') || '';   // account id of the team workspace being used ('' = my own)
 
   // ---------- helpers ----------
   function $(id){ return document.getElementById(id); }
@@ -524,6 +575,7 @@ main{padding:30px 0 80px}
     var headers = opts.headers||{};
     headers['Content-Type']='application/json';
     if(opts.auth!==false && token()) headers['Authorization']='Bearer '+token();
+    if(opts.auth!==false && TEAM) headers['X-Yantra-Team']=TEAM;
     return fetch(base+path, { method:opts.method||'GET', headers:headers, body:opts.body?JSON.stringify(opts.body):undefined })
       .then(function(res){
         return res.text().then(function(t){
@@ -719,17 +771,18 @@ main{padding:30px 0 80px}
     openReset(tk); return true;
   };
 
-  window.signOut=function(){ store.del('yantra.jwt'); ME=null; location.reload(); };
+  window.signOut=function(){ store.del('yantra.jwt'); store.del('yantra.team'); ME=null; location.reload(); };
 
   // ================= NAV =================
   window.showView=function(v){
-    ['overview','keys','billing','usage'].forEach(function(name){
+    ['overview','keys','billing','usage','team'].forEach(function(name){
       $('view-'+name).classList.toggle('hide', name!==v);
       var b=document.querySelector('.nav button[data-view="'+name+'"]'); if(b) b.classList.toggle('on', name===v);
     });
     if(v==='keys') loadKeys();
     if(v==='billing') loadBilling();
     if(v==='usage') loadUsage();
+    if(v==='team') loadTeam();
     closeMenu();
   };
   window.toggleMenu=function(){ $('acct-menu').classList.toggle('hide'); };
@@ -751,6 +804,7 @@ main{padding:30px 0 80px}
       // Key creation is open to unverified users on purpose — trying the product
       // is the aha moment. Verification gates adding money instead.
       $('newkey-btn').disabled = false;
+      renderWorkspace();
       renderOnboarding();
     });
   }
@@ -846,7 +900,7 @@ main{padding:30px 0 80px}
       return '<div class="row">'+
         '<div class="grow"><div class="t1 mono">'+esc(k.prefix)+'••••'+esc(k.last4)+
           (revoked?' <span class="tag red">revoked</span>':'')+'</div>'+
-          '<div class="t2">'+esc(k.name||'Default')+' · '+fmtNum(k.requests)+' requests · created '+when(k.created_at)+'</div>'+
+          '<div class="t2">'+esc(k.name||'Default')+' · '+fmtNum(k.requests)+' requests · created '+when(k.created_at)+(k.created_by_email&&ME&&ME.workspace&&ME.workspace.role!=='member'&&(ME.workspace.acting_team||MULTI)?' · by '+esc(k.created_by_email):'')+'</div>'+
           keyLimitLine(k)+'</div>'+
         (revoked?'':'<button class="btn btn-danger btn-sm" onclick="revokeKey(\''+k.id+'\')">Revoke</button>')+
       '</div>';
@@ -1011,6 +1065,7 @@ main{padding:30px 0 80px}
         stat('Output tokens',fmtNum(t.out_tokens),'pu')+
         stat('Total spent',inr(t.cost_paise),'sf');
       renderUsageCharts(d);
+      renderByKey(d.byKey||[]);
       var el=$('usage-list'), rows=d.recent||[];
       if(!rows.length){ el.innerHTML='<div class="empty"><div class="big">📊</div>No requests yet. Send one from the playground or your app.</div>'; return; }
       el.innerHTML=rows.map(function(u){
@@ -1080,14 +1135,118 @@ main{padding:30px 0 80px}
   document.addEventListener('keydown',function(e){ if(e.key==='Escape') closeOverlays(); });
 
   // ================= BOOT =================
+
+  // ================= TEAM / WORKSPACES =================
+  function roleLabel(r){ return r==='owner'?'Owner':(r==='admin'?'Admin':'Member'); }
+  function renderWorkspace(){
+    var ws=ME.workspace||{acting_team:false,role:'owner'}, teams=ME.my_teams||[];
+    document.body.classList.toggle('role-member', ws.role==='member');
+    var b=$('ws-banner'); b.classList.toggle('hide', !ws.acting_team);
+    if(ws.acting_team) $('ws-banner-tx').innerHTML='You are working in <b>'+esc(ws.name||'a team')+'</b> as '+esc(roleLabel(ws.role).toLowerCase())+'. Keys you create here spend from the team balance.';
+    var h='';
+    if(teams.length){
+      h+='<div class="ws-l">Workspace</div><button class="'+(ws.acting_team?'':'on')+'" onclick="switchWs(\'\')"><span>My account</span>'+(ws.acting_team?'':'<span>✓</span>')+'</button>';
+      h+=teams.map(function(t){ var on=ws.acting_team&&ws.team_id===t.id; return '<button class="'+(on?'on':'')+'" onclick="switchWs(\''+esc(t.id)+'\')"><span>'+esc(t.name)+' <span class="tag dim">'+esc(t.role)+'</span></span>'+(on?'<span>✓</span>':'')+'</button>'; }).join('');
+    }
+    $('ws-switch').innerHTML=h; $('ws-switch').style.display=h?'':'none';
+  }
+  window.switchWs=function(id){ if(id) store.set('yantra.team',id); else store.del('yantra.team'); location.reload(); };
+
+  function loadTeam(){
+    api('/app/team').then(function(d){
+      var ws=d.workspace, rows=d.members||[];
+      MULTI=rows.length>0;
+      $('team-invite-card').classList.toggle('hide', !d.can_manage);
+      $('tm-role-admin').disabled=!d.can_manage_admins; if(!d.can_manage_admins) $('tm-role').value='member';
+      $('team-leave-card').classList.toggle('hide', !(ws.acting_team && ws.role!=='owner'));
+      $('team-sub').textContent = ws.acting_team ? ('You are in "'+(ws.name||'a team')+'" as '+roleLabel(ws.role).toLowerCase()+'.') : 'Share one balance with your team. Everyone gets their own login and API keys.';
+      var el=$('team-list'), html='';
+      if(d.can_manage){
+        html+='<div class="row"><div class="grow"><div class="t1">'+esc(ws.acting_team?(ws.name||'Owner'):(ME.user.email))+' <span class="tag green">owner</span></div><div class="t2">Owns the balance</div></div></div>';
+        html+=rows.map(function(m){
+          var pending=m.status==='pending';
+          var tags=pending?(m.expired?'<span class="tag red">invite expired</span>':'<span class="tag dim">invite pending</span>'):'<span class="tag green">'+esc(m.role)+'</span>';
+          var canTouch = m.role!=='admin' || d.can_manage_admins;
+          var roleBtn = (!pending && d.can_manage_admins) ? '<button class="btn btn-ghost btn-sm" onclick="setMemberRole(\''+esc(m.id)+'\',\''+(m.role==='admin'?'member':'admin')+'\')">Make '+(m.role==='admin'?'member':'admin')+'</button>' : '';
+          var rm = canTouch ? '<button class="btn btn-danger btn-sm" onclick="removeMember(\''+esc(m.id)+'\')">'+(pending?'Cancel invite':'Remove')+'</button>' : '';
+          return '<div class="row"><div class="grow"><div class="t1">'+esc(m.email)+' '+tags+'</div><div class="t2">'+(pending?'Invited '+when(m.created_at):'Joined '+when(m.accepted_at))+'</div></div>'+roleBtn+rm+'</div>';
+        }).join('');
+        if(!rows.length) html+='<div class="empty" style="padding:26px 10px"><div class="big">👥</div>No teammates yet. Invite someone above.</div>';
+      } else {
+        html='<div class="empty" style="padding:26px 10px"><div class="big">🔑</div>You can create and manage your own API keys in this team. Ask an admin to add credits or manage people.</div>';
+      }
+      el.innerHTML=html;
+    }).catch(function(e){ toast(e.message,'bad'); });
+  }
+  window.sendInvite=function(){
+    var email=($('tm-email').value||'').trim(), role=$('tm-role').value;
+    if(!email) return toast('Enter an email address','bad');
+    var b=$('tm-send'); b.disabled=true;
+    api('/app/team/invite',{method:'POST',body:{email:email,role:role}}).then(function(d){
+      $('tm-email').value='';
+      $('tm-result').classList.remove('hide');
+      $('tm-result-t').textContent=(d.emailed?'Invite emailed to ':'Invite created for ')+d.email+'. You can also send them this link yourself:';
+      $('tm-link').textContent=d.invite_link;
+      toast(d.emailed?'Invite sent':'Invite created','good'); loadTeam();
+    }).catch(function(e){ toast(e.message,'bad'); }).then(function(){ b.disabled=false; });
+  };
+  window.removeMember=function(id){
+    if(!confirm('Remove this person from the team? Their keys on this team stop working.')) return;
+    api('/app/team/members/'+encodeURIComponent(id)+'/remove',{method:'POST'}).then(function(){ toast('Removed','good'); loadTeam(); }).catch(function(e){ toast(e.message,'bad'); });
+  };
+  window.setMemberRole=function(id,role){
+    api('/app/team/members/'+encodeURIComponent(id)+'/role',{method:'POST',body:{role:role}}).then(function(){ toast('Role updated','good'); loadTeam(); }).catch(function(e){ toast(e.message,'bad'); });
+  };
+  window.leaveTeam=function(){
+    if(!confirm('Leave this team?')) return;
+    api('/app/team/leave',{method:'POST',body:{team_id:TEAM}}).then(function(){ switchWs(''); }).catch(function(e){ toast(e.message,'bad'); });
+  };
+  function renderByKey(rows){
+    var host=$('usage-bykey'); if(!host) return;
+    if(!rows.length){ host.classList.add('hide'); return; }
+    host.classList.remove('hide');
+    var names={}; KEYS.forEach(function(k){ names[k.id]=(k.name||'Default')+' ('+k.prefix+'…'+k.last4+')'; });
+    $('usage-bykey-list').innerHTML=rows.slice(0,15).map(function(r){
+      return '<div class="row"><div class="grow"><div class="t1">'+esc(names[r.key_id]||'Deleted key')+'</div><div class="t2">'+fmtNum(r.requests)+' requests</div></div><div class="mono" style="color:var(--saffron);font-weight:600">'+inr(r.cost_paise)+'</div></div>';
+    }).join('');
+  }
+
+  // Invite links: dashboard.html#team-invite=TOKEN
+  function captureInvite(){
+    var m=/[#&]team-invite=([^&]+)/.exec(location.hash||'');
+    if(m){ try{ store.set('yantra.invite', decodeURIComponent(m[1])); }catch(e){} try{ history.replaceState(null,'',location.pathname+location.search); }catch(e){} }
+  }
+  function handleInvite(){
+    var tk=store.get('yantra.invite'); if(!tk) return;
+    api('/app/team/invite/preview',{method:'POST',body:{token:tk}}).then(function(p){
+      $('inv-title').textContent='Join '+p.team_name+'?';
+      var acts=$('inv-actions');
+      if(!p.matches){
+        $('inv-sub').textContent='This invite was sent to '+p.email+', but you are signed in as '+ME.user.email+'. Sign out and sign in with '+p.email+' to accept it.';
+        acts.innerHTML='<button class="btn btn-ghost" onclick="dismissInvite()">Not now</button><button class="btn btn-pri" onclick="signOut()">Sign out</button>';
+      } else {
+        $('inv-sub').textContent='You will join as '+(p.role==='admin'?'an admin':'a member')+'. You will share the team balance and can create your own API keys.';
+        acts.innerHTML='<button class="btn btn-ghost" onclick="dismissInvite()">Decline</button><button class="btn btn-pri" onclick="acceptInvite()">Join team</button>';
+      }
+      $('ov-invite').classList.add('on');
+    }).catch(function(){ store.del('yantra.invite'); toast('That invite link is invalid or has expired','bad'); });
+  }
+  window.dismissInvite=function(){ store.del('yantra.invite'); closeOverlays(); };
+  window.acceptInvite=function(){
+    var tk=store.get('yantra.invite');
+    api('/app/team/accept',{method:'POST',body:{token:tk}}).then(function(d){ store.del('yantra.invite'); store.set('yantra.team',d.team_id); location.reload(); })
+      .catch(function(e){ toast(e.message,'bad'); });
+  };
+
   function boot(){
     $('auth-screen').classList.add('hide');
     $('app-screen').classList.remove('hide');
     loadMe().then(function(){ return loadOverviewStats(); }).then(function(){ return loadKeys().catch(function(){}); })
-      .then(function(){ showView('overview'); if(FIRST_RUN){ FIRST_RUN=false; if(!KEYS.some(function(k){return !k.revoked;})){ openCreateKey(); $('ck-name').value='My first key'; } } })
+      .then(function(){ showView('overview'); handleInvite(); if(FIRST_RUN){ FIRST_RUN=false; if(!KEYS.some(function(k){return !k.revoked;})){ openCreateKey(); $('ck-name').value='My first key'; } } })
       .catch(function(e){
         // token invalid/expired → back to auth
         if(e.status===401){ store.del('yantra.jwt'); showAuth(); }
+        else if(e.status===403 && TEAM){ store.del('yantra.team'); location.reload(); }   // removed from that team
         else toast(e.message,'bad');
       });
   }
@@ -1099,7 +1258,11 @@ main{padding:30px 0 80px}
     openResetFromHash();
   }
 
-  function init(){ if(/reset=/.test(location.hash||'')){ showAuth(); return; } if(token()) boot(); else showAuth(); }
+  function init(){
+    captureInvite();
+    if(/reset=/.test(location.hash||'')){ showAuth(); return; }
+    if(token()) boot(); else { showAuth(); if(store.get('yantra.invite')) $('invite-note').classList.remove('hide'); }
+  }
   init();
 })();
 </script>
