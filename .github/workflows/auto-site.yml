@@ -1,1 +1,88 @@
+name: Auto update site
+
+# Every night (about 2 AM India time) this refreshes model pages, guides, the sitemap,
+# opens an Issue when new models or big price changes appear, and pings IndexNow.
+on:
+  schedule:
+    - cron: '30 20 * * *'
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+  issues: write
+
+concurrency:
+  group: auto-site
+  cancel-in-progress: false
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Download live catalogue
+        run: node scripts/fetch_catalog.js
+
+      - name: Check what changed in the catalogue
+        run: node scripts/diff_models.js
+
+      - name: Regenerate model pages and guides
+        env:
+          SITE_DIR: ${{ github.workspace }}
+          REGISTRY_MODULE: ${{ github.workspace }}/scripts/registry_shim.js
+          IMAGE_MODULE: ${{ github.workspace }}/scripts/imagemodels_shim.js
+        run: |
+          node scripts/gen_model_pages.js
+          node scripts/gen_seo_pages.js
+          node scripts/build_sitemap.js .
+
+      - name: Commit changes
+        id: commit
+        run: |
+          git config user.name "yantra-bot"
+          git config user.email "yantra-bot@users.noreply.github.com"
+          rm -f scripts/catalog.json
+          git add -A -- . ':!report.md'
+          if git diff --cached --quiet; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          else
+            git diff --cached --name-only > /tmp/changed.txt
+            git commit -m "Auto update: model pages, guides, sitemap"
+            git push
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Open an Issue for new models or price changes
+        if: hashFiles('report.md') != ''
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh issue create --title "Model catalogue update $(date +%F)" --body-file report.md || true
+          rm -f report.md
+
+      - name: Tell Bing and other search engines (IndexNow)
+        if: steps.commit.outputs.changed == 'true'
+        run: |
+          KEY=$(ls *.txt | grep -E '^[0-9a-f]{32}\.txt$' | head -1 | sed 's/\.txt$//')
+          if [ -z "$KEY" ]; then echo "no IndexNow key file"; exit 0; fi
+          python3 - "$KEY" <<'PY'
+          import sys, json, urllib.request
+          key = sys.argv[1]
+          files = [l.strip() for l in open('/tmp/changed.txt') if l.strip().endswith('.html') and not l.startswith(('dashboard','admin','404'))]
+          urls = ['https://apikeys.in/' + ('' if f == 'index.html' else f) for f in files][:9000]
+          if not urls: sys.exit(0)
+          body = json.dumps({"host": "apikeys.in", "key": key, "keyLocation": f"https://apikeys.in/{key}.txt", "urlList": urls}).encode()
+          req = urllib.request.Request('https://api.indexnow.org/indexnow', data=body, headers={'Content-Type': 'application/json; charset=utf-8'})
+          try:
+              print('IndexNow', urllib.request.urlopen(req, timeout=30).status, len(urls), 'urls')
+          except Exception as e:
+              print('IndexNow failed (not critical):', e)
+          PY
 
