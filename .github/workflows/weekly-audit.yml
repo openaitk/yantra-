@@ -1,0 +1,30 @@
+name: Weekly site audit
+
+# Every Monday about 9 AM India time: checks every page in the sitemap (status, title, description,
+# canonical, h1, JSON-LD, broken links) and the API, then opens one Issue with the results.
+on:
+  schedule:
+    - cron: '30 3 * * 1'
+  workflow_dispatch: {}
+
+permissions:
+  issues: write
+  contents: read
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - run: node scripts/site_audit.js
+      - name: Open the report Issue
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          label="audit-ok"; [ "$(cat audit_problems.txt)" != "0" ] && label="audit-problems"
+          gh label create "$label" --color 0E8A16 2>/dev/null || true
+          gh issue create --title "Weekly site audit $(date +%F)" --label "$label" --body-file audit.md
