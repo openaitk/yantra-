@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Flux Image Tester</title>
+<style>
+  :root{
+    --bg:#f6f7fb; --surface:#ffffff; --text:#14161c; --muted:#6b7280; --border:#e3e6ee;
+    --accent:#6d5efc; --accent-2:#00c2ff; --danger:#d9344f; --ok:#12a150;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{ --bg:#0b0d13; --surface:#141824; --text:#eceef6; --muted:#8b93a7; --border:#252b3b; --danger:#ff6b81; --ok:#3ddc84; }
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--text);font:15px/1.5 system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+  .wrap{max-width:1100px;margin:0 auto;padding:24px 16px 60px}
+  h1{margin:0 0 4px;font-size:26px;letter-spacing:-.02em}
+  h1 span{background:linear-gradient(90deg,var(--accent),var(--accent-2));-webkit-background-clip:text;background-clip:text;color:transparent}
+  .sub{color:var(--muted);margin:0 0 20px}
+  .grid{display:grid;grid-template-columns:380px 1fr;gap:20px}
+  @media (max-width:860px){.grid{grid-template-columns:1fr}}
+  .card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:16px}
+  label{display:block;font-size:13px;font-weight:600;margin:14px 0 6px}
+  label:first-child{margin-top:0}
+  input,select,textarea{width:100%;padding:10px 12px;border:1px solid var(--border);border-radius:10px;background:var(--bg);color:var(--text);font:inherit}
+  input:focus,select:focus,textarea:focus{outline:2px solid var(--accent);outline-offset:0;border-color:transparent}
+  textarea{resize:vertical;min-height:110px}
+  .row{display:flex;gap:10px}
+  .row>*{flex:1;min-width:0}
+  .keybox{position:relative}
+  .keybox button{position:absolute;right:6px;top:50%;transform:translateY(-50%);width:auto;padding:4px 10px;font-size:12px;background:transparent;color:var(--muted);border:none;cursor:pointer}
+  .keybox input{padding-right:60px}
+  .hint{font-size:12px;color:var(--muted);margin-top:5px}
+  .check{display:flex;align-items:center;gap:8px;font-weight:400;margin-top:10px}
+  .check input{width:auto}
+  button.primary{width:100%;margin-top:18px;padding:12px;border:none;border-radius:10px;font:inherit;font-weight:600;color:#fff;cursor:pointer;background:linear-gradient(90deg,var(--accent),var(--accent-2))}
+  button.primary:disabled{opacity:.55;cursor:not-allowed}
+  details{margin-top:14px}
+  summary{cursor:pointer;font-size:13px;color:var(--muted)}
+  .status{margin-top:12px;font-size:13px;min-height:18px}
+  .status.err{color:var(--danger);white-space:pre-wrap;word-break:break-word}
+  .status.ok{color:var(--ok)}
+  .results{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:14px}
+  .item{border:1px solid var(--border);border-radius:12px;overflow:hidden;background:var(--surface)}
+  .item img{display:block;width:100%;height:auto;background:var(--bg)}
+  .meta{padding:10px 12px;font-size:12px;color:var(--muted)}
+  .meta .p{color:var(--text);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;margin-bottom:6px}
+  .actions{display:flex;gap:8px;margin-top:8px}
+  .actions a,.actions button{flex:1;text-align:center;padding:6px;border:1px solid var(--border);border-radius:8px;background:transparent;color:var(--text);font:inherit;font-size:12px;text-decoration:none;cursor:pointer}
+  .empty{border:1px dashed var(--border);border-radius:14px;padding:50px 20px;text-align:center;color:var(--muted)}
+  .skeleton{aspect-ratio:1/1;border-radius:12px;background:linear-gradient(100deg,var(--surface) 30%,var(--border) 50%,var(--surface) 70%);background-size:200% 100%;animation:sh 1.2s infinite}
+  @keyframes sh{from{background-position:200% 0}to{background-position:-200% 0}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1><span>Flux</span> Image Tester</h1>
+  <p class="sub">Paste your apikeys.in API key, pick a Flux model and generate images.</p>
+
+  <div class="grid">
+    <div class="card">
+      <label for="key">API key</label>
+      <div class="keybox">
+        <input id="key" type="password" placeholder="Paste your apikeys.in API key" autocomplete="off" spellcheck="false">
+        <button type="button" id="toggleKey">Show</button>
+      </div>
+      <div class="hint">Sent only to the API base URL below. Not stored unless you tick the box.</div>
+      <label class="check"><input type="checkbox" id="remember"> Remember key in this browser</label>
+
+      <label for="model">Model</label>
+      <select id="model">
+        <option value="black-forest-labs/flux-1-schnell">flux-1-schnell (fast)</option>
+        <option value="black-forest-labs/flux-2-dev">flux-2-dev</option>
+        <option value="black-forest-labs/flux-2-pro">flux-2-pro</option>
+        <option value="black-forest-labs/flux-1.1-pro">flux-1.1-pro</option>
+        <option value="black-forest-labs/flux-2-max">flux-2-max</option>
+        <option value="__custom">Custom model ID…</option>
+      </select>
+      <input id="customModel" placeholder="e.g. black-forest-labs/flux-2-pro" style="display:none;margin-top:8px">
+
+      <label for="prompt">Prompt</label>
+      <textarea id="prompt" placeholder="A neon-lit street in Tokyo at night, rain reflections, cinematic"></textarea>
+
+      <div class="row">
+        <div>
+          <label for="size">Size</label>
+          <select id="size">
+            <option>1024x1024</option>
+            <option>1024x768</option>
+            <option>768x1024</option>
+            <option>1344x768</option>
+            <option>768x1344</option>
+            <option>512x512</option>
+          </select>
+        </div>
+        <div>
+          <label for="n">Images</label>
+          <select id="n"><option>1</option><option>2</option><option>3</option><option>4</option></select>
+        </div>
+      </div>
+
+      <details>
+        <summary>Advanced</summary>
+        <label for="base">API base URL</label>
+        <input id="base" value="https://api.aitklabs.in">
+        <label for="path">Endpoint path</label>
+        <input id="path" value="/v1/images/generations">
+        <label for="seed">Seed (optional)</label>
+        <input id="seed" type="number" placeholder="random">
+      </details>
+
+      <button class="primary" id="go">Generate</button>
+      <div class="status" id="status"></div>
+    </div>
+
+    <div>
+      <div id="results" class="results"></div>
+      <div id="empty" class="empty">Your generated images will appear here.</div>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+  const $ = id => document.getElementById(id);
+  const els = {key:$('key'),remember:$('remember'),model:$('model'),custom:$('customModel'),prompt:$('prompt'),
+    size:$('size'),n:$('n'),base:$('base'),path:$('path'),seed:$('seed'),go:$('go'),status:$('status'),
+    results:$('results'),empty:$('empty')};
+
+  try{
+    const saved = localStorage.getItem('flux_tester_key');
+    if(saved){ els.key.value = saved; els.remember.checked = true; }
+  }catch(e){}
+
+  $('toggleKey').onclick = function(){
+    const show = els.key.type === 'password';
+    els.key.type = show ? 'text' : 'password';
+    this.textContent = show ? 'Hide' : 'Show';
+  };
+  els.model.onchange = () => { els.custom.style.display = els.model.value === '__custom' ? 'block' : 'none'; };
+  els.remember.onchange = () => {
+    try{ if(!els.remember.checked) localStorage.removeItem('flux_tester_key'); }catch(e){}
+  };
+
+  function setStatus(msg, cls){ els.status.textContent = msg; els.status.className = 'status ' + (cls||''); }
+
+  function addImage(src, prompt, model, ms){
+    const div = document.createElement('div'); div.className = 'item';
+    const img = document.createElement('img'); img.src = src; img.alt = prompt; img.loading = 'lazy';
+    const meta = document.createElement('div'); meta.className = 'meta';
+    const p = document.createElement('div'); p.className = 'p'; p.textContent = prompt;
+    const m = document.createElement('div'); m.textContent = model.split('/').pop() + ' · ' + (ms/1000).toFixed(1) + 's';
+    const act = document.createElement('div'); act.className = 'actions';
+    const dl = document.createElement('a'); dl.href = src; dl.download = 'flux-' + Date.now() + '.png'; dl.target = '_blank'; dl.rel = 'noopener'; dl.textContent = 'Download';
+    const open = document.createElement('a'); open.href = src; open.target = '_blank'; open.rel = 'noopener'; open.textContent = 'Open';
+    act.append(dl, open);
+    meta.append(p, m, act);
+    div.append(img, meta);
+    return div;
+  }
+
+  async function generate(){
+    const key = els.key.value.trim();
+    const prompt = els.prompt.value.trim();
+    const model = els.model.value === '__custom' ? els.custom.value.trim() : els.model.value;
+    if(!key){ setStatus('Enter your API key.', 'err'); return; }
+    if(!model){ setStatus('Enter a model ID.', 'err'); return; }
+    if(!prompt){ setStatus('Enter a prompt.', 'err'); return; }
+
+    try{
+      if(els.remember.checked) localStorage.setItem('flux_tester_key', key);
+    }catch(e){}
+
+    const n = parseInt(els.n.value, 10);
+    const url = els.base.value.trim().replace(/\/+$/,'') + '/' + els.path.value.trim().replace(/^\/+/,'');
+    const body = {model, prompt, n, size: els.size.value};
+    if(els.seed.value !== '') body.seed = parseInt(els.seed.value, 10);
+
+    els.go.disabled = true;
+    setStatus('Generating…');
+    els.empty.style.display = 'none';
+
+    const holders = [];
+    for(let i=0;i<n;i++){
+      const s = document.createElement('div'); s.className = 'skeleton';
+      els.results.prepend(s); holders.push(s);
+    }
+
+    const t0 = performance.now();
+    try{
+      const res = await fetch(url, {
+        method:'POST',
+        headers:{'Content-Type':'application/json','Authorization':'Bearer ' + key},
+        body: JSON.stringify(body)
+      });
+      const text = await res.text();
+      let data; try{ data = JSON.parse(text); }catch(e){ data = null; }
+      if(!res.ok){
+        const detail = data && (data.error && (data.error.message || data.error) || data.message || data.detail) || text.slice(0,400);
+        throw new Error('HTTP ' + res.status + ': ' + (typeof detail === 'string' ? detail : JSON.stringify(detail)));
+      }
+      const list = (data && (data.data || data.images || data.output)) || [];
+      const arr = Array.isArray(list) ? list : [list];
+      const ms = performance.now() - t0;
+      let shown = 0;
+      arr.forEach((it, i) => {
+        let src = null;
+        if(typeof it === 'string') src = it.startsWith('http') || it.startsWith('data:') ? it : 'data:image/png;base64,' + it;
+        else if(it && it.url) src = it.url;
+        else if(it && (it.b64_json || it.base64)) src = 'data:image/png;base64,' + (it.b64_json || it.base64);
+        if(!src) return;
+        const card = addImage(src, prompt, model, ms);
+        if(holders[i]) holders[i].replaceWith(card); else els.results.prepend(card);
+        shown++;
+      });
+      holders.forEach(h => { if(h.parentNode) h.remove(); });
+      if(!shown) throw new Error('No images in response:\n' + text.slice(0,400));
+      setStatus('Done — ' + shown + ' image' + (shown>1?'s':'') + ' in ' + (ms/1000).toFixed(1) + 's', 'ok');
+    }catch(err){
+      holders.forEach(h => h.remove());
+      if(!els.results.children.length) els.empty.style.display = 'block';
+      setStatus(err.message || String(err), 'err');
+    }finally{
+      els.go.disabled = false;
+    }
+  }
+
+  els.go.onclick = generate;
+  els.prompt.addEventListener('keydown', e => { if((e.ctrlKey||e.metaKey) && e.key === 'Enter') generate(); });
+})();
+</script>
+</body>
+</html>
