@@ -244,6 +244,7 @@ main{padding:30px 0 80px}
 .ck-next{font-size:12.5px;color:var(--dim);margin:10px 0 0}
 @media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 </style>
+<script src="/assets/yk.js" defer></script>
 </head>
 <body>
 
@@ -356,6 +357,20 @@ main{padding:30px 0 80px}
         <div class="stat"><div class="k">Total spent</div><div class="v sf" id="ov-spent">₹0.00</div></div>
         <div class="stat"><div class="k">Active keys</div><div class="v pu" id="ov-keys">0</div></div>
       </div>
+      <div class="card pad hide" id="fb-card" style="margin-bottom:18px">
+        <div style="display:flex;justify-content:space-between;gap:10px;align-items:flex-start">
+          <div><div class="t1" style="font-weight:600">How is Yantra working for you?</div><div class="t2" id="fb-sub">Your honest words help us improve, and help other developers decide.</div></div>
+          <button class="btn btn-ghost btn-sm" onclick="fbDismiss()" aria-label="Hide this">Not now</button>
+        </div>
+        <div id="fb-stars" role="radiogroup" aria-label="Rating" style="display:flex;gap:6px;margin:12px 0 6px"></div>
+        <div class="field"><label for="fb-msg">Your feedback</label><textarea class="inp" id="fb-msg" rows="3" maxlength="500" placeholder="What do you use it for? What worked, and what should be better?"></textarea></div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:8px">
+          <div class="field" style="flex:1;min-width:140px"><label for="fb-name">Name to show</label><input class="inp" id="fb-name" maxlength="30" placeholder="First name"></div>
+          <div class="field" style="flex:1;min-width:140px"><label for="fb-role">What you do (optional)</label><input class="inp" id="fb-role" maxlength="40" placeholder="Student, founder, developer..."></div>
+        </div>
+        <label style="display:flex;gap:8px;align-items:flex-start;margin-top:10px;font-size:13.5px"><input type="checkbox" id="fb-public" style="margin-top:3px"> <span>You may show this feedback, with the name above, on apikeys.in after you review it. (Leave unticked to keep it private to us.)</span></label>
+        <div style="margin-top:12px"><button class="btn btn-pri" id="fb-send" onclick="fbSend()">Send feedback</button> <span class="t2" id="fb-done"></span></div>
+      </div>
       <div class="card gs" id="gs">
         <div class="gs-head">
           <div><h2 id="gs-title">Get started</h2><p id="gs-sub">Three steps to your first answer. It takes about a minute.</p></div>
@@ -429,16 +444,20 @@ main{padding:30px 0 80px}
             <select class="inp" id="tm-role"><option value="member">Member</option><option value="admin" id="tm-role-admin">Admin</option></select></div>
           <button class="btn btn-pri" id="tm-send" onclick="sendInvite()">Send invite</button>
         </div>
-        <div style="margin-top:10px;font-size:12.5px;color:var(--dim)"><b>Member</b>: creates and manages only their own keys and sees only their own usage. <b>Admin</b>: also adds credits, sees every key and can invite members. Everyone spends from the shared balance, so set a credit limit on keys.</div>
+        <div style="margin-top:10px;font-size:12.5px;color:var(--dim)"><b>Member</b>: creates and manages only their own keys and sees only their own usage. <b>Admin</b>: also adds credits, sees every key and can invite members. Everyone spends from the shared balance, so set a monthly budget per person (Budget button) or a credit limit on keys.</div>
         <div class="hide" id="tm-result" style="margin-top:12px">
           <div style="font-size:13px;margin-bottom:6px" id="tm-result-t"></div>
           <div class="codebox"><button class="btn btn-ghost btn-sm copy-ic" onclick="copyEl('tm-link')">Copy</button><span id="tm-link"></span></div>
         </div>
       </div>
       <div class="card pad" style="margin-top:18px"><div class="list" id="team-list"></div></div>
+      <div class="card pad hide" id="team-events-card" style="margin-top:18px">
+        <div class="t1" style="font-weight:600;margin-bottom:8px">Recent activity</div>
+        <div class="list" id="team-events"></div>
+      </div>
       <div class="card pad hide" id="team-leave-card" style="margin-top:18px">
         <div class="t1" style="font-weight:600;margin-bottom:6px">Leave this team</div>
-        <div class="t2" style="color:var(--dim);font-size:13px;margin-bottom:12px">You will lose access to the team balance and your keys on it stop working for you.</div>
+        <div class="t2" style="color:var(--dim);font-size:13px;margin-bottom:12px">You will lose access to the team balance and the API keys you created on this team are revoked.</div>
         <button class="btn btn-danger btn-sm" onclick="leaveTeam()">Leave team</button>
       </div>
     </section>
@@ -507,6 +526,19 @@ main{padding:30px 0 80px}
       <p class="ck-next">This browser remembers the key so the examples and the test button on Overview use it. You can remove it there.</p>
       <div class="modal-actions"><button class="btn btn-ghost" onclick="closeOverlays();showView('billing')">Add credits</button><button class="btn btn-pri" onclick="closeOverlays();showView('overview')">Done</button></div>
     </div>
+  </div>
+</div>
+
+<div class="overlay" id="ov-ctl" onclick="if(event.target===this)closeOverlays()">
+  <div class="modal">
+    <h3 id="ctl-title">Controls</h3>
+    <div class="sub" id="ctl-sub">Limits apply to everything this person does on the team, across all their keys.</div>
+    <div class="field" style="margin-top:12px"><label>Monthly budget (₹)</label><input class="inp" id="ctl-budget" type="number" min="1" placeholder="No limit"></div>
+    <div class="field" style="margin-top:10px"><label>Allowed models</label><input class="inp" id="ctl-models" placeholder="All models. Or e.g. openai/ deepseek/deepseek-v4"><div style="font-size:12px;color:var(--dim);margin-top:4px">Separate with spaces. An id ending in / allows a whole provider.</div></div>
+    <div class="field" style="margin-top:10px"><label>Requests per minute</label><input class="inp" id="ctl-rpm" type="number" min="1" placeholder="No limit"></div>
+    <div class="field" style="margin-top:10px"><label>Most API keys they can hold</label><input class="inp" id="ctl-maxkeys" type="number" min="1" placeholder="No limit"></div>
+    <label style="display:flex;gap:8px;align-items:center;margin-top:14px;font-size:14px"><input type="checkbox" id="ctl-pause"> Pause this person (their keys stop working, nothing is deleted)</label>
+    <div class="modal-actions"><button class="btn btn-ghost" onclick="closeOverlays()">Cancel</button><button class="btn btn-pri" id="ctl-save" onclick="saveControls()">Save</button></div>
   </div>
 </div>
 
@@ -642,6 +674,7 @@ main{padding:30px 0 80px}
     $('tab-signup').className = m==='signup'?'on':'';
     $('name-field').style.display = m==='signup'?'block':'none';
     $('forgot-row').style.display = m==='login'?'block':'none';
+    if(m==='signup'){ try{ykTrack('signup_view')}catch(_){} }
     $('auth-submit').textContent = m==='login'?'Sign in':(m==='forgot'?'Send reset link':'Create account');
     // forgot / reset screens drop the tabs and the password box
     var fr=(m==='forgot'), tabs=$('auth-tabs');
@@ -673,13 +706,14 @@ main{padding:30px 0 80px}
     var btn=$('auth-submit'); btn.disabled=true; var old=btn.textContent; btn.innerHTML='<span class="spin"></span>';
     var path = mode==='login'?'/app/auth/login':'/app/auth/signup';
     var body={email:email,password:pass,name:name};
-    if(mode==='signup'){
+    if(mode==='signup'){ try{ykTrack('signup_submit')}catch(_){}
       body.device=deviceId(); body.fp=fingerprint();
       body.formMs=Date.now()-formShownAt; body.website=($('f-website').value||'');
       body.cfToken=cfToken;
     }
     api(path,{method:'POST',auth:false,body:body})
       .then(function(d){
+        try{ykTrack(mode==='signup'?'signup_done':'login_done')}catch(_){}
         store.set('yantra.jwt', d.token); FIRST_RUN=(mode==='signup'); boot();
         if(mode==='signup' && d.welcome){
           setTimeout(function(){ toast(d.welcome.granted ? 'Welcome! ₹'+(d.welcome.amount_paise/100).toFixed(2)+' free credit added' : d.welcome.message, d.welcome.granted?'good':''); }, 900);
@@ -809,11 +843,36 @@ main{padding:30px 0 80px}
     });
   }
 
+
+  // ================= FEEDBACK =================
+  var FB_RATING=0;
+  function fbStars(){
+    var h=''; for(var i=1;i<=5;i++) h+='<button type="button" role="radio" aria-checked="'+(i<=FB_RATING)+'" aria-label="'+i+' star'+(i>1?'s':'')+'" onclick="fbRate('+i+')" style="font-size:26px;line-height:1;background:none;border:0;cursor:pointer;padding:2px 3px;color:'+(i<=FB_RATING?'#f5a623':'#c3cad6')+'">&#9733;</button>';
+    $('fb-stars').innerHTML=h;
+  }
+  window.fbRate=function(n){ FB_RATING=n; fbStars(); };
+  window.fbDismiss=function(){ store.set('yantra.fbdismiss','1'); $('fb-card').classList.add('hide'); };
+  function loadFeedbackCard(){
+    if(store.get('yantra.fbdismiss')) return;
+    api('/app/feedback/mine').then(function(d){
+      if(!d.eligible || d.submitted) return;
+      var n=(ME&&ME.account&&ME.account.name||'').split(' ')[0]; if(n&&!$('fb-name').value) $('fb-name').value=n;
+      fbStars(); $('fb-card').classList.remove('hide');
+    }).catch(function(){});
+  }
+  window.fbSend=function(){
+    if(!FB_RATING){ toast('Pick a star rating first','bad'); return; }
+    var b=$('fb-send'); b.disabled=true;
+    api('/app/feedback',{method:'POST',body:{rating:FB_RATING,message:$('fb-msg').value,display_name:$('fb-name').value,role:$('fb-role').value,public_ok:$('fb-public').checked}})
+      .then(function(){ $('fb-card').innerHTML='<div class="t1" style="font-weight:600">Thank you!</div><div class="t2" style="margin-top:4px">We read every message.'+($('fb-public')&&0?'':'')+'</div>'; toast('Feedback sent. Thank you!','good'); store.set('yantra.fbdismiss','1'); })
+      .catch(function(e){ toast(e.message,'bad'); b.disabled=false; });
+  };
+
   function loadOverviewStats(){
     return api('/app/usage').then(function(d){
       $('ov-requests').textContent=fmtNum(d.totals.requests);
       $('ov-spent').textContent=inr(d.totals.cost_paise);
-      renderOnboarding();
+      renderOnboarding(); loadFeedbackCard();
     }).catch(function(){});
   }
 
@@ -944,6 +1003,7 @@ main{padding:30px 0 80px}
     }
     api('/app/keys',{method:'POST',body:body})
       .then(function(d){
+        try{ykTrack('key_created')}catch(_){}
         $('ck-secret').textContent=d.secret;
         store.set('yantra.lastkey',d.secret);
         $('ck-step1').classList.add('hide'); $('ck-step2').classList.remove('hide');
@@ -1025,11 +1085,12 @@ main{padding:30px 0 80px}
       theme:{ color:'#ff9933' },
       handler:function(resp){
         api('/app/billing/verify',{method:'POST',body:{order_id:resp.razorpay_order_id,payment_id:resp.razorpay_payment_id,signature:resp.razorpay_signature}})
-          .then(function(out){ toast('Added '+inr(out.credited_paise),'good'); refreshAfterPay(); })
+          .then(function(out){ try{ykTrack('topup_done')}catch(_){} toast('Added '+inr(out.credited_paise),'good'); refreshAfterPay(); })
           .catch(function(e){ toast('Payment captured but crediting failed: '+e.message,'bad'); });
       }
     });
     rzp.on('payment.failed',function(){ toast('Payment failed or cancelled','bad'); });
+    try{ykTrack('topup_start')}catch(_){}
     rzp.open();
   }
 
@@ -1160,6 +1221,7 @@ main{padding:30px 0 80px}
       $('tm-role-admin').disabled=!d.can_manage_admins; if(!d.can_manage_admins) $('tm-role').value='member';
       $('team-leave-card').classList.toggle('hide', !(ws.acting_team && ws.role!=='owner'));
       $('team-sub').textContent = ws.acting_team ? ('You are in "'+(ws.name||'a team')+'" as '+roleLabel(ws.role).toLowerCase()+'.') : 'Share one balance with your team. Everyone gets their own login and API keys.';
+      MEMBERS={}; rows.forEach(function(m){ MEMBERS[m.id]=m; });
       var el=$('team-list'), html='';
       if(d.can_manage){
         html+='<div class="row"><div class="grow"><div class="t1">'+esc(ws.acting_team?(ws.name||'Owner'):(ME.user.email))+' <span class="tag green">owner</span></div><div class="t2">Owns the balance</div></div></div>';
@@ -1169,15 +1231,60 @@ main{padding:30px 0 80px}
           var canTouch = m.role!=='admin' || d.can_manage_admins;
           var roleBtn = (!pending && d.can_manage_admins) ? '<button class="btn btn-ghost btn-sm" onclick="setMemberRole(\''+esc(m.id)+'\',\''+(m.role==='admin'?'member':'admin')+'\')">Make '+(m.role==='admin'?'member':'admin')+'</button>' : '';
           var rm = canTouch ? '<button class="btn btn-danger btn-sm" onclick="removeMember(\''+esc(m.id)+'\')">'+(pending?'Cancel invite':'Remove')+'</button>' : '';
-          return '<div class="row"><div class="grow"><div class="t1">'+esc(m.email)+' '+tags+'</div><div class="t2">'+(pending?'Invited '+when(m.created_at):'Joined '+when(m.accepted_at))+'</div></div>'+roleBtn+rm+'</div>';
+          var sub=pending?'Invited '+when(m.created_at):'Joined '+when(m.accepted_at)+' · '+m.active_keys+' active key'+(m.active_keys===1?'':'s');
+          var bud='';
+          if(!pending){
+            var cap=m.monthly_cap_paise, sp=(m.spent_month_paise||0)/100;
+            bud='<div class="t2" style="margin-top:3px">This month: ₹'+sp.toFixed(2)+(cap!=null?' of ₹'+(cap/100).toFixed(2)+' budget'+(m.spent_month_paise>=cap?' <span class="tag red">limit reached</span>':''):' · no monthly budget')+'</div>';
+          }
+          var budBtn = (!pending && canTouch) ? '<button class="btn btn-ghost btn-sm" onclick="openControls(\''+esc(m.id)+'\')">Controls</button>' : '';
+          if(!pending){ var cs=[]; if(m.allowed_models&&m.allowed_models.length) cs.push(m.allowed_models.length+' model rule'+(m.allowed_models.length>1?'s':'')); if(m.rate_limit_per_min) cs.push(m.rate_limit_per_min+'/min'); if(m.max_keys) cs.push('max '+m.max_keys+' keys'); if(cs.length) bud+='<div class="t2">Limits: '+cs.join(' · ')+'</div>'; if(m.suspended) tags+=' <span class="tag red">paused</span>'; }
+          var resend = (pending && canTouch) ? '<button class="btn btn-ghost btn-sm" onclick="resendInvite(\''+esc(m.email)+'\',\''+esc(m.role)+'\')">'+(m.expired?'Send again':'Resend')+'</button>' : '';
+          return '<div class="row" style="flex-wrap:wrap;gap:8px"><div class="grow"><div class="t1">'+esc(m.email)+' '+tags+'</div><div class="t2">'+sub+'</div>'+bud+'</div>'+budBtn+resend+roleBtn+rm+'</div>';
         }).join('');
         if(!rows.length) html+='<div class="empty" style="padding:26px 10px"><div class="big">👥</div>No teammates yet. Invite someone above.</div>';
       } else {
         html='<div class="empty" style="padding:26px 10px"><div class="big">🔑</div>You can create and manage your own API keys in this team. Ask an admin to add credits or manage people.</div>';
       }
       el.innerHTML=html;
+      var evc=$('team-events-card'); if(evc){
+        var ev=d.events||[]; evc.classList.toggle('hide', !d.can_manage || !ev.length);
+        var names={controls:'Controls changed',invite:'Invited',joined:'Joined',removed:'Removed',invite_cancelled:'Cancelled invite for',left:'Left',role:'Role changed',budget:'Budget set'};
+        $('team-events').innerHTML=ev.map(function(e){ return '<div class="row"><div class="grow"><div class="t1" style="font-size:13.5px">'+esc(names[e.action]||e.action)+' · '+esc(e.detail||'')+'</div><div class="t2">'+(e.actor?'by '+esc(e.actor)+' · ':'')+when(e.created_at)+'</div></div></div>'; }).join('');
+      }
     }).catch(function(e){ toast(e.message,'bad'); });
   }
+  var MEMBERS={};
+  window.setMemberBudget=function(id,cur){
+    var v=prompt('Monthly budget for this person in ₹ (spent across all their keys, resets on the 1st). Leave empty for no limit.', cur==null?'':cur);
+    if(v===null) return;
+    api('/app/team/members/'+encodeURIComponent(id)+'/budget',{method:'POST',body:{monthly_inr:v.trim()===''?null:Number(v)}}).then(function(){ toast('Budget saved','good'); loadTeam(); }).catch(function(e){ toast(e.message,'bad'); });
+  };
+  var CTL_ID=null;
+  window.openControls=function(id){
+    var m=MEMBERS[id]; if(!m) return; CTL_ID=id;
+    $('ctl-title').textContent='Controls for '+m.email;
+    $('ctl-budget').value=m.monthly_cap_paise!=null?m.monthly_cap_paise/100:'';
+    $('ctl-models').value=(m.allowed_models||[]).join(' ');
+    $('ctl-rpm').value=m.rate_limit_per_min||''; $('ctl-maxkeys').value=m.max_keys||''; $('ctl-pause').checked=!!m.suspended;
+    $('ov-ctl').classList.add('on');
+  };
+  window.saveControls=function(){
+    if(!CTL_ID) return;
+    var num=function(v){ v=String(v).trim(); return v===''?null:Number(v); }, b=$('ctl-save'); b.disabled=true;
+    var id=encodeURIComponent(CTL_ID);
+    var m0=MEMBERS[CTL_ID], nb=num($('ctl-budget').value), ob=m0.monthly_cap_paise!=null?m0.monthly_cap_paise/100:null;
+    (nb===ob?Promise.resolve():api('/app/team/members/'+id+'/budget',{method:'POST',body:{monthly_inr:nb}})).then(function(){
+      return api('/app/team/members/'+id+'/controls',{method:'POST',body:{allowed_models:$('ctl-models').value.trim(),rate_limit_per_min:num($('ctl-rpm').value),max_keys:num($('ctl-maxkeys').value),suspended:$('ctl-pause').checked}});
+    }).then(function(){ closeOverlays(); toast('Controls saved','good'); loadTeam(); }).catch(function(e){ toast(e.message,'bad'); }).then(function(){ b.disabled=false; });
+  };
+  window.resendInvite=function(email,role){
+    api('/app/team/invite',{method:'POST',body:{email:email,role:role}}).then(function(d){
+      $('tm-result').classList.remove('hide');
+      $('tm-result-t').textContent=(d.emailed?'Invite emailed again to ':'New invite link for ')+d.email+'. The old link no longer works:';
+      $('tm-link').textContent=d.invite_link; toast(d.emailed?'Invite sent again':'New link created','good'); loadTeam(); window.scrollTo({top:0,behavior:'smooth'});
+    }).catch(function(e){ toast(e.message,'bad'); });
+  };
   window.sendInvite=function(){
     var email=($('tm-email').value||'').trim(), role=$('tm-role').value;
     if(!email) return toast('Enter an email address','bad');
@@ -1191,7 +1298,7 @@ main{padding:30px 0 80px}
     }).catch(function(e){ toast(e.message,'bad'); }).then(function(){ b.disabled=false; });
   };
   window.removeMember=function(id){
-    if(!confirm('Remove this person from the team? Their keys on this team stop working.')) return;
+    if(!confirm('Remove this person from the team? The API keys they created on this team are revoked right away.')) return;
     api('/app/team/members/'+encodeURIComponent(id)+'/remove',{method:'POST'}).then(function(){ toast('Removed','good'); loadTeam(); }).catch(function(e){ toast(e.message,'bad'); });
   };
   window.setMemberRole=function(id,role){

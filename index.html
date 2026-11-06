@@ -293,6 +293,24 @@ html{scroll-behavior:smooth;}
 .flow-node.prov.dim rect{opacity:0.35;}
 .flow-edge{stroke:var(--border2);stroke-width:1.5;fill:none;}
 .flow-edge.active{stroke:var(--cyan);stroke-width:2;filter:drop-shadow(0 0 4px rgba(0,105,184,0.55));}
+
+/* interactive route demo */
+.flow-node.prov.fail rect{stroke:#d92d20;fill:rgba(217,45,32,0.10);}
+.flow-node.prov.fail .flow-label{fill:#d92d20;}
+.rd{margin-top:14px;border-top:1px dashed var(--border2);padding-top:14px}
+.rd-t{font-size:11px;letter-spacing:1.2px;text-transform:uppercase;color:var(--text3);font-weight:700;margin-bottom:8px;text-align:center}
+.rd-chips{display:flex;flex-wrap:wrap;gap:7px;justify-content:center}
+.rd-chip{font:inherit;font-size:12.5px;font-weight:700;padding:8px 12px;border-radius:100px;border:1.5px solid var(--border2);background:var(--card);color:var(--text);cursor:pointer;transition:all .15s}
+.rd-chip:hover{border-color:var(--cyan)}
+.rd-chip.on{background:var(--cyan);border-color:var(--cyan);color:#fff}
+.rd-out{margin-top:12px;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:12px 14px;font-size:12.5px;color:var(--text2);line-height:1.55;min-height:92px}
+.rd-out b{color:var(--text)}
+.rd-out .rd-m{font-size:14px;color:var(--cyan);font-weight:800}
+.rd-out .rd-bad{color:#d92d20;font-weight:700}
+.rd-out .rd-ok{color:var(--green);font-weight:700}
+.rd-code{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:10px;background:#0b1730;color:#cfe3ff;border-radius:10px;padding:9px 12px;font-family:var(--fm);font-size:12px}
+.rd-code button{font:inherit;font-size:11px;font-weight:700;border:0;border-radius:7px;padding:5px 9px;background:#1b3a6b;color:#fff;cursor:pointer}
+.rd-cta{display:block;text-align:center;margin-top:10px;font-weight:700;font-size:13px;color:var(--cyan);text-decoration:none}
 .diagram-caption{font-size:11px;color:var(--text3);margin-top:10px;text-align:center;line-height:1.5;}
 .diagram-caption b{color:var(--cyan);} .diagram-caption .gr{color:var(--green);}
 
@@ -395,6 +413,38 @@ html{scroll-behavior:smooth;}
   font-size:12.5px;color:#8899bb;line-height:1.6;text-align:center;}
 .swb-foot em{color:#e2eaff;font-style:normal;font-weight:600;}
 .swb-tile:focus-visible{outline:2px solid #ff9933;outline-offset:2px;}
+.ag-group{margin-bottom:14px}
+.ag-gh{font-family:var(--fm);font-size:10.5px;letter-spacing:1.4px;text-transform:uppercase;color:#8899bb;margin:0 2px 8px}
+.ag-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:9px}
+.ag-tile{display:flex;align-items:center;gap:10px;background:rgba(255,255,255,0.035);border:1px solid rgba(56,139,253,0.14);border-radius:13px;padding:11px 12px;color:#e2eaff;font:inherit;text-align:left;cursor:pointer;transition:border-color .2s,background .2s,transform .2s}
+.ag-tile:hover{background:rgba(255,255,255,0.07);border-color:rgba(255,153,51,0.45);transform:translateY(-2px)}
+.ag-tile.lit,.ag-tile[aria-pressed=true]{border-color:#ff9933;background:rgba(255,153,51,0.10)}
+.ag-tile:focus-visible{outline:2px solid #ff9933;outline-offset:2px}
+.ag-badge{width:30px;height:30px;border-radius:9px;background:#fff;color:#0d1528;font-family:var(--fd);font-weight:800;font-size:13px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.ag-badge img{width:20px;height:20px;object-fit:contain}
+.ag-tn{font-family:var(--fd);font-weight:700;font-size:13.5px;line-height:1.2}
+.ag-tk{display:block;font-family:var(--fm);font-weight:400;font-size:10px;color:#8899bb;margin-top:2px}
+.ag-flow{display:flex;justify-content:center;gap:34px;height:26px;margin:2px 0}
+.ag-flow i{width:2px;height:100%;background:linear-gradient(#ff9933 0 40%,transparent 40% 60%,#ff9933 60%);background-size:2px 14px;opacity:.7;animation:ag-down 1s linear infinite}
+@keyframes ag-down{from{background-position:0 0}to{background-position:0 14px}}
+.ag-hub{margin:0 auto;max-width:460px;text-align:center;background:linear-gradient(135deg,rgba(255,153,51,.18),rgba(56,139,253,.16));border:1px solid rgba(255,153,51,.5);border-radius:16px;padding:14px 16px}
+.ag-hub-t{font-family:var(--fd);font-weight:800;letter-spacing:3px;color:#fff;font-size:16px}
+.ag-hub-s{font-family:var(--fm);font-size:11px;color:#c7d3ee;margin-top:4px}
+.ag-labs{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin:2px 0 4px}
+.ag-lab{display:inline-flex;align-items:center;gap:7px;background:rgba(255,255,255,0.05);border:1px solid rgba(56,139,253,0.14);border-radius:999px;padding:5px 11px 5px 6px;color:#e2eaff;font-size:12px;font-family:var(--fm)}
+.ag-lab .swb-chip{width:20px;height:20px;border-radius:50%;margin:0}
+.ag-lab .swb-chip img{width:13px;height:13px}
+.ag-lab .swb-mono{font-size:11px}
+.ag-panel{margin-top:18px;border-top:1px solid rgba(56,139,253,0.14);padding-top:14px}
+.ag-panel-h{display:flex;flex-wrap:wrap;gap:6px 12px;align-items:baseline;color:#e2eaff;font-size:13.5px;margin-bottom:8px}
+.ag-panel-h span{color:#8899bb;font-size:12.5px}
+.ag-code{margin:0;background:#080f1f;border:1px solid rgba(56,139,253,0.18);border-radius:10px;padding:12px 14px;color:#cfe0ff;font-family:var(--fm);font-size:12px;line-height:1.65;overflow-x:auto;white-space:pre}
+.ag-actions{display:flex;gap:14px;align-items:center;margin-top:10px;flex-wrap:wrap}
+.ag-btn{background:#ff9933;color:#0d1528;border:0;border-radius:8px;padding:7px 14px;font-weight:700;font-size:12.5px;cursor:pointer}
+.ag-link{color:#ff9933;font-size:13px;text-decoration:none;font-weight:600}
+@media(max-width:520px){.ag-grid{grid-template-columns:repeat(2,1fr);gap:8px}.ag-tn{font-size:12.5px}}
+@media(prefers-reduced-motion:reduce){.ag-flow i{animation:none}}
+
 @media(max-width:520px){
   .swb-grid{grid-template-columns:repeat(2,1fr);gap:8px;}
   .swb-now{font-size:11px;}
@@ -785,8 +835,21 @@ html{scroll-behavior:smooth;}
 /* mobile: provider logos as one scrollable row so the headline is visible without scrolling */
 @media(max-width:640px){.prov-logos-top{flex-wrap:nowrap;overflow-x:auto;justify-content:flex-start;scrollbar-width:none;padding:0 14px 4px;margin:0 -14px}.prov-logos-top::-webkit-scrollbar{display:none}.prov-logos-top .prov-logo{flex-shrink:0}}
 .prov-after{padding-top:0;padding-bottom:0}
+.voices{display:flex;gap:16px;overflow-x:auto;scroll-snap-type:x mandatory;scroll-behavior:smooth;-webkit-overflow-scrolling:touch;scrollbar-width:none;padding:4px 2px 10px}
+.voices::-webkit-scrollbar{display:none}
+.voices .voice{flex:0 0 min(340px,86%);scroll-snap-align:start}
+@media(min-width:900px){.voices.few{justify-content:center}}
+.voice-dots{display:flex;gap:8px;justify-content:center;margin-top:10px}
+.voice-dots button{width:9px;height:9px;border-radius:50%;border:0;padding:0;background:rgba(15,30,60,.22);cursor:pointer}
+.voice-dots button[aria-current=true]{background:var(--saffron,#d16800);transform:scale(1.25)}
+.voice{background:var(--surface,#fff);border:1px solid var(--border,rgba(15,30,60,.1));border-radius:16px;padding:20px;display:flex;flex-direction:column;gap:12px}
+.voice-stars{color:#f5a623;letter-spacing:2px;font-size:16px}
+.voice-text{font-size:15px;line-height:1.55;color:var(--text,#0f1e3c)}
+.voice-who{font-size:13px;color:var(--text2,#4a5878);margin-top:auto}
+.voice-who b{color:var(--text,#0f1e3c)}
 </style>
 
+<script src="/assets/yk.js" defer></script>
 </head>
 <body>
 <canvas id="bg-canvas"></canvas>
@@ -911,6 +974,19 @@ html{scroll-behavior:smooth;}
             <g class="flow-node prov" id="p-local"><rect x="220" y="360" width="120" height="28" rx="7"></rect><text class="flow-label" x="280" y="378" text-anchor="middle">Local Models</text></g>
           </svg>
           <div class="diagram-caption" id="diagram-caption">Idle — send a request in the playground to watch a live route.</div>
+          <div class="rd" id="route-demo">
+            <div class="rd-t">Try it · pick what matters <span style="text-transform:none;letter-spacing:0;font-weight:500">(example routes; the live router chooses by current availability)</span></div>
+            <div class="rd-chips" role="group" aria-label="Routing mode">
+              <button type="button" class="rd-chip" data-mode="cheap">💰 Cheapest</button>
+              <button type="button" class="rd-chip" data-mode="fast">⚡ Fastest</button>
+              <button type="button" class="rd-chip" data-mode="reasoning">🧠 Smartest</button>
+              <button type="button" class="rd-chip" data-mode="failover">🛡 If a provider fails</button>
+            </div>
+            <div class="rd-out" id="rd-out" aria-live="polite">Tap a mode to see which model Yantra would pick and what it costs.</div>
+            <div class="rd-code"><span id="rd-code">"model": "auto:cheap"</span><button type="button" id="rd-copy">Copy</button></div>
+            <a class="rd-cta" href="dashboard.html">Get your free key and try it →</a>
+          </div>
+
         </div>
       </div>
     </div>
@@ -967,23 +1043,43 @@ html{scroll-behavior:smooth;}
     </div>
   </section>
 
-  <section class="section swb-section">
+  <section class="section swb-section" id="agents">
     <div class="wrap">
       <div class="swb-head">
-        <h2 class="s-title">Every lab, one key</h2>
-        <div class="s-sub">Model counts and floor prices are read live from the gateway — the same
-          numbers you get billed at.</div>
+        <h2 class="s-title">Your AI tools. One key.</h2>
+        <div class="s-sub">Any tool that lets you set an OpenAI-compatible base URL can run on Yantra. Pick one to see the setup.</div>
       </div>
 
-      <div class="swb" id="swb">
+      <div class="swb ag" id="ag">
         <div class="swb-bar">
           <span class="swb-live"><span class="swb-dot"></span>ROUTING</span>
-          <span class="swb-now mono" id="swb-now">—</span>
+          <span class="swb-now mono" id="ag-now">Tool → Yantra → any model</span>
         </div>
-        <div class="swb-grid" id="swb-grid"></div>
+
+        <div class="ag-group"><div class="ag-gh">Coding agents</div><div class="ag-grid" id="ag-g1"></div></div>
+        <div class="ag-group"><div class="ag-gh">Automation and agent builders</div><div class="ag-grid" id="ag-g2"></div></div>
+        <div class="ag-group"><div class="ag-gh">Frameworks and chat apps</div><div class="ag-grid" id="ag-g3"></div></div>
+
+        <div class="ag-flow" aria-hidden="true"><i></i><i></i><i></i></div>
+
+        <div class="ag-hub">
+          <div class="ag-hub-t">YANTRA</div>
+          <div class="ag-hub-s">One key · pay in ₹ with UPI · automatic failover</div>
+        </div>
+
+        <div class="ag-flow" aria-hidden="true"><i></i><i></i><i></i></div>
+
+        <div class="ag-labs" id="ag-labs"></div>
+
+        <div class="ag-panel" id="ag-panel" aria-live="polite">
+          <div class="ag-panel-h"><b id="ag-ptitle">Choose a tool above</b><span id="ag-phint"></span></div>
+          <pre class="ag-code" id="ag-code" tabindex="0">Click Cursor, Cline, n8n or any tile to see the exact settings.</pre>
+          <div class="ag-actions"><button type="button" class="ag-btn" id="ag-copy" hidden>Copy</button><a class="ag-link" id="ag-guide" href="docs.html" hidden>Full guide</a><a class="ag-link" href="dashboard.html" id="ag-key">Get a key</a></div>
+        </div>
+
         <div class="swb-foot">
-          One key reaches all of them. If a lab's own API errors, we retry the
-          <em>same model</em> on another host before suggesting anything else.
+          Setup screens change between versions, but it is always the same three things: base URL, API key, model id.
+          Tool names belong to their owners; Yantra is not affiliated with them.
         </div>
       </div>
     </div>
@@ -1058,6 +1154,26 @@ html{scroll-behavior:smooth;}
     </div>
   </section>
 </main>
+<section class="section" id="voices" hidden>
+    <div class="wrap">
+      <div class="section-head"><h2 class="s-title">What developers say</h2><div class="s-sub">Real feedback from people using Yantra, shared with their permission.</div></div>
+      <div class="voices" id="voices-grid" tabindex="0" aria-label="Feedback from developers"></div>
+      <div class="voice-dots" id="voice-dots" aria-hidden="true"></div>
+    </div>
+  </section>
+  <section class="section" id="trust">
+    <div class="wrap">
+      <div class="section-head"><h2 class="s-title">Built in India. Paid in rupees. Easy to trust.</h2><div class="s-sub">What you can check yourself before you add a single rupee.</div></div>
+      <div class="features">
+        <div class="feat"><div class="feat-icon sf">₹</div><div class="feat-title">Safe payments</div><div class="feat-desc">Top-ups go through Razorpay with UPI. Your UPI PIN and card details never reach us. Start from just ₹10.</div></div>
+        <div class="feat"><div class="feat-icon">◎</div><div class="feat-title">Every paisa visible</div><div class="feat-desc">Each response shows what it cost. Prices per million tokens are listed in rupees on the <a href="models.html" style="color:var(--saffron)">Models page</a>, with no hidden fees.</div></div>
+        <div class="feat"><div class="feat-icon">↯</div><div class="feat-title">See if something is down</div><div class="feat-desc">A public <a href="status.html" style="color:var(--saffron)">status page</a> shows provider health. If one model host fails, requests move to another automatically.</div></div>
+        <div class="feat"><div class="feat-icon">⚿</div><div class="feat-title">Clear rules</div><div class="feat-desc">Plain-language <a href="legal/refund.html" style="color:var(--saffron)">refund policy</a>, <a href="legal/terms.html" style="color:var(--saffron)">terms</a> and <a href="legal/privacy.html" style="color:var(--saffron)">privacy policy</a>. Your keys and balance stay yours.</div></div>
+        <div class="feat"><div class="feat-icon">⇄</div><div class="feat-title">No lock-in</div><div class="feat-desc">It speaks the OpenAI API. Change the base URL and key to try it, and change them back any time. Your code stays the same.</div></div>
+        <div class="feat"><div class="feat-icon">⌂</div><div class="feat-title">A real person behind it</div><div class="feat-desc">Yantra AI is built and run by Aditya Sunil Borgaonkar in Kolhapur, Maharashtra. Write to <a href="mailto:gettony3000@gmail.com" style="color:var(--saffron)">gettony3000@gmail.com</a>. I read every message.</div></div>
+      </div>
+    </div>
+  </section>
 <section class="section" id="faq">
     <div class="wrap">
       <div class="section-head"><h2 class="s-title">Common questions</h2><div class="s-sub">Everything people ask before their first API call.</div></div>
@@ -1079,6 +1195,11 @@ html{scroll-behavior:smooth;}
     <a href="openai-api-india.html" style="color:var(--text2)">OpenAI API in India</a>
     <a href="claude-api-india.html" style="color:var(--text2)">Claude API in India</a>
     <a href="ai-api-without-credit-card.html" style="color:var(--text2)">No credit card?</a>
+    <a href="guides.html" style="color:var(--text2)">Guides</a>
+    <a href="llm-api-pricing-india.html" style="color:var(--text2)">AI API pricing in ₹</a>
+    <a href="gemini-api-india.html" style="color:var(--text2)">Gemini API in India</a>
+    <a href="deepseek-api-india.html" style="color:var(--text2)">DeepSeek API in India</a>
+    <a href="n8n-openai-india.html" style="color:var(--text2)">n8n setup</a>
     <a href="status.html" style="color:var(--text2)">Status</a>
     <a href="mailto:gettony3000@gmail.com" style="color:var(--text2)">Contact</a>
   </div>
@@ -1463,6 +1584,82 @@ function animateRoute(routedAs, providerId, fellBack, opts){
   lightSeq(prefix, provSuffix);
   var cap=$(capId); if(cap) cap.innerHTML=caption;
 }
+
+
+/* ════════════ interactive route demo ════════════ */
+(function(){
+  var MODES={cheap:'auto:cheap',fast:'auto:fast',reasoning:'auto:reasoning',failover:'auto:reasoning'};
+  var timer=null, current=null, userTouched=false, cycle=['cheap','fast','reasoning','failover'], ci=0;
+  function blended(m){ return m.inr.in*0.6+m.inr.out*0.4; }
+  function pool(tag){
+    var out=[]; Object.keys(MODELS).forEach(function(id){ var m=MODELS[id]; if(m&&m.inr&&m.tags&&m.tags.indexOf(tag)>-1&&PROV2DIAG[m.provider]) out.push({id:id,m:m}); });
+    out.sort(function(a,b){return blended(a.m)-blended(b.m);});
+    return out;
+  }
+  function pick(mode){
+    if(mode==='cheap'){ var c=pool('cheap'); return c[0]; }
+    if(mode==='fast'){ var f=pool('fast'); var cheap=pool('cheap')[0]; for(var i=0;i<f.length;i++){ if(!cheap||f[i].id!==cheap.id) return f[i]; } return f[0]; }
+    var r=pool('reasoning'); if(!r.length) return null;
+    return r[Math.floor(r.length/2)];
+  }
+  function per1k(m){ /* 500 input + 300 output tokens per request, 1000 requests */ return (m.inr.in*500+m.inr.out*300)/1e6*1000; }
+  function inr(n){ return '₹'+(n<10?n.toFixed(2):Math.round(n).toLocaleString('en-IN')); }
+  function setCode(mode){ var c=$('rd-code'); if(c) c.textContent='"model": "'+MODES[mode]+'"'; }
+  function show(mode){
+    var out=$('rd-out'); if(!out) return;
+    current=mode;
+    var chips=document.querySelectorAll('#route-demo .rd-chip'); for(var i=0;i<chips.length;i++) chips[i].classList.toggle('on',chips[i].getAttribute('data-mode')===mode);
+    setCode(mode);
+    var p=pick(mode); if(!p){ return; }
+    var suf=PROV2DIAG[p.m.provider], prov=PROVIDERS[p.m.provider]?PROVIDERS[p.m.provider].label:p.m.provider;
+    var cap=$('diagram-caption');
+    if(mode==='failover'){
+      var alt=pool('reasoning').filter(function(x){return x.m.provider!==p.m.provider;});
+      var a=alt.length?alt[Math.floor(alt.length/2)]:null;
+      lightSeq('', suf);
+      setTimeout(function(){
+        if(current!=='failover') return;
+        var el=$(('p-'+suf)); if(el){ el.classList.remove('active'); el.classList.add('fail'); }
+        var edge=$('er-'+suf); if(edge) edge.classList.remove('active');
+        if(cap) cap.innerHTML='<b style="color:#d92d20">'+esc(prov)+' returned an error</b>';
+        out.innerHTML='<span class="rd-bad">Simulated: '+esc(prov)+' returns a 503.</span> Retrying…';
+      },1900);
+      setTimeout(function(){
+        if(current!=='failover'||!a) return;
+        var f=$('p-'+suf); if(f) f.classList.remove('fail');
+        lightSeq('', PROV2DIAG[a.m.provider]);
+        var ap=PROVIDERS[a.m.provider]?PROVIDERS[a.m.provider].label:a.m.provider;
+        if(cap) cap.innerHTML='Retried on <b>'+esc(a.m.label)+'</b> · '+esc(ap)+' <span class="sf">· failover</span>';
+        out.innerHTML='<span class="rd-ok">Your request still succeeded.</span><br>Yantra retried on <span class="rd-m">'+esc(a.m.label)+'</span> ('+esc(ap)+'). Your app saw one normal answer, and you were billed once.';
+      },3200);
+      return;
+    }
+    var f0=document.querySelector('#route-demo');
+    var pf=$('p-'+suf); Object.keys(PROV2DIAG).forEach(function(k){ var e=$('p-'+PROV2DIAG[k]); if(e) e.classList.remove('fail'); });
+    lightSeq('', suf);
+    if(cap) cap.innerHTML='Routed to <b>'+esc(p.m.label)+'</b> · '+esc(prov);
+    var why={cheap:'lowest cost per request',fast:'built for low latency',reasoning:'strong step-by-step reasoning'}[mode];
+    out.innerHTML='<span class="rd-m">'+esc(p.m.label)+'</span> via '+esc(prov)+' <span class="dim">· '+why+'</span><br>'
+      +'Price: <b>'+inr(p.m.inr.in)+'</b> in / <b>'+inr(p.m.inr.out)+'</b> out per 1M tokens<br>'
+      +'1,000 typical requests ≈ <b>'+inr(per1k(p.m))+'</b> <span class="dim">(500 in + 300 out tokens each)</span>';
+  }
+  function start(){
+    var box=$('route-demo'); if(!box) return;
+    box.addEventListener('click',function(e){
+      var b=e.target.closest?e.target.closest('.rd-chip'):null; if(!b) return;
+      userTouched=true; clearInterval(timer); show(b.getAttribute('data-mode'));
+    });
+    var cp=$('rd-copy'); if(cp) cp.addEventListener('click',function(){ userTouched=true; clearInterval(timer); copyText(($('rd-code').textContent||''),'Copied'); });
+    box.addEventListener('mouseenter',function(){ clearInterval(timer); });
+    // gentle auto-tour until the visitor interacts
+    setTimeout(function(){
+      if(userTouched) return;
+      show(cycle[ci++%cycle.length]);
+      timer=setInterval(function(){ if(userTouched){ clearInterval(timer); return; } show(cycle[ci++%cycle.length]); }, 6500);
+    }, 2500);
+  }
+  if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',start); else start();
+})();
 
 /* ════════════ models page ════════════ */
 var modelFilter='all';
@@ -2104,6 +2301,90 @@ function ykGetKey(){ window.location.href = 'dashboard.html'; }
       if(ch) draw();
     }).catch(function(){}).then(function(){clearTimeout(t);});
   }catch(e){}
+})();
+
+/* ---- real customer feedback (shown only when there is approved feedback) ---- */
+(function(){
+  try{
+    fetch('https://api.aitklabs.in/app/feedback/public').then(function(r){ return r.ok?r.json():null; }).then(function(d){
+      if(!d||!d.items||!d.items.length) return;
+      var g=document.getElementById('voices-grid'); if(!g) return;
+      d.items.slice(0,9).forEach(function(x){
+        var c=document.createElement('figure'); c.className='voice'; c.style.margin='0';
+        var st=document.createElement('div'); st.className='voice-stars'; st.setAttribute('aria-label',x.rating+' out of 5 stars'); st.textContent='\u2605'.repeat(x.rating)+'\u2606'.repeat(5-x.rating);
+        var q=document.createElement('blockquote'); q.className='voice-text'; q.style.margin='0'; q.textContent='\u201c'+x.message+'\u201d';
+        var w=document.createElement('figcaption'); w.className='voice-who'; var b=document.createElement('b'); b.textContent=x.name; w.appendChild(b); if(x.role) w.appendChild(document.createTextNode(' \u00b7 '+x.role));
+        c.appendChild(st); c.appendChild(q); c.appendChild(w); g.appendChild(c);
+      });
+      document.getElementById('voices').hidden=false;
+      var cards=g.children, n=cards.length, dots=document.getElementById('voice-dots'), cur=0, timer=null, paused=false;
+      if(n<=1){ dots.style.display='none'; return; }
+      var many = n>2;                                   /* with 1-2 cards there is nothing to rotate on wide screens */
+      if(!many) g.classList.add('few');
+      for(var i=0;i<n;i++){ (function(i){ var b=document.createElement('button'); b.type='button'; b.setAttribute('aria-label','Show feedback '+(i+1)); b.onclick=function(){ go(i,true); }; dots.appendChild(b); })(i); }
+      function mark(){ for(var i=0;i<dots.children.length;i++) dots.children[i].setAttribute('aria-current', i===cur?'true':'false'); }
+      function go(i,user){ cur=(i+n)%n; g.scrollTo({left:cards[cur].offsetLeft-g.offsetLeft-2,behavior:'smooth'}); mark(); if(user) restart(); }
+      function restart(){ clearInterval(timer); if(window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches) return; timer=setInterval(function(){ if(!paused&&!document.hidden) go(cur+1); },5000); }
+      g.addEventListener('scroll',function(){ var best=0,bd=1e9; for(var i=0;i<n;i++){ var d=Math.abs(cards[i].offsetLeft-g.offsetLeft-g.scrollLeft); if(d<bd){bd=d;best=i;} } if(best!==cur){cur=best;mark();} },{passive:true});
+      ['mouseenter','focusin','touchstart'].forEach(function(ev){ g.addEventListener(ev,function(){ paused=true; },{passive:true}); });
+      ['mouseleave','focusout','touchend'].forEach(function(ev){ g.addEventListener(ev,function(){ paused=false; },{passive:true}); });
+      mark(); restart();
+    }).catch(function(){});
+  }catch(e){}
+})();
+
+/* ---- AI tools that can run through Yantra ---- */
+(function(){
+  var BASE='https://api.aitklabs.in/v1', KEY='yk_live_YOUR_KEY';
+  function mid(){ try{ var k=Object.keys(MODELS).filter(function(x){return /deepseek/.test(x);})[0]||Object.keys(MODELS)[0]; return k||'MODEL_ID'; }catch(e){ return 'MODEL_ID'; } }
+  function gui(where,extra){ return function(m){ return 'Base URL: '+BASE+'\nAPI key:  '+KEY+'\nModel:    '+m+(extra?'\n'+extra:''); }; }
+  var TOOLS=[
+    {g:1,n:'Cursor',k:'AI code editor',b:'C',h:'Settings → Models → turn on "OpenAI API Key" and override the base URL.',c:gui(0,'(add the model id as a custom model)')},
+    {g:1,n:'Cline',k:'VS Code agent',b:'C',h:'Settings → API Provider → "OpenAI Compatible".',c:gui()},
+    {g:1,n:'Roo Code',k:'VS Code agent',b:'R',h:'Settings → API Provider → "OpenAI Compatible".',c:gui()},
+    {g:1,n:'Continue',k:'IDE assistant',b:'C',h:'Add this to your Continue config file.',c:function(m){ return 'models:\n  - name: Yantra\n    provider: openai\n    model: '+m+'\n    apiBase: '+BASE+'\n    apiKey: '+KEY; }},
+    {g:1,n:'Aider',k:'terminal pair programmer',b:'A',h:'Set two environment variables, then pick the model.',c:function(m){ return 'export OPENAI_API_BASE='+BASE+'\nexport OPENAI_API_KEY='+KEY+'\naider --model openai/'+m; }},
+    {g:2,n:'n8n',k:'workflow automation',b:'n',h:'Credentials → OpenAI API → set the Base URL.',guide:'n8n-openai-india.html',c:gui()},
+    {g:2,n:'Dify',k:'agent builder',b:'D',h:'Settings → Model Provider → "OpenAI-API-compatible".',c:gui()},
+    {g:2,n:'Flowise',k:'agent builder',b:'F',h:'ChatOpenAI node → connect credential → Additional Parameters → BasePath.',c:gui()},
+    {g:3,n:'LangChain',k:'Python / JS framework',b:'L',h:'Point ChatOpenAI at Yantra.',c:function(m){ return 'from langchain_openai import ChatOpenAI\n\nllm = ChatOpenAI(\n    base_url="'+BASE+'",\n    api_key="'+KEY+'",\n    model="'+m+'",\n)'; }},
+    {g:3,n:'LlamaIndex',k:'RAG framework',b:'L',h:'Use the OpenAI-like LLM class.',c:function(m){ return 'from llama_index.llms.openai_like import OpenAILike\n\nllm = OpenAILike(\n    api_base="'+BASE+'",\n    api_key="'+KEY+'",\n    model="'+m+'",\n    is_chat_model=True,\n)'; }},
+    {g:3,n:'CrewAI',k:'multi-agent framework',b:'C',h:'Give the LLM a base URL.',c:function(m){ return 'from crewai import LLM\n\nllm = LLM(\n    model="openai/'+m+'",\n    base_url="'+BASE+'",\n    api_key="'+KEY+'",\n)'; }},
+    {g:3,n:'Open WebUI',k:'self-hosted chat',b:'O',h:'Admin Settings → Connections → OpenAI API → add the URL and key.',c:gui()}
+  ];
+  var tiles=[], cur=-1;
+  function esc2(x){ return String(x).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];}); }
+  function show(i){
+    cur=i; var t=TOOLS[i], m=mid();
+    tiles.forEach(function(b,j){ b.setAttribute('aria-pressed', j===i?'true':'false'); });
+    var set=function(id,v){ var e=document.getElementById(id); if(e) e.textContent=v; };
+    set('ag-ptitle',t.n+' → Yantra'); set('ag-phint',t.h); set('ag-code',t.c(m)); set('ag-now',t.n+' → Yantra → '+m);
+    var cb=document.getElementById('ag-copy'); cb.hidden=false; cb.textContent='Copy';
+    var gd=document.getElementById('ag-guide'); if(t.guide){ gd.hidden=false; gd.href=t.guide; } else gd.hidden=true;
+  }
+  var host={1:'ag-g1',2:'ag-g2',3:'ag-g3'};
+  TOOLS.forEach(function(t,i){
+    var el=document.getElementById(host[t.g]); if(!el) return;
+    var b=document.createElement('button'); b.type='button'; b.className='ag-tile'; b.setAttribute('aria-pressed','false');
+    var slug=t.n.toLowerCase().replace(/[^a-z0-9]/g,'');
+    b.innerHTML='<span class="ag-badge" aria-hidden="true"><img src="assets/logos/tools/'+slug+'.png" alt="" loading="lazy" onerror="this.replaceWith(document.createTextNode(\''+esc2(t.b)+'\'))"></span><span class="ag-tn">'+esc2(t.n)+'<span class="ag-tk">'+esc2(t.k)+'</span></span>';
+    b.addEventListener('click',function(){ show(i); try{ykTrack('cta_agent')}catch(e){} });
+    el.appendChild(b); tiles[i]=b;
+  });
+  var cp=document.getElementById('ag-copy');
+  if(cp) cp.addEventListener('click',function(){ var txt=document.getElementById('ag-code').textContent; (navigator.clipboard?navigator.clipboard.writeText(txt):Promise.reject()).then(function(){ cp.textContent='Copied'; }).catch(function(){ cp.textContent='Select and copy'; }); try{ykTrack('copy_snippet')}catch(e){} });
+  // lab chips under the hub
+  var labs=document.getElementById('ag-labs');
+  if(labs){
+    var L=[['OpenAI','openai'],['Anthropic','anthropic'],['Google','google'],['DeepSeek','deepseek'],['Mistral','mistral'],['Meta','meta'],['xAI','xai'],['Moonshot','moonshot'],['NVIDIA','nvidia']];
+    labs.innerHTML=L.map(function(x){ return '<span class="ag-lab"><span class="swb-chip"><img src="assets/logos/'+x[1]+'.png" alt="" loading="lazy" onerror="this.parentElement.innerHTML=\'<span class=&quot;swb-mono&quot;>'+x[0].charAt(0)+'</span>\'"></span>'+x[0]+'</span>'; }).join('')+'<span class="ag-lab" style="padding-left:11px">+ 20 more labs</span>';
+  }
+  // gentle auto-highlight until the visitor picks something
+  var reduce=window.matchMedia&&matchMedia('(prefers-reduced-motion:reduce)').matches, hop=0, timer=null;
+  function tick(){ if(cur>=0){ clearInterval(timer); tiles.forEach(function(b){b.classList.remove('lit');}); return; } tiles.forEach(function(b){b.classList.remove('lit');}); var t=tiles[hop%tiles.length]; if(t){ t.classList.add('lit'); var n=document.getElementById('ag-now'); if(n&&cur<0) n.textContent=TOOLS[hop%tiles.length].n+' → Yantra → any model'; } hop++; }
+  if(!reduce && 'IntersectionObserver' in window){
+    new IntersectionObserver(function(es){ es.forEach(function(e){ if(e.isIntersecting&&!timer&&cur<0){ tick(); timer=setInterval(tick,1600); } else if(!e.isIntersecting&&timer){ clearInterval(timer); timer=null; } }); },{threshold:.2}).observe(document.getElementById('ag'));
+  }
 })();
 </script>
 </body>

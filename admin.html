@@ -57,6 +57,12 @@ td.em{color:var(--text);font-weight:600;}
 .pl-row{display:flex;justify-content:space-between;padding:7px 0;font-size:13.5px;border-bottom:1px solid var(--border);}
 .pl-row:last-child{border-bottom:none;padding-top:11px;font-weight:700;font-size:15px;}
 .pl-row .lbl{color:var(--text2);} .pl-row:last-child .lbl{color:var(--text);}
+.att{padding:10px 13px;border-radius:10px;font-size:13px;line-height:1.45;margin-bottom:8px;border:1px solid var(--border2);background:var(--card2);}
+.att.bad{border-color:rgba(255,84,112,.5);background:rgba(255,84,112,.08);} .att.warn{border-color:rgba(255,190,11,.45);background:rgba(255,190,11,.07);}
+.att b{margin-right:6px;} .st{font-weight:700;font-size:12px;} .st.operational{color:var(--green);} .st.degraded{color:var(--amber);} .st.outage{color:var(--red);} .st.no_data{color:var(--text3);}
+.hrs{display:inline-grid;grid-template-columns:repeat(24,5px);gap:1px;vertical-align:middle;} .hrs i{height:14px;border-radius:1px;background:#2a3550;}
+.hrs i.operational{background:#17a566;} .hrs i.degraded{background:#e0a100;} .hrs i.outage{background:#e0294f;}
+details.errs{margin-top:6px;font-size:12px;color:var(--text2);} details.errs summary{cursor:pointer;color:var(--cyan);} details.errs div{margin:4px 0 0 8px;font-family:var(--fm);font-size:11.5px;word-break:break-word;}
 .muted{color:var(--text3);font-size:11.5px;line-height:1.5;margin-top:9px;}
 </style>
 </head>
@@ -84,6 +90,30 @@ td.em{color:var(--text);font-weight:600;}
     </div>
 
     <div id="err"></div>
+
+    <div class="panel" id="fb-panel">
+      <h3>Customer feedback <span class="mono" style="font-weight:400;color:var(--text3);font-size:11.5px" id="fb-count"></span></h3>
+      <div class="muted">Only entries where the person allowed public display can be approved. Approved entries appear on the home page.</div>
+      <div id="fb-list" style="margin-top:10px">—</div>
+    </div>
+
+    <div class="panel" id="funnel-panel">
+      <h3>Visitors → customers <span class="mono" style="font-weight:400;color:var(--text3);font-size:11.5px">last 14 days, distinct browser sessions</span></h3>
+      <table><thead><tr><th>Step</th><th>Sessions</th><th>of previous step</th></tr></thead><tbody id="f-rows"><tr><td colspan="3">—</td></tr></tbody></table>
+      <div class="muted" style="margin-top:8px">Visits by source (home page)</div>
+      <div id="f-src" class="muted">—</div>
+    </div>
+
+    <div class="panel" id="health-panel">
+      <h3>Health <span class="mono" style="font-weight:400;color:var(--text3);font-size:11.5px" id="h-stamp"></span></h3>
+      <div id="h-att"></div>
+      <div class="grid" id="h-kpis" style="margin-top:10px"></div>
+      <div class="scroll"><table>
+        <thead><tr><th>Provider</th><th>Status</th><th>Last 15 min</th><th>24 h</th><th>Last OK</th><th>Last failure</th></tr></thead>
+        <tbody id="h-prov"><tr><td colspan="6">—</td></tr></tbody>
+      </table></div>
+      <div class="muted" id="h-foot"></div>
+    </div>
 
     <div class="grid">
       <div class="kpi"><div class="l">Registered users</div><div class="v cy" id="k-users">—</div><div class="n" id="k-users-n">—</div></div>
@@ -162,11 +192,38 @@ function load(fromGate){
       if(!r.ok) throw new Error('Server returned HTTP ' + r.status);
       return r.json();
     })
-    .then(render)
+    .then(function(d){ render(d); loadHealth(); loadFunnel(); loadFeedback(); })
     .catch(function(e){
       if(fromGate){ $('gate-err').innerHTML = '<div class="err">' + esc(e.message) + '</div>'; }
       else { $('err').innerHTML = '<div class="err">' + esc(e.message) + '</div>'; }
     });
+}
+
+var STEPS={view_home:'Visited the home page',cta_get_key:'Clicked "Generate your API key"',signup_view:'Saw the sign-up form',signup_submit:'Submitted sign-up',signup_done:'Account created',key_created:'Created an API key',playground_send:'Sent a first message (playground)',topup_start:'Started a top-up',topup_done:'Paid (top-up completed)'};
+function loadFunnel(){
+  fetch(BASE + '/app/admin/analytics?days=14', { headers: { 'x-admin-token': TOKEN } }).then(function(r){ return r.ok ? r.json() : null; }).then(function(d){
+    if(!d) return;
+    $('f-rows').innerHTML = d.funnel.map(function(s){ return '<tr><td>'+esc(STEPS[s.name]||s.name)+'</td><td class="mono">'+num(s.sessions)+'</td><td class="mono">'+(s.pct_of_previous==null?'—':s.pct_of_previous+'%')+'</td></tr>'; }).join('');
+    var src=d.by_source||{}; var parts=Object.keys(src).map(function(k){ var h=src[k].view_home; return [k,h?h.uniq:0]; }).filter(function(x){return x[1]>0;}).sort(function(a,b){return b[1]-a[1];});
+    $('f-src').textContent = parts.length ? parts.map(function(x){return x[0]+': '+num(x[1]);}).join('  ·  ') : 'No visits recorded yet.';
+  }).catch(function(){});
+}
+
+function loadFeedback(){
+  fetch(BASE + '/app/admin/feedback', { headers: { 'x-admin-token': TOKEN } }).then(function(r){ return r.ok ? r.json() : null; }).then(function(d){
+    if(!d) return; var el=$('fb-list'); $('fb-count').textContent = d.items.length + ' total';
+    if(!d.items.length){ el.textContent='No feedback yet.'; return; }
+    el.innerHTML = d.items.map(function(f){
+      var stars=new Array(f.rating+1).join('\u2605')+new Array(6-f.rating).join('\u2606');
+      var acts = f.public_ok ? ('<button onclick="fbSet(\''+f.id+'\',\'approved\')">Approve</button> ') : '<span class="muted">private</span> ';
+      acts += '<button onclick="fbSet(\''+f.id+'\',\'hidden\')">Hide</button>';
+      return '<div style="border-top:1px solid var(--border,#2a3350);padding:10px 0"><div><b>'+esc(f.display_name)+'</b>'+(f.role?' · '+esc(f.role):'')+' <span class="mono">'+stars+'</span> <span class="mono muted">'+esc(f.email||'')+'</span> <span class="mono">['+esc(f.status)+']</span></div><div style="margin:4px 0">'+esc(f.message)+'</div><div>'+acts+'</div></div>';
+    }).join('');
+  }).catch(function(){});
+}
+function fbSet(id,status){
+  fetch(BASE + '/app/admin/feedback/'+encodeURIComponent(id), { method:'POST', headers: { 'x-admin-token': TOKEN, 'Content-Type':'application/json' }, body: JSON.stringify({status:status}) })
+    .then(function(r){ return r.json().then(function(j){ if(!r.ok) throw new Error((j.error&&j.error.message)||'Failed'); }); }).then(loadFeedback).catch(function(e){ alert(e.message); });
 }
 
 function render(d){
@@ -218,6 +275,53 @@ function render(d){
   }).join('');
   $('t-daily').innerHTML = drows || '<tr><td colspan="3">No usage yet.</td></tr>';
 }
+
+// ── Health panel ───────────────────────────────────────────────
+function ago(ms){ if(!ms) return '—'; var s=Math.max(0,Math.round((Date.now()-ms)/1000)); if(s<90) return s+'s ago'; var m=Math.round(s/60); if(m<90) return m+' min ago'; var h=Math.round(m/60); return h<48 ? h+' h ago' : Math.round(h/24)+' d ago'; }
+var HLABEL={operational:'operational',degraded:'degraded',outage:'OUTAGE',no_data:'no traffic'};
+function loadHealth(){
+  if(!TOKEN) return;
+  fetch(BASE + '/app/admin/health', { headers: { 'x-admin-token': TOKEN } })
+    .then(function(r){ if(!r.ok) throw new Error('HTTP '+r.status+' (is the new server code uploaded?)'); return r.json(); })
+    .then(renderHealth)
+    .catch(function(e){ $('h-att').innerHTML = '<div class="att warn">Health feed unavailable: ' + esc(e.message) + '</div>'; });
+}
+function renderHealth(h){
+  $('h-stamp').textContent = ' · updated ' + new Date().toLocaleTimeString('en-IN');
+  var att = (h.attention||[]).map(function(a){
+    return '<div class="att ' + (a.level==='bad'?'bad':'warn') + '"><b>' + esc(a.provider) + '</b>' + esc(a.text) + '</div>';
+  }).join('');
+  $('h-att').innerHTML = att || '<div class="att" style="border-color:rgba(0,255,136,.4)"><b>All clear</b>No provider problems, no backup problems.</div>';
+
+  var s = h.server||{}, lag = s.lag||{}, b = h.backup||{}, d = h.db_file||{};
+  var kp = [
+    ['Server up', Math.round((s.uptime_min||0)/60*10)/10 + ' h', 'node ' + esc(s.node||'')],
+    ['Memory', (s.rss_mb||0) + ' MB', 'heap ' + (s.heap_mb||0) + ' MB'],
+    ['Longest freeze (5 min)', (lag.max_5min_ms||0) + ' ms', '60 min: ' + (lag.max_60min_ms||0) + ' ms'],
+    ['Last backup', b.found ? (b.age_min<90? b.age_min+' min ago' : Math.round(b.age_min/60)+' h ago') : 'none', b.found ? ('off-server: ' + esc(b.offsite||'unknown')) : 'run harden_server.sh'],
+    ['Database file', d.size_kb!=null ? d.size_kb + ' KB' : '—', d.modified_min_ago!=null ? 'saved ' + d.modified_min_ago + ' min ago' : '']
+  ];
+  $('h-kpis').innerHTML = kp.map(function(k){ return '<div class="kpi"><div class="l">'+k[0]+'</div><div class="v" style="font-size:19px">'+k[1]+'</div><div class="n">'+k[2]+'</div></div>'; }).join('');
+
+  $('h-prov').innerHTML = (h.providers||[]).map(function(p){
+    var w = p.last_15min||{};
+    var bars = '<span class="hrs">' + (p.hours||[]).map(function(x){ return '<i class="'+x+'"></i>'; }).join('') + '</span>';
+    var errs = (p.recent_errors||[]).length
+      ? '<details class="errs"><summary>' + p.recent_errors.length + ' recent error(s)</summary>' + p.recent_errors.map(function(e){
+          return '<div>' + ago(e.at) + ' · ' + esc(e.kind) + (e.status? ' ' + e.status : '') + ' · ' + esc(e.model||'') + ' — ' + esc(e.msg) + '</div>'; }).join('') + '</details>' : '';
+    return '<tr><td class="em">' + esc(p.name) + errs + '</td>'
+      + '<td><span class="st ' + p.status + '">' + (HLABEL[p.status]||p.status) + (p.host_demoted?' · demoted':'') + '</span></td>'
+      + '<td class="mono">' + w.ok + ' ok / ' + w.fail + ' fail' + (w.avg_ms!=null ? ' · ' + w.avg_ms + 'ms' : '') + '</td>'
+      + '<td>' + bars + (p.uptime_24h!=null ? ' <span class="mono">' + p.uptime_24h + '%</span>' : '') + '</td>'
+      + '<td>' + ago(p.last_ok) + '</td><td>' + ago(p.last_fail) + '</td></tr>';
+  }).join('') || '<tr><td colspan="6">No providers configured.</td></tr>';
+
+  var dead = (h.dead_models||[]).map(function(m){ return esc(m.id) + ' (' + esc(m.reason) + ')'; }).join('; ');
+  var dem = (h.demoted_hosts||[]).map(esc).join(', ');
+  $('h-foot').innerHTML = 'Public page: <a href="status.html" style="color:var(--cyan)">status.html</a> (shows only provider status and uptime, never errors or counts).'
+    + (dead ? '<br>Auto-disabled models (24 h): ' + dead : '') + (dem ? '<br>Temporarily demoted hosts: ' + dem : '');
+}
+setInterval(function(){ if(TOKEN && $('app').style.display!=='none') loadHealth(); }, 30000);
 
 $('tok').addEventListener('keydown', function(e){ if(e.key === 'Enter') unlock(); });
 if(TOKEN) load(false);

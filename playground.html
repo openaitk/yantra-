@@ -587,6 +587,7 @@ select.pg-sel:focus-visible,.pg-input:focus-visible,.pg-send:focus-visible,.pg-c
 @media(prefers-reduced-motion:reduce){.pg-start{transition:none}}
 </style>
 
+<script src="/assets/yk.js" defer></script>
 </head>
 <body>
 <canvas id="bg-canvas"></canvas>
@@ -819,6 +820,7 @@ var MODELS = {
   "qwen/qwen3.8-max": { provider:"qwen", label:"Qwen 3.8 Max", inr:{in:217.35,out:652.05}, ctx:1000000, tags:["reasoning","vision","code","tools","long-context","flagship"], blurb:"Alibaba's 2.4T-parameter flagship - 1M context, image + video input." },
   "minimax/minimax-m3.1-flash": { provider:"minimax", label:"MiniMax M3.1 Flash", inr:{in:16.31,out:65.21}, ctx:1000000, tags:["reasoning","vision","code","tools","long-context","cheap","fast"], blurb:"MiniMax's agent-tuned Flash (released Oct 19) - 1M context, very low cost." },
   "moonshot/kimi-k3.1-pro": { provider:"moonshot", label:"Kimi K3.1 Pro", inr:{in:217.35,out:1086.75}, ctx:1000000, tags:["reasoning","vision","code","tools","long-context","flagship"], blurb:"Moonshot's newest flagship - 1M context, native image + video understanding." },
+  "moonshot/kimi-k3.1-pro-highspeed": { provider:"moonshot", label:"Kimi K3.1 Pro (High-speed)", inr:{in:434.7,out:2173.5}, ctx:1000000, tags:["reasoning","vision","code","tools","long-context","fast"], blurb:"Kimi K3.1 Pro on the faster endpoint - same model, quicker replies, 2x the price." },
   "moonshot/kimi-k2.7-code": { provider:"moonshot", label:"Kimi K2.7 Code", inr:{in:103.5,out:434.7}, ctx:256000, tags:["code","tools","long-context"], blurb:"K2.6's coding-tuned sibling — same price, code-specialized." },
   "zai/glm-5.3": { provider:"zai", label:"GLM-5.3", inr:{in:151.8,out:478.4}, ctx:1000000, tags:["reasoning","code","tools","long-context"], blurb:"Z.AI's newest flagship — stronger coding and longer agent runs than 5.2, same price." },
   "zai/glm-5.2": { provider:"zai", label:"GLM-5.2", inr:{in:151.8,out:478.4}, ctx:1000000, tags:["reasoning","code","tools","long-context","cheap"], blurb:"Open-weight (MIT) — beats GPT-5.5 on SWE-bench Pro at a fraction of the cost." },
@@ -901,7 +903,7 @@ function loadCommunityModels(){
       // Only touch the figure when the catalog genuinely loaded. A failed
       // fetch must leave the existing value alone — otherwise a momentary
       // network problem silently reports the static-only count.
-      if(statEl && communityLoaded){ var total=Object.keys(MODELS).length+count; statEl.textContent = total>=350 ? '350+' : String(total); }
+      if(statEl && communityLoaded){ var total=Object.keys(MODELS).length+count; statEl.textContent = '350+'; }
       renderTicker();
       renderCommunityResults();
       if(typeof renderModels==='function') renderModels();
@@ -1208,6 +1210,7 @@ async function realChat(o){
     return b;
   }
   async function attempt(temp, maxtok){
+    try{ if(!sessionStorage.getItem('yk.sent')){ sessionStorage.setItem('yk.sent','1'); ykTrack('playground_send'); } }catch(_){}
     var r=await fetch(base+'/v1/chat/completions', {
       method:'POST',
       headers:{ 'Content-Type':'application/json', 'Authorization':'Bearer '+key },
@@ -1306,11 +1309,11 @@ function renderTicker(){
   // number, so show the same figure as the server-rendered stat card. Once
   // real data is in, report exactly what's there.
   var realTotal=Object.keys(MODELS).length+Object.keys(MODELS_COMMUNITY).length;
-  var modelCount=(!communityLoaded || realTotal>=350) ? '350+' : String(realTotal);
+  var modelCount='350+';
   var items=[
     ['MODELS', String(modelCount), false],
     ['ONE KEY', 'yk_live_…', true],
-    ['PROVIDERS', String(Object.keys(PROVIDERS).length-1), false],
+    ['PROVIDERS', '20+', false],
     ['BILLING', 'UPI · INR', true],
     ['API', 'OpenAI-compatible', false],
     ['ROUTING', 'auto · failover', true],

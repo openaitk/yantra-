@@ -1,6 +1,7 @@
 User-agent: *
 Allow: /
 Disallow: /dashboard.html
+Disallow: /admin.html
 
 # ── AI search / citation bots ────────────────────────────────────────────
 # These power real-time answers in ChatGPT Search, Claude, and Perplexity.
@@ -11,26 +12,32 @@ Disallow: /dashboard.html
 User-agent: OAI-SearchBot
 Allow: /
 Disallow: /dashboard.html
+Disallow: /admin.html
 
 User-agent: ChatGPT-User
 Allow: /
 Disallow: /dashboard.html
+Disallow: /admin.html
 
 User-agent: Claude-SearchBot
 Allow: /
 Disallow: /dashboard.html
+Disallow: /admin.html
 
 User-agent: Claude-User
 Allow: /
 Disallow: /dashboard.html
+Disallow: /admin.html
 
 User-agent: PerplexityBot
 Allow: /
 Disallow: /dashboard.html
+Disallow: /admin.html
 
 User-agent: Perplexity-User
 Allow: /
 Disallow: /dashboard.html
+Disallow: /admin.html
 
 # ── AI training bots ──────────────────────────────────────────────────────
 # Separate from the search bots above — these feed model training rather
@@ -43,17 +50,21 @@ Disallow: /dashboard.html
 User-agent: GPTBot
 Allow: /
 Disallow: /dashboard.html
+Disallow: /admin.html
 
 User-agent: ClaudeBot
 Allow: /
 Disallow: /dashboard.html
+Disallow: /admin.html
 
 User-agent: Google-Extended
 Allow: /
 Disallow: /dashboard.html
+Disallow: /admin.html
 
 User-agent: CCBot
 Allow: /
 Disallow: /dashboard.html
+Disallow: /admin.html
 
 Sitemap: https://apikeys.in/sitemap.xml

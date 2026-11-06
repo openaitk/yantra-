@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>System Status — Yantra AI</title>
+<meta name="description" content="Live status of the Yantra AI gateway and the AI providers behind it (OpenAI, Anthropic, Google, DeepSeek and more). See if something is down, and 24-hour history.">
+<link rel="canonical" href="https://apikeys.in/status.html">
+<meta property="og:title" content="System Status — Yantra AI">
+<meta property="og:description" content="Live provider health for the Yantra AI gateway.">
+<meta property="og:url" content="https://apikeys.in/status.html">
+<meta property="og:image" content="https://apikeys.in/assets/og-image.png">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png">
+<link rel="shortcut icon" href="assets/favicon.ico">
+<link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;700;800&family=JetBrains+Mono:wght@400;500&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#eaeff7; --card:#ffffff; --card2:#f2f6fd;
+  --border:rgba(15,40,90,0.14); --border2:rgba(15,40,90,0.26);
+  --cyan:#0069b8; --brand-c:#00d4ff; --brand-p:#9d4edd;
+  --text:#0f1e33; --text2:#4a5a75; --text3:#667791;
+  --ok:#00864c;  --ok-bg:rgba(0,148,83,0.10);
+  --warn:#8a5600; --warn-bg:rgba(217,140,0,0.14);
+  --bad:#c0173f; --bad-bg:rgba(209,0,87,0.10);
+  --none:#c9d3e3;
+  --fd:'Bricolage Grotesque',sans-serif; --fm:'JetBrains Mono',monospace; --fb:'Instrument Sans',sans-serif;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--bg);color:var(--text);font-family:var(--fb);min-height:100vh;-webkit-font-smoothing:antialiased;}
+a{color:inherit;text-decoration:none;}
+:focus-visible{outline:2px solid var(--cyan);outline-offset:3px;border-radius:4px;}
+.wrap{max-width:860px;margin:0 auto;padding:0 16px;}
+header.top{background:var(--card);border-bottom:1px solid var(--border);}
+header.top .wrap{display:flex;align-items:center;justify-content:space-between;height:60px;gap:12px;}
+.logo{display:flex;align-items:center;gap:10px;}
+.logo-icon{width:34px;height:34px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:17px;font-weight:800;color:#fff;background:linear-gradient(135deg,var(--brand-c),var(--brand-p));}
+.logo-name{font-family:var(--fd);font-weight:800;font-size:19px;letter-spacing:-.5px;}
+.logo-name em{color:var(--cyan);font-style:normal;}
+.links{display:flex;gap:16px;font-size:13.5px;font-weight:600;color:var(--text2);}
+.links a:hover{color:var(--cyan);}
+h1{font-family:var(--fd);font-weight:800;font-size:28px;letter-spacing:-.8px;margin:30px 0 6px;}
+.sub{color:var(--text2);font-size:14px;line-height:1.55;margin-bottom:18px;}
+
+.banner{display:flex;align-items:center;gap:14px;border-radius:16px;padding:18px 20px;border:1px solid var(--border);background:var(--card);}
+.banner .ico{width:38px;height:38px;border-radius:50%;flex:none;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:19px;color:#fff;}
+.banner .t{font-family:var(--fd);font-weight:800;font-size:19px;letter-spacing:-.4px;}
+.banner .d{font-size:13.5px;color:var(--text2);margin-top:2px;line-height:1.45;}
+.banner.operational{background:var(--ok-bg);border-color:rgba(0,148,83,.3);} .banner.operational .ico{background:var(--ok);}
+.banner.degraded{background:var(--warn-bg);border-color:rgba(217,140,0,.35);} .banner.degraded .ico{background:#c27a00;}
+.banner.outage,.banner.unreachable{background:var(--bad-bg);border-color:rgba(209,0,87,.3);} .banner.outage .ico,.banner.unreachable .ico{background:var(--bad);}
+.banner.loading .ico{background:var(--none);}
+
+.card{background:var(--card);border:1px solid var(--border);border-radius:16px;margin-top:16px;overflow:hidden;}
+.card h2{font-family:var(--fd);font-size:15px;font-weight:700;padding:15px 18px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;gap:10px;}
+.card h2 small{font-family:var(--fb);font-weight:500;font-size:12px;color:var(--text3);}
+.prov{padding:14px 18px;border-bottom:1px solid var(--border);}
+.prov:last-child{border-bottom:none;}
+.row{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;}
+.pname{font-weight:600;font-size:14.5px;}
+.pill{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:700;padding:3px 10px;border-radius:99px;white-space:nowrap;}
+.pill::before{content:"";width:7px;height:7px;border-radius:50%;background:currentColor;}
+.pill.operational{color:var(--ok);background:var(--ok-bg);}
+.pill.degraded{color:var(--warn);background:var(--warn-bg);}
+.pill.outage{color:var(--bad);background:var(--bad-bg);}
+.pill.no_data{color:var(--text2);background:rgba(15,40,90,0.07);}
+.bars{display:grid;grid-template-columns:repeat(24,1fr);gap:3px;margin-top:10px;}
+.bar{height:26px;border-radius:3px;background:var(--none);}
+.bar.operational{background:#17a566;} .bar.degraded{background:#e0a100;} .bar.outage{background:#e0294f;}
+.axis{display:flex;justify-content:space-between;font-size:11px;color:var(--text3);margin-top:4px;}
+.up{font-family:var(--fm);font-size:12px;color:var(--text2);}
+.empty{padding:16px 18px;color:var(--text2);font-size:13.5px;line-height:1.5;}
+.chips{display:flex;flex-wrap:wrap;gap:7px;padding:14px 18px;}
+.chip{font-family:var(--fm);font-size:12px;background:var(--card2);border:1px solid var(--border);border-radius:8px;padding:4px 9px;}
+.inc{padding:12px 18px;border-bottom:1px solid var(--border);font-size:13.5px;display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;}
+.inc:last-child{border-bottom:none;}
+.inc .when{color:var(--text3);font-size:12.5px;}
+.foot{color:var(--text3);font-size:12.5px;text-align:center;margin:22px 0 40px;line-height:1.7;}
+.legend{display:flex;gap:14px;flex-wrap:wrap;font-size:12px;color:var(--text2);padding:12px 18px;border-top:1px solid var(--border);}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:5px;vertical-align:-1px;}
+@media(max-width:520px){ h1{font-size:23px;} .links a:nth-child(n+3){display:none;} .banner{padding:15px;} .bar{height:22px;} }
+@media(prefers-reduced-motion:no-preference){ .bar{transition:opacity .2s;} .bar:hover{opacity:.7;} }
+</style>
+<script src="/assets/yk.js" defer></script>
+</head>
+<body>
+<header class="top"><div class="wrap">
+  <a class="logo" href="index.html"><span class="logo-icon">य</span><span class="logo-name">Yantra<em> AI</em></span></a>
+  <nav class="links" aria-label="Site"><a href="index.html">Home</a><a href="models.html">Models</a><a href="docs.html">Docs</a><a href="dashboard.html">Dashboard</a></nav>
+</div></header>
+
+<main class="wrap">
+  <h1>System status</h1>
+  <p class="sub">Live health of the Yantra API and the AI providers behind it. Measured from real requests, not a guess. If one provider has trouble, requests are re-routed to a healthy one automatically.</p>
+
+  <div id="banner" class="banner loading" role="status" aria-live="polite">
+    <div class="ico" id="b-ico">…</div>
+    <div><div class="t" id="b-t">Checking…</div><div class="d" id="b-d">Contacting the Yantra API.</div></div>
+  </div>
+
+  <section class="card" aria-labelledby="h-prov">
+    <h2 id="h-prov">Providers <small id="stamp"></small></h2>
+    <div id="providers"><div class="empty">Loading…</div></div>
+    <div class="legend" aria-hidden="true">
+      <span><i style="background:#17a566"></i>Operational</span><span><i style="background:#e0a100"></i>Some failures</span><span><i style="background:#e0294f"></i>Mostly failing</span><span><i style="background:var(--none)"></i>No traffic</span>
+    </div>
+  </section>
+
+  <section class="card" id="un-card" style="display:none" aria-labelledby="h-un">
+    <h2 id="h-un">Models temporarily unavailable</h2>
+    <div class="chips" id="unavail"></div>
+    <div class="empty" style="padding-top:0">Their provider is not serving them right now. Other models are unaffected, and <code>auto</code> routes around them.</div>
+  </section>
+
+  <section class="card" aria-labelledby="h-inc">
+    <h2 id="h-inc">Recent incidents</h2>
+    <div id="incidents"><div class="empty">Loading…</div></div>
+  </section>
+
+  <p class="foot">Updates every 30 seconds · Times shown in your local time zone<br>
+    Something not working that isn't shown here? Write to <a href="mailto:gettony3000@gmail.com" style="text-decoration:underline">gettony3000@gmail.com</a></p>
+</main>
+
+<script>
+(function(){
+  var API='https://api.aitklabs.in/status.json';
+  var $=function(id){return document.getElementById(id);};
+  var LABEL={operational:'Operational',degraded:'Some failures',outage:'Mostly failing',no_data:'No recent traffic'};
+  var BANNER={
+    operational:['✓','All systems operational','Everything is working normally.'],
+    degraded:['!','Partial disruption','One or more providers are having trouble. Requests are re-routed automatically, so most calls still succeed.'],
+    outage:['×','Major outage','Every provider with recent traffic is failing. We are investigating.'],
+    unreachable:['×','Cannot reach the Yantra API','The status feed did not answer. If your own requests are failing too, the gateway may be down. Check again in a minute.']
+  };
+  function setBanner(kind){
+    var b=BANNER[kind]; var el=$('banner');
+    el.className='banner '+kind; $('b-ico').textContent=b[0]; $('b-t').textContent=b[1]; $('b-d').textContent=b[2];
+  }
+  function ago(ms){
+    var s=Math.max(0,Math.round((Date.now()-ms)/1000));
+    if(s<60) return 'just now'; var m=Math.round(s/60); if(m<60) return m+' min ago';
+    var h=Math.round(m/60); if(h<48) return h+' h ago'; return Math.round(h/24)+' d ago';
+  }
+  function dur(a,b){ var m=Math.max(1,Math.round((b-a)/60000)); if(m<60) return m+' min'; var h=Math.floor(m/60); return h+' h '+(m%60)+' min'; }
+  function el(tag,cls,text){ var e=document.createElement(tag); if(cls) e.className=cls; if(text!=null) e.textContent=text; return e; }
+
+  function renderProviders(list){
+    var box=$('providers'); box.textContent='';
+    if(!list.length){ box.appendChild(el('div','empty','No providers are configured yet.')); return; }
+    list.forEach(function(p){
+      var row=el('div','prov');
+      var r=el('div','row');
+      r.appendChild(el('span','pname',p.name));
+      var right=el('span','row');
+      if(p.uptime_24h!=null) right.appendChild(el('span','up',p.uptime_24h.toFixed(2)+'% · 24 h'));
+      right.appendChild(el('span','pill '+p.status,LABEL[p.status]||p.status));
+      r.appendChild(right); row.appendChild(r);
+      var bars=el('div','bars'); bars.setAttribute('role','img');
+      var parts=[];
+      (p.hours||[]).forEach(function(h,i){
+        var b=el('div','bar '+h); var hrs=24-i;
+        var t=(hrs===1?'Last hour':hrs+' hours ago')+': '+(LABEL[h]||h);
+        b.title=t; bars.appendChild(b);
+      });
+      bars.setAttribute('aria-label',p.name+' hourly status for the last 24 hours. Currently '+(LABEL[p.status]||p.status)+'.');
+      row.appendChild(bars);
+      var ax=el('div','axis'); ax.appendChild(el('span',null,'24 h ago')); ax.appendChild(el('span',null,'now')); row.appendChild(ax);
+      box.appendChild(row);
+    });
+  }
+  function renderIncidents(list){
+    var box=$('incidents'); box.textContent='';
+    if(!list.length){ box.appendChild(el('div','empty','No incidents recorded recently.')); return; }
+    list.forEach(function(i){
+      var d=el('div','inc');
+      var left=el('span',null); left.appendChild(el('strong',null,i.provider+' · ')); left.appendChild(document.createTextNode(i.level==='outage'?'mostly failing':'some failures'));
+      d.appendChild(left);
+      d.appendChild(el('span','when',new Date(i.start).toLocaleString()+(i.end?' · lasted '+dur(i.start,i.end):' · ongoing')));
+      box.appendChild(d);
+    });
+  }
+  function render(d){
+    setBanner(d.overall==='outage'?'outage':d.overall==='degraded'?'degraded':'operational');
+    $('stamp').textContent='Updated '+ago(d.generated_at);
+    renderProviders(d.providers||[]);
+    renderIncidents(d.incidents||[]);
+    var un=d.unavailable_models||[]; $('un-card').style.display=un.length?'block':'none';
+    var c=$('unavail'); c.textContent=''; un.forEach(function(m){ c.appendChild(el('span','chip',m)); });
+  }
+  function load(){
+    var ctl=('AbortController' in window)?new AbortController():null;
+    var to=setTimeout(function(){ if(ctl) ctl.abort(); },10000);
+    fetch(API,{cache:'no-store',signal:ctl?ctl.signal:undefined})
+      .then(function(r){ if(!r.ok) throw new Error('HTTP '+r.status); return r.json(); })
+      .then(render)
+      .catch(function(){
+        setBanner('unreachable'); $('stamp').textContent='';
+        if(!$('providers').children.length || $('providers').textContent==='Loading…'){ $('providers').textContent=''; $('providers').appendChild(el('div','empty','Provider details are unavailable until the API answers.')); $('incidents').textContent=''; $('incidents').appendChild(el('div','empty','—')); }
+      })
+      .then(function(){ clearTimeout(to); });
+  }
+  load(); setInterval(load,30000);
+  document.addEventListener('visibilitychange',function(){ if(!document.hidden) load(); });
+})();
+</script>
+</body>
+</html>

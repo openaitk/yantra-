@@ -18,7 +18,18 @@
 - [Homepage](https://apikeys.in/): product overview, pricing model, how it works
 - [Models](https://apikeys.in/models.html): live, searchable catalog of all 350+ models with current INR pricing per million tokens
 - [Playground](https://apikeys.in/playground.html): try any model in the browser, no signup required — real routing and cost shown live
+- [Workspace](https://apikeys.in/workspace.html): multi-file project editor where an AI proposes changes as reviewable diffs; code stays in the browser
 - [Docs](https://apikeys.in/docs.html): base URL, auth, routing modes, response headers, error codes — everything needed to integrate
+
+## Guides (India-specific)
+
+- [Guides hub](https://apikeys.in/guides.html)
+- [LLM API pricing in India (₹ per 1M tokens)](https://apikeys.in/llm-api-pricing-india.html)
+- [Cheapest LLM APIs in India](https://apikeys.in/cheapest-llm-api-india.html)
+- [OpenAI API in India](https://apikeys.in/openai-api-india.html) · [Claude API in India](https://apikeys.in/claude-api-india.html) · [Gemini API in India](https://apikeys.in/gemini-api-india.html) · [DeepSeek API in India](https://apikeys.in/deepseek-api-india.html)
+- [OpenAI alternative for India](https://apikeys.in/openai-alternative-india.html) · [OpenRouter alternative for India](https://apikeys.in/openrouter-alternative-india.html)
+- [Use GPT, Claude and Gemini in n8n](https://apikeys.in/n8n-openai-india.html)
+- [Image generation API (FLUX) in India](https://apikeys.in/ai-image-generation-api-india.html)
 
 ## Typical questions this site answers
 
