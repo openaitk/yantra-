@@ -926,6 +926,32 @@ footer a:hover{color:var(--cyan)!important}
 .hero-points li{display:flex;align-items:center;gap:11px;font-weight:500}
 .hero-points li::before{content:'';width:20px;height:20px;border-radius:50%;flex-shrink:0;background:rgba(0,148,83,.12) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath d='M6 10.5l2.6 2.6L14 7.5' fill='none' stroke='%23009453' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center/20px no-repeat}
 @media(max-width:900px){.sec-tight{padding:30px 0}.hero-points{margin-top:22px;font-size:14px}}
+
+/* ── refinement pass 2 ── */
+.feat{flex-direction:column;gap:0;padding:28px}
+.feat-icon{margin-bottom:16px;color:var(--cyan);background:linear-gradient(135deg,rgba(0,105,184,.12),rgba(124,58,237,.09))!important;font-weight:700}
+.feat-icon.sf{color:var(--saffron);background:linear-gradient(135deg,rgba(209,104,0,.16),rgba(255,153,51,.10))!important;font-size:22px}
+.feat-title{font-size:18px;margin-bottom:8px}
+.feat-desc{font-size:14.5px;line-height:1.65}
+.feat-desc a{color:var(--saffron);font-weight:600;text-decoration:underline;text-decoration-color:rgba(209,104,0,.3);text-underline-offset:3px}
+.features{gap:20px}
+.step-icon svg{display:block}
+.ws-promo h2,.ws-promo .s-title{letter-spacing:-1.6px;line-height:1.06;margin-bottom:18px}
+.ws-promo p{margin-bottom:20px}
+.site-foot{border-top:1px solid var(--border);padding:64px 24px 110px;font-family:var(--fb);background:#fff}
+.sf-grid{max-width:1152px;margin:0 auto;display:grid;grid-template-columns:1.5fr 1fr 1fr 1fr;gap:40px}
+.sf-brand p{color:var(--text2);font-size:14px;line-height:1.65;margin-top:14px;max-width:300px}
+.sf-logo{display:flex;align-items:center;gap:10px;font-family:var(--fd);font-size:19px;letter-spacing:-.4px}
+.site-foot h4{font-family:var(--fm);font-size:11px;letter-spacing:1.6px;text-transform:uppercase;color:var(--text3);margin-bottom:14px;font-weight:700}
+.site-foot a{display:block;color:var(--text2);font-size:14px;padding:5px 0;transition:color .2s}
+.site-foot a:hover{color:var(--cyan)}
+.sf-copy{max-width:1152px;margin:48px auto 0;padding-top:22px;border-top:1px solid var(--border);color:var(--text3);font-size:12.5px}
+@media(max-width:900px){
+  .features{gap:14px}
+  .sf-grid{grid-template-columns:1fr 1fr;gap:32px 24px}
+  .sf-brand{grid-column:1/-1}
+  .site-foot{padding:48px 20px 120px}
+}
 </style>
 
 <script src="/assets/yk.js" defer></script>
@@ -1174,9 +1200,9 @@ footer a:hover{color:var(--cyan)!important}
     <div class="wrap">
       <div class="section-head"><h2 class="s-title">How it works</h2><div class="s-sub">Three steps from zero to your first completion.</div></div>
       <div class="steps">
-        <div class="step"><div class="step-n">01</div><div class="step-icon">⚿</div><div class="step-title">Generate an API key</div><div class="step-desc">Create a key in seconds. One <span class="mono">yk_live_…</span> key works for every model on the platform — no per-model credentials.</div></div>
+        <div class="step"><div class="step-n">01</div><div class="step-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="8" cy="15" r="4"/><path d="M11 12l9-9M16 7l3 3"/></svg></div><div class="step-title">Generate an API key</div><div class="step-desc">Create a key in seconds. One <span class="mono">yk_live_…</span> key works for every model on the platform — no per-model credentials.</div></div>
         <div class="step"><div class="step-n">02</div><div class="step-icon sf">₹</div><div class="step-title">Add credits with UPI</div><div class="step-desc">Top up in rupees by scanning a UPI QR or opening any UPI app. Balance is metered per token — pay only for what you use.</div></div>
-        <div class="step"><div class="step-n">03</div><div class="step-icon">▷</div><div class="step-title">Call one endpoint</div><div class="step-desc">Point the OpenAI SDK at the gateway. Pick a model or say <span class="mono">auto</span> and the routing engine chooses the best one, with failover.</div></div>
+        <div class="step"><div class="step-n">03</div><div class="step-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 4l13 8-13 8z"/></svg></div><div class="step-title">Call one endpoint</div><div class="step-desc">Point the OpenAI SDK at the gateway. Pick a model or say <span class="mono">auto</span> and the routing engine chooses the best one, with failover.</div></div>
       </div>
     </div>
   </section>
@@ -1228,12 +1254,12 @@ footer a:hover{color:var(--cyan)!important}
     <div class="wrap">
       <div class="section-head"><h2 class="s-title">Why Yantra</h2><div class="s-sub">A single, billed LLM API — one front door to the whole model ecosystem, paid in rupees over UPI.</div></div>
       <div class="features">
-        <div class="feat"><div class="feat-icon">⚿</div><div class="feat-title">One key, every model</div><div class="feat-desc">Stop juggling a dozen provider dashboards and secrets. Generate one key and reach GPT, Claude, Gemini, DeepSeek, Mistral and local models alike.</div></div>
-        <div class="feat"><div class="feat-icon">⇄</div><div class="feat-title">Intelligent routing + failover</div><div class="feat-desc">Ask for a capability — <span class="mono">auto:cheap</span>, <span class="mono">auto:reasoning</span>, <span class="mono">auto:fast</span> — and the engine routes to the right model, retrying on a sibling if a provider errors.</div></div>
-        <div class="feat"><div class="feat-icon">◎</div><div class="feat-title">OpenAI-compatible</div><div class="feat-desc">Drop-in <span class="mono">/v1/chat/completions</span>, streaming included. Change two lines — base URL and key — and your existing code just works.</div></div>
+        <div class="feat"><div class="feat-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="8" cy="15" r="4"/><path d="M11 12l9-9M16 7l3 3"/></svg></div><div class="feat-title">One key, every model</div><div class="feat-desc">Stop juggling a dozen provider dashboards and secrets. Generate one key and reach GPT, Claude, Gemini, DeepSeek, Mistral and local models alike.</div></div>
+        <div class="feat"><div class="feat-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h14l-3-3M20 16H6l3 3"/></svg></div><div class="feat-title">Intelligent routing + failover</div><div class="feat-desc">Ask for a capability — <span class="mono">auto:cheap</span>, <span class="mono">auto:reasoning</span>, <span class="mono">auto:fast</span> — and the engine routes to the right model, retrying on a sibling if a provider errors.</div></div>
+        <div class="feat"><div class="feat-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4"/></svg></div><div class="feat-title">OpenAI-compatible</div><div class="feat-desc">Drop-in <span class="mono">/v1/chat/completions</span>, streaming included. Change two lines — base URL and key — and your existing code just works.</div></div>
         <div class="feat"><div class="feat-icon sf">₹</div><div class="feat-title">Rupee billing over UPI</div><div class="feat-desc">No cards, no forex. Recharge with UPI and get transparent per-token pricing in INR, metered to the paisa.</div></div>
-        <div class="feat"><div class="feat-icon">↯</div><div class="feat-title">Cost-saving auto mode</div><div class="feat-desc">Let Yantra pick the cheapest model that satisfies the request, so routine calls cost a fraction of always-on flagship pricing.</div></div>
-        <div class="feat"><div class="feat-icon">⌂</div><div class="feat-title">Local & private models</div><div class="feat-desc">Route sensitive workloads to self-hosted Llama or Qwen on your own hardware — same key, same API, zero per-token cost.</div></div>
+        <div class="feat"><div class="feat-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13 2L4 14h7l-1 8 9-12h-7z"/></svg></div><div class="feat-title">Cost-saving auto mode</div><div class="feat-desc">Let Yantra pick the cheapest model that satisfies the request, so routine calls cost a fraction of always-on flagship pricing.</div></div>
+        <div class="feat"><div class="feat-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11l9-8 9 8M5 10v10h14V10"/></svg></div><div class="feat-title">Local & private models</div><div class="feat-desc">Route sensitive workloads to self-hosted Llama or Qwen on your own hardware — same key, same API, zero per-token cost.</div></div>
       </div>
     </div>
   </section>
@@ -1250,11 +1276,11 @@ footer a:hover{color:var(--cyan)!important}
       <div class="section-head"><h2 class="s-title">Built in India. Paid in rupees. Easy to trust.</h2><div class="s-sub">What you can check yourself before you add a single rupee.</div></div>
       <div class="features">
         <div class="feat"><div class="feat-icon sf">₹</div><div class="feat-title">Safe payments</div><div class="feat-desc">Top-ups go through Razorpay with UPI. Your UPI PIN and card details never reach us. Start from just ₹10.</div></div>
-        <div class="feat"><div class="feat-icon">◎</div><div class="feat-title">Every paisa visible</div><div class="feat-desc">Each response shows what it cost. Prices per million tokens are listed in rupees on the <a href="models.html" style="color:var(--saffron)">Models page</a>, with no hidden fees.</div></div>
-        <div class="feat"><div class="feat-icon">↯</div><div class="feat-title">See if something is down</div><div class="feat-desc">A public <a href="status.html" style="color:var(--saffron)">status page</a> shows provider health. If one model host fails, requests move to another automatically.</div></div>
-        <div class="feat"><div class="feat-icon">⚿</div><div class="feat-title">Clear rules</div><div class="feat-desc">Plain-language <a href="legal/refund.html" style="color:var(--saffron)">refund policy</a>, <a href="legal/terms.html" style="color:var(--saffron)">terms</a> and <a href="legal/privacy.html" style="color:var(--saffron)">privacy policy</a>. Your keys and balance stay yours.</div></div>
-        <div class="feat"><div class="feat-icon">⇄</div><div class="feat-title">No lock-in</div><div class="feat-desc">It speaks the OpenAI API. Change the base URL and key to try it, and change them back any time. Your code stays the same.</div></div>
-        <div class="feat"><div class="feat-icon">⌂</div><div class="feat-title">A real person behind it</div><div class="feat-desc">Yantra AI is built and run by Aditya Sunil Borgaonkar in Kolhapur, Maharashtra. Write to <a href="mailto:gettony3000@gmail.com" style="color:var(--saffron)">gettony3000@gmail.com</a>. I read every message.</div></div>
+        <div class="feat"><div class="feat-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4"/></svg></div><div class="feat-title">Every paisa visible</div><div class="feat-desc">Each response shows what it cost. Prices per million tokens are listed in rupees on the <a href="models.html" style="color:var(--saffron)">Models page</a>, with no hidden fees.</div></div>
+        <div class="feat"><div class="feat-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13 2L4 14h7l-1 8 9-12h-7z"/></svg></div><div class="feat-title">See if something is down</div><div class="feat-desc">A public <a href="status.html" style="color:var(--saffron)">status page</a> shows provider health. If one model host fails, requests move to another automatically.</div></div>
+        <div class="feat"><div class="feat-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="8" cy="15" r="4"/><path d="M11 12l9-9M16 7l3 3"/></svg></div><div class="feat-title">Clear rules</div><div class="feat-desc">Plain-language <a href="legal/refund.html" style="color:var(--saffron)">refund policy</a>, <a href="legal/terms.html" style="color:var(--saffron)">terms</a> and <a href="legal/privacy.html" style="color:var(--saffron)">privacy policy</a>. Your keys and balance stay yours.</div></div>
+        <div class="feat"><div class="feat-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h14l-3-3M20 16H6l3 3"/></svg></div><div class="feat-title">No lock-in</div><div class="feat-desc">It speaks the OpenAI API. Change the base URL and key to try it, and change them back any time. Your code stays the same.</div></div>
+        <div class="feat"><div class="feat-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11l9-8 9 8M5 10v10h14V10"/></svg></div><div class="feat-title">A real person behind it</div><div class="feat-desc">Yantra AI is built and run by Aditya Sunil Borgaonkar in Kolhapur, Maharashtra. Write to <a href="mailto:gettony3000@gmail.com" style="color:var(--saffron)">gettony3000@gmail.com</a>. I read every message.</div></div>
       </div>
     </div>
   </section>
@@ -1271,23 +1297,17 @@ footer a:hover{color:var(--cyan)!important}
       </div>
     </div>
   </section>
-<footer style="border-top:1px solid var(--border);padding:34px 20px 100px;text-align:center;font-family:var(--fb)">
-  <div style="display:flex;gap:22px;justify-content:center;flex-wrap:wrap;margin-bottom:14px;font-size:13px">
-    <a href="legal/terms.html" style="color:var(--text2)">Terms</a>
-    <a href="legal/privacy.html" style="color:var(--text2)">Privacy</a>
-    <a href="legal/refund.html" style="color:var(--text2)">Refund &amp; Cancellation</a>
-    <a href="openai-api-india.html" style="color:var(--text2)">OpenAI API in India</a>
-    <a href="claude-api-india.html" style="color:var(--text2)">Claude API in India</a>
-    <a href="ai-api-without-credit-card.html" style="color:var(--text2)">No credit card?</a>
-    <a href="guides.html" style="color:var(--text2)">Guides</a>
-    <a href="llm-api-pricing-india.html" style="color:var(--text2)">AI API pricing in ₹</a>
-    <a href="gemini-api-india.html" style="color:var(--text2)">Gemini API in India</a>
-    <a href="deepseek-api-india.html" style="color:var(--text2)">DeepSeek API in India</a>
-    <a href="n8n-openai-india.html" style="color:var(--text2)">n8n setup</a>
-    <a href="status.html" style="color:var(--text2)">Status</a>
-    <a href="mailto:gettony3000@gmail.com" style="color:var(--text2)">Contact</a>
+<footer class="site-foot">
+  <div class="sf-grid">
+    <div class="sf-brand">
+      <div class="sf-logo"><span class="logo-icon" style="width:32px;height:32px;font-size:15px;border-radius:9px">य</span><b>Yantra AI</b></div>
+      <p>One API key for every AI model. Built in India, paid in rupees over UPI.</p>
+    </div>
+    <div><h4>Product</h4><a href="models.html">Models &amp; pricing</a><a href="playground.html">Playground</a><a href="workspace.html">Workspace</a><a href="docs.html">Docs</a><a href="status.html">Status</a></div>
+    <div><h4>Guides</h4><a href="guides.html">All guides</a><a href="openai-api-india.html">OpenAI API in India</a><a href="claude-api-india.html">Claude API in India</a><a href="gemini-api-india.html">Gemini API in India</a><a href="deepseek-api-india.html">DeepSeek API in India</a><a href="n8n-openai-india.html">n8n setup</a></div>
+    <div><h4>Company</h4><a href="llm-api-pricing-india.html">AI API pricing in ₹</a><a href="ai-api-without-credit-card.html">No credit card?</a><a href="legal/terms.html">Terms</a><a href="legal/privacy.html">Privacy</a><a href="legal/refund.html">Refund &amp; Cancellation</a><a href="mailto:gettony3000@gmail.com">Contact</a></div>
   </div>
-  <div style="color:var(--text3);font-size:12px">© 2026 Yantra AI · Aditya Sunil Borgaonkar · Kolhapur, Maharashtra, India</div>
+  <div class="sf-copy">© 2026 Yantra AI · Aditya Sunil Borgaonkar · Kolhapur, Maharashtra, India</div>
 </footer>
 
 <!-- ════ MODALS ════ -->
