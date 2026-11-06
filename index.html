@@ -2344,6 +2344,7 @@ function ykGetKey(){ window.location.href = 'dashboard.html'; }
     {g:1,n:'Roo Code',k:'VS Code agent',b:'R',h:'Settings → API Provider → "OpenAI Compatible".',c:gui()},
     {g:1,n:'Continue',k:'IDE assistant',b:'C',h:'Add this to your Continue config file.',c:function(m){ return 'models:\n  - name: Yantra\n    provider: openai\n    model: '+m+'\n    apiBase: '+BASE+'\n    apiKey: '+KEY; }},
     {g:1,n:'Aider',k:'terminal pair programmer',b:'A',h:'Set two environment variables, then pick the model.',c:function(m){ return 'export OPENAI_API_BASE='+BASE+'\nexport OPENAI_API_KEY='+KEY+'\naider --model openai/'+m; }},
+    {g:1,n:'Hermes Agent',k:'Nous Research agent',b:'H',h:'Run `hermes model`, choose a custom OpenAI-compatible endpoint, and enter these values.',c:gui()},
     {g:2,n:'n8n',k:'workflow automation',b:'n',h:'Credentials → OpenAI API → set the Base URL.',guide:'n8n-openai-india.html',c:gui()},
     {g:2,n:'Dify',k:'agent builder',b:'D',h:'Settings → Model Provider → "OpenAI-API-compatible".',c:gui()},
     {g:2,n:'Flowise',k:'agent builder',b:'F',h:'ChatOpenAI node → connect credential → Additional Parameters → BasePath.',c:gui()},
