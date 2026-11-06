@@ -79,6 +79,12 @@
     <priority>0.6</priority>
   </url>
   <url>
+    <loc>https://apikeys.in/flux-tester.html</loc>
+    <lastmod>2026-11-06</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
     <loc>https://apikeys.in/gemini-api-india.html</loc>
     <lastmod>2026-11-05</lastmod>
     <changefreq>monthly</changefreq>
@@ -164,13 +170,13 @@
   </url>
   <url>
     <loc>https://apikeys.in/models/anthropic-claude-haiku-5-5.html</loc>
-    <lastmod>2026-10-11</lastmod>
+    <lastmod>2026-11-05</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://apikeys.in/models/anthropic-claude-opus-4-6.html</loc>
-    <lastmod>2026-10-11</lastmod>
+    <lastmod>2026-11-05</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
@@ -182,7 +188,7 @@
   </url>
   <url>
     <loc>https://apikeys.in/models/anthropic-claude-opus-5-5.html</loc>
-    <lastmod>2026-10-11</lastmod>
+    <lastmod>2026-11-05</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
@@ -194,7 +200,7 @@
   </url>
   <url>
     <loc>https://apikeys.in/models/anthropic-claude-sonnet-4-6.html</loc>
-    <lastmod>2026-10-11</lastmod>
+    <lastmod>2026-11-05</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
@@ -206,19 +212,19 @@
   </url>
   <url>
     <loc>https://apikeys.in/models/anthropic-claude-sonnet-5.html</loc>
-    <lastmod>2026-10-11</lastmod>
+    <lastmod>2026-11-05</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://apikeys.in/models/deepseek-deepseek-v4-1-flash.html</loc>
-    <lastmod>2026-10-11</lastmod>
+    <lastmod>2026-11-05</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://apikeys.in/models/deepseek-deepseek-v4-flash.html</loc>
-    <lastmod>2026-10-11</lastmod>
+    <lastmod>2026-11-05</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
@@ -266,19 +272,19 @@
   </url>
   <url>
     <loc>https://apikeys.in/models/google-gemini-2-5-pro.html</loc>
-    <lastmod>2026-10-11</lastmod>
+    <lastmod>2026-11-05</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://apikeys.in/models/google-gemini-3-1-flash-lite.html</loc>
-    <lastmod>2026-10-11</lastmod>
+    <lastmod>2026-11-05</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://apikeys.in/models/google-gemini-3-1-pro.html</loc>
-    <lastmod>2026-10-11</lastmod>
+    <lastmod>2026-11-05</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
@@ -290,7 +296,7 @@
   </url>
   <url>
     <loc>https://apikeys.in/models/google-gemini-3-5-flash.html</loc>
-    <lastmod>2026-10-11</lastmod>
+    <lastmod>2026-11-05</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
@@ -302,7 +308,7 @@
   </url>
   <url>
     <loc>https://apikeys.in/models/google-gemini-3-7-flash.html</loc>
-    <lastmod>2026-10-11</lastmod>
+    <lastmod>2026-11-05</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
@@ -344,13 +350,13 @@
   </url>
   <url>
     <loc>https://apikeys.in/models/mistral-mistral-medium-3-5.html</loc>
-    <lastmod>2026-10-11</lastmod>
+    <lastmod>2026-11-05</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://apikeys.in/models/mistral-mistral-small.html</loc>
-    <lastmod>2026-10-11</lastmod>
+    <lastmod>2026-11-05</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
@@ -416,13 +422,13 @@
   </url>
   <url>
     <loc>https://apikeys.in/models/openai-gpt-5-6-terra.html</loc>
-    <lastmod>2026-10-11</lastmod>
+    <lastmod>2026-11-05</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>https://apikeys.in/models/openai-gpt-6-1-sol.html</loc>
-    <lastmod>2026-10-11</lastmod>
+    <lastmod>2026-11-05</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
@@ -434,7 +440,13 @@
   </url>
   <url>
     <loc>https://apikeys.in/models/openai-gpt-6-luna.html</loc>
-    <lastmod>2026-10-11</lastmod>
+    <lastmod>2026-11-05</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://apikeys.in/models/openai-gpt-oss-120b.html</loc>
+    <lastmod>2026-11-06</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
