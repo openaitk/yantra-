@@ -847,6 +847,85 @@ html{scroll-behavior:smooth;}
 .voice-text{font-size:15px;line-height:1.55;color:var(--text,#0f1e3c)}
 .voice-who{font-size:13px;color:var(--text2,#4a5878);margin-top:auto}
 .voice-who b{color:var(--text,#0f1e3c)}
+
+/* ════ PREMIUM POLISH LAYER ════
+   Spacing rhythm, softer depth, tighter type, calmer motion.
+   Overrides only; remove this block to get the old look back. */
+body{background:
+  radial-gradient(900px 480px at 82% -80px,rgba(0,105,184,.10),transparent 70%),
+  radial-gradient(700px 420px at 6% 140px,rgba(124,58,237,.07),transparent 70%),var(--bg);
+  background-attachment:scroll;text-rendering:optimizeLegibility;font-feature-settings:"ss01","tnum" 0}
+#bg-canvas{opacity:.28}
+.wrap{padding:0 24px}
+/* nav */
+nav{background:rgba(255,255,255,.82);box-shadow:0 1px 0 rgba(15,40,90,.06),0 8px 30px -18px rgba(15,40,90,.25)}
+.ntab{font-weight:600;transition:color .2s,background .2s}
+.ntab.active,.ntab[aria-current]{background:#fff;box-shadow:0 1px 2px rgba(15,40,90,.08),0 4px 12px -6px rgba(15,40,90,.18)}
+/* hero */
+.hero{padding:34px 0 56px}
+.hero-grid{align-items:start;gap:56px}
+.hero-grid>div:first-child{padding-top:34px}
+.hero-h1{line-height:.98;letter-spacing:-2.4px;text-shadow:none;margin-bottom:24px}
+.hero-sub{font-size:clamp(16px,1.5vw,19px);line-height:1.7}
+.hero-badge{background:#fff;border-color:rgba(209,104,0,.22);box-shadow:0 2px 10px -4px rgba(209,104,0,.25)}
+.cta-primary{background:linear-gradient(180deg,#0a78d1,#0058b8);box-shadow:0 1px 0 rgba(255,255,255,.28) inset,0 10px 26px -8px rgba(0,88,184,.55);padding:16px 30px;letter-spacing:-.1px}
+.cta-primary:hover{transform:translateY(-2px);box-shadow:0 1px 0 rgba(255,255,255,.28) inset,0 16px 34px -8px rgba(0,88,184,.6)}
+.cta-secondary{background:#fff;border-color:var(--border2);box-shadow:0 1px 2px rgba(15,40,90,.06);padding:16px 28px}
+.cta-secondary:hover{background:#fff;border-color:rgba(0,105,184,.45);box-shadow:0 10px 24px -12px rgba(0,88,184,.35)}
+.hero-keyline{background:#0d1a2e;color:#9fb4d4;border-radius:12px;padding:13px 16px;font-size:12.5px;box-shadow:0 10px 30px -16px rgba(13,26,46,.6)}
+.hero-keyline b{color:#5ee0a0}
+.hero-keyline .k,.hero-keyline span{color:inherit}
+/* cards */
+.diagram-card{background:linear-gradient(180deg,#fff,#f3f7fd);border:1px solid rgba(15,40,90,.12);box-shadow:0 1px 2px rgba(15,40,90,.05),0 30px 70px -30px rgba(15,40,90,.35)}
+.step,.feat,.ct-box,.panel{border-color:rgba(15,40,90,.10);box-shadow:0 1px 2px rgba(15,40,90,.04),0 14px 34px -22px rgba(15,40,90,.28)}
+.step{padding:32px}
+.step-icon{width:52px;height:52px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-size:24px;margin-bottom:18px;background:linear-gradient(135deg,rgba(0,105,184,.12),rgba(124,58,237,.10));color:var(--cyan)}
+.step-icon.sf{background:linear-gradient(135deg,rgba(209,104,0,.16),rgba(255,153,51,.10));color:var(--saffron)}
+.step-title{font-size:20px;letter-spacing:-.3px}
+.feat{padding:28px}
+.feat-icon{width:48px;height:48px;border-radius:14px}
+.feat-title{letter-spacing:-.3px}
+.feat-desc{font-size:14px}
+/* section rhythm + headings */
+.section{padding:96px 0}
+.section-head{margin-bottom:56px}
+.s-label{letter-spacing:2.4px}
+.s-title{font-size:clamp(30px,4.2vw,50px);letter-spacing:-1.8px;line-height:1.04}
+.s-sub{font-size:17px;max-width:560px;line-height:1.65}
+/* chart card */
+.ct-box{padding:32px;border-radius:24px}
+.ct-foot{display:flex;flex-wrap:wrap;gap:6px 14px;justify-content:space-between;align-items:baseline;margin-top:18px;padding-top:16px;border-top:1px solid var(--border);font-size:12.5px;color:var(--text3);line-height:1.5}
+.ct-foot a{color:var(--cyan);font-weight:700;font-size:13px}
+.ct-foot a:hover{text-decoration:underline}
+.ct-bar{height:12px}
+/* agents */
+#agents .s-title{margin-bottom:12px}
+/* faq */
+#faq details,#faq .faq-item{border-radius:16px;box-shadow:0 1px 2px rgba(15,40,90,.04)}
+/* footer */
+footer{background:#fff}
+footer a{transition:color .2s}
+footer a:hover{color:var(--cyan)!important}
+/* focus + selection */
+:focus-visible{outline:2px solid #0a78d1;outline-offset:3px}
+@media(prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+@media(max-width:900px){
+  .hero-grid>div:first-child{padding-top:8px}
+  .hero{padding:20px 0 36px}
+  .section{padding:64px 0}
+  .section-head{margin-bottom:36px}
+  .wrap{padding:0 18px}
+  .ct-box{padding:22px 18px}
+  .step{padding:26px}
+  .hero-h1{letter-spacing:-1.8px}
+}
+
+.sec-tight{padding:44px 0}
+.ct{padding-bottom:36px}
+.hero-points{list-style:none;display:grid;gap:11px;margin-top:30px;font-size:15px;color:var(--text2)}
+.hero-points li{display:flex;align-items:center;gap:11px;font-weight:500}
+.hero-points li::before{content:'';width:20px;height:20px;border-radius:50%;flex-shrink:0;background:rgba(0,148,83,.12) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath d='M6 10.5l2.6 2.6L14 7.5' fill='none' stroke='%23009453' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center/20px no-repeat}
+@media(max-width:900px){.sec-tight{padding:30px 0}.hero-points{margin-top:22px;font-size:14px}}
 </style>
 
 <script src="/assets/yk.js" defer></script>
@@ -928,6 +1007,11 @@ html{scroll-behavior:smooth;}
           <div class="hero-keyline">
             <span class="k">$</span> curl <span class="org">https://api.aitklabs.in/v1/chat/completions</span> -H <span class="grn">"Authorization: Bearer yk_live_…"</span>
           </div>
+          <ul class="hero-points">
+            <li>No international card needed</li>
+            <li>OpenAI-compatible: change one line</li>
+            <li>Top up from ₹10 with UPI</li>
+          </ul>
         </div>
 
         <!-- SIGNATURE: live routing diagram -->
@@ -1012,7 +1096,7 @@ html{scroll-behavior:smooth;}
   })();
   </script>
 
-  <section class="section">
+  <section class="section sec-tight">
     <div class="wrap">
       <div class="stats-grid">
         <div class="stat-card"><div class="stat-n" id="stat-models">350+</div><div class="stat-l">Models, one key</div></div>
@@ -1024,7 +1108,7 @@ html{scroll-behavior:smooth;}
   </section>
 
 
-  <section class="section" style="padding-top:0">
+  <section class="section sec-tight" style="padding-top:0">
     <div class="wrap">
       <div class="trust-strip">
         <div class="trust-item">
@@ -1161,7 +1245,7 @@ html{scroll-behavior:smooth;}
       <div class="voice-dots" id="voice-dots" aria-hidden="true"></div>
     </div>
   </section>
-  <section class="section" id="trust">
+  <section class="section sec-tight" id="trust">
     <div class="wrap">
       <div class="section-head"><h2 class="s-title">Built in India. Paid in rupees. Easy to trust.</h2><div class="s-sub">What you can check yourself before you add a single rupee.</div></div>
       <div class="features">
