@@ -585,6 +585,47 @@ select.pg-sel:focus-visible,.pg-input:focus-visible,.pg-send:focus-visible,.pg-c
 .pg-start small{display:block;color:var(--text3);font-size:11.5px;margin-top:3px}
 @media(max-width:560px){.pg-empty{padding:28px 6px 8px}.pg-empty-inner h2{font-size:19px}.pg-starts{grid-template-columns:minmax(0,1fr)}}
 @media(prefers-reduced-motion:reduce){.pg-start{transition:none}}
+
+/* ════ playground: media tabs (speech, transcription, image, video, embeddings) ════ */
+.pgm-tabs{display:flex;gap:6px;overflow-x:auto;padding:0 0 12px;flex-shrink:0;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+.pgm-tabs::-webkit-scrollbar{display:none}
+.pgm-tab{flex:0 0 auto;padding:8px 15px;border-radius:999px;border:1px solid var(--border2);background:var(--card);color:var(--text2);font:600 13px var(--fb);cursor:pointer;white-space:nowrap;transition:all .15s}
+.pgm-tab:hover{color:var(--text);border-color:rgba(0,105,184,.45)}
+.pgm-tab.on{background:var(--cyan);border-color:var(--cyan);color:#fff}
+.pgm{display:none;flex:1;min-height:0;overflow-y:auto;padding:2px 2px 18px;-webkit-overflow-scrolling:touch}
+.pg-main.pgm-on .pgm{display:block}
+.pg-main.pgm-on .pg-bar,.pg-main.pgm-on .pg-price,.pg-main.pgm-on .pg-settings,.pg-main.pgm-on .pg-msgs,.pg-main.pgm-on .pg-chips,.pg-main.pgm-on .pg-input-row{display:none!important}
+.pg-cols.pgm-wide{grid-template-columns:minmax(0,1fr)}
+.pg-cols.pgm-wide .pg-side{display:none}
+.pgm-intro{font-size:13px;color:var(--text2);line-height:1.55;margin:0 0 14px}
+.pgm-intro b{color:var(--text)}
+.pgm .fld{margin-bottom:12px;background:none;border:0;box-shadow:none;padding:0;border-radius:0}
+.pgm-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-bottom:12px}
+.pgm-row .fld{margin-bottom:0}
+.pgm-sel,.pgm-in{width:100%;background:var(--card);border:1.5px solid var(--border2);color:var(--text);padding:10px 12px;border-radius:12px;font:600 13px var(--fb);outline:none;min-width:0}
+.pgm-sel:focus,.pgm-in:focus,.pgm-ta:focus{border-color:var(--cyan)}
+.pgm-ta{width:100%;min-height:110px;max-height:300px;resize:vertical;background:var(--card);border:1.5px solid var(--border2);border-radius:14px;padding:12px 14px;color:var(--text);font:14px/1.5 var(--fb);outline:none}
+.pgm-desc{font-size:12px;color:var(--text3);margin:6px 2px 0;line-height:1.5}
+.pgm-price{font-size:12.5px;color:var(--text2);margin:2px 2px 12px;line-height:1.55}
+.pgm-price b{font-family:var(--fm);color:var(--green)}
+.pgm-go{height:46px;padding:0 22px;border-radius:13px;border:none;background:linear-gradient(135deg,var(--cyan),#005599);color:#fff;font:700 14px var(--fb);cursor:pointer;transition:all .2s;max-width:100%}
+.pgm-go:hover{filter:brightness(1.1);transform:translateY(-1px)}
+.pgm-go:disabled{opacity:.45;cursor:not-allowed;transform:none}
+.pgm-st{font-size:13px;margin:12px 2px 0;line-height:1.5;color:var(--text2);min-height:18px}
+.pgm-st.err{color:#c0392b}.pgm-st.ok{color:var(--green)}
+.pgm-st a{color:inherit;text-decoration:underline}
+.pgm-res{margin-top:12px}
+.pgm-res audio,.pgm-res video{width:100%;max-width:640px;border-radius:12px;display:block}
+.pgm-imgs{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:10px}
+.pgm-imgs img{width:100%;height:auto;border-radius:12px;border:1px solid var(--border);display:block;background:var(--card)}
+.pgm-dl{display:inline-block;margin-top:8px;font-size:12.5px;font-weight:700;color:var(--cyan);text-decoration:none;cursor:pointer;background:none;border:0;padding:0;font-family:var(--fb)}
+.pgm-dl:hover{text-decoration:underline}
+.pgm-out{background:var(--card);border:1px solid var(--border2);border-radius:14px;padding:14px 16px;font-size:14px;line-height:1.65;white-space:pre-wrap;word-break:break-word}
+.pgm-pre{background:var(--card);border:1px solid var(--border2);border-radius:12px;padding:12px 14px;font:12px/1.6 var(--fm);overflow-x:auto;white-space:pre-wrap;word-break:break-all;margin:10px 0 0}
+.pgm-kv{display:flex;flex-wrap:wrap;gap:6px 18px;font-size:13px;color:var(--text2)}
+.pgm-kv b{font-family:var(--fm);color:var(--text)}
+.pgm-note{font-size:12px;color:var(--text3);margin-top:8px;line-height:1.5}
+@media(max-width:900px){.pgm-go{width:100%}.pgm{padding-bottom:96px}}
 </style>
 
 <script src="/assets/yk.js" defer></script>
@@ -638,6 +679,7 @@ select.pg-sel:focus-visible,.pg-input:focus-visible,.pg-send:focus-visible,.pg-c
     <div class="pg-shell">
       <div class="pg-cols">
         <div class="pg-main">
+          <div class="pgm-tabs" id="pgm-tabs" role="tablist" aria-label="Playground mode"><button class="pgm-tab on" data-t="chat" role="tab" aria-selected="true" onclick="pgmTab('chat')">Chat</button><button class="pgm-tab" data-t="speech" role="tab" aria-selected="false" onclick="pgmTab('speech')">Speech</button><button class="pgm-tab" data-t="stt" role="tab" aria-selected="false" onclick="pgmTab('stt')">Transcribe</button><button class="pgm-tab" data-t="image" role="tab" aria-selected="false" onclick="pgmTab('image')">Image</button><button class="pgm-tab" data-t="video" role="tab" aria-selected="false" onclick="pgmTab('video')">Video</button><button class="pgm-tab" data-t="emb" role="tab" aria-selected="false" onclick="pgmTab('emb')">Embeddings</button></div>
           <div class="pg-bar">
             <select class="pg-sel" id="pg-model" onchange="onPgModelChange()"></select>
             <button class="pg-iconbtn" id="pg-community-btn" onclick="openCommunitySearch()" title="Browse 300+ community models via OpenRouter">+</button>
@@ -673,6 +715,7 @@ select.pg-sel:focus-visible,.pg-input:focus-visible,.pg-send:focus-visible,.pg-c
             <input class="pg-input" id="pg-text" placeholder="Send a message…" onkeydown="if(event.key==='Enter'&&!event.shiftKey){event.preventDefault();sendChat();}">
             <button class="pg-send" id="pg-send" onclick="sendChat()">Send ▷</button>
           </div>
+          <div class="pgm" id="pgm"></div>
         </div>
         <div class="pg-side">
           <div class="side-card">
@@ -1443,5 +1486,272 @@ else init();
 function ykGetKey(){ window.location.href = 'dashboard.html'; }
 </script>
 
+<script>
+/* ════════════ playground: media tabs ════════════
+   Speech, transcription, image, video and embeddings. Uses the gateway's public model lists
+   and the visitor's own API key. The price is shown before anything is sent. */
+(function(){
+  var EP={speech:'/v1/audio/models',stt:'/v1/audio/transcription-models',image:'/v1/images/models',video:'/v1/videos/models',emb:'/v1/embeddings/models'};
+  var NAMES={speech:'Speech',stt:'Transcription',image:'Image',video:'Video',emb:'Embeddings'};
+  var cache={}, built={}, urls={}, cur='chat';
+
+  var GATEWAY='https://api.aitklabs.in';   /* same address the chat above uses */
+  function api(){ return GATEWAY; }
+  function g(id){ return document.getElementById(id); }
+  function esc(s){ return String(s==null?'':s).replace(/[&<>"]/g,function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
+  function money(v){ if(!(v>0)) return '₹0'; if(v<0.01) return '< ₹0.01'; return '₹'+v.toFixed(2); }
+  function key(){ var k=g('pgm-key'); return ((k&&k.value)||'').trim(); }
+  function sleep(ms){ return new Promise(function(r){ setTimeout(r,ms); }); }
+  function setSt(t,msg,kind){ var s=g('pgm-st-'+t); if(!s) return; s.className='pgm-st'+(kind?' '+kind:''); s.innerHTML=msg; }
+  function costOf(r){ var c=r.headers.get('x-yantra-cost-paise'); return c!=null&&c!==''?Number(c)/100:null; }
+  function keepUrl(t,u){ if(urls[t]){ try{ URL.revokeObjectURL(urls[t]); }catch(e){} } urls[t]=u; }
+  function opts(list,sel){ return list.map(function(v,i){ var val=Array.isArray(v)?v[0]:v, lab=Array.isArray(v)?v[1]:v; return '<option value="'+esc(val)+'"'+(val===sel?' selected':'')+'>'+esc(lab)+'</option>'; }).join(''); }
+  function modelOpts(list){ return list.map(function(m){ return '<option value="'+esc(m.id)+'">'+esc(m.label||m.id)+'</option>'; }).join(''); }
+  function unavailable(t){ return '<p class="pgm-intro">'+NAMES[t]+' is not available right now. Please try again later.</p>'; }
+
+  async function models(t){
+    if(cache[t]) return cache[t];
+    var r=await fetch(api()+EP[t]);
+    if(!r.ok) throw new Error('Could not load the model list.');
+    var d=await r.json(); cache[t]=d; return d;
+  }
+  async function errText(r){
+    var d=null; try{ d=await r.json(); }catch(e){}
+    var m=d&&d.error&&(d.error.message||d.error);
+    if(typeof m==='string'&&m) return m;
+    if(r.status===401) return 'That API key was not accepted. Create one in your Dashboard.';
+    return 'Request failed ('+r.status+'). Please try again.';
+  }
+  function auth(extra){ var h={Authorization:'Bearer '+key()}; for(var k in (extra||{})) h[k]=extra[k]; return h; }
+
+  /* wraps one "Generate" click: key check, disable button, show errors */
+  async function run(t,btn,fn){
+    if(!key()){ setSt(t,'Paste your API key above first. You can create one in your <a href="dashboard.html">Dashboard</a>.','err'); return; }
+    btn.disabled=true; setSt(t,'Working…',''); g('pgm-res-'+t).innerHTML='';
+    try{ await fn(); }
+    catch(e){ setSt(t,esc(e&&e.message||'Something went wrong. Please try again.'),'err'); }
+    btn.disabled=false;
+  }
+  function modelField(t,list){ return '<div class="fld"><label class="fld-label">Model</label><select class="pgm-sel" id="pgm-model-'+t+'">'+modelOpts(list)+'</select><div class="pgm-desc" id="pgm-desc-'+t+'"></div></div>'; }
+  function tail(t,btnLabel){ return '<div class="pgm-price" id="pgm-price-'+t+'" aria-live="polite"></div><button class="pgm-go" id="pgm-go-'+t+'">'+btnLabel+'</button><div class="pgm-st" id="pgm-st-'+t+'" aria-live="polite"></div><div class="pgm-res" id="pgm-res-'+t+'"></div>'; }
+
+  /* ───────── speech ───────── */
+  async function buildSpeech(c){
+    var d=await models('speech'), list=d.data||[];
+    if(!list.length){ c.innerHTML=unavailable('speech'); return; }
+    var max=d.max_characters_per_request||5000;
+    c.innerHTML=modelField('speech',list)
+      +'<div class="fld"><label class="fld-label">Voice</label><select class="pgm-sel" id="pgm-voice-speech"></select></div>'
+      +'<div class="fld"><label class="fld-label">Text</label><textarea class="pgm-ta" id="pgm-text-speech" maxlength="'+max+'" placeholder="Type what you want to hear…">Namaste! This is a test of Yantra AI text to speech.</textarea></div>'
+      +tail('speech','Generate speech ▷');
+    var ms=g('pgm-model-speech'), vs=g('pgm-voice-speech'), tx=g('pgm-text-speech');
+    function m(){ return list[ms.selectedIndex]; }
+    function fill(){ vs.innerHTML=opts(m().voices||[]); g('pgm-desc-speech').textContent=m().description||''; price(); }
+    function price(){ var n=tx.value.length, p=m().pricing_inr_per_1000_chars; g('pgm-price-speech').innerHTML='About <b>'+money(n/1000*p)+'</b> for '+n+' characters · '+money(p)+' per 1,000 characters.'; }
+    ms.onchange=fill; tx.oninput=price; fill();
+    g('pgm-go-speech').onclick=function(){
+      var text=tx.value.trim(); if(!text){ setSt('speech','Type some text first.','err'); return; }
+      run('speech',this,async function(){
+        var r=await fetch(api()+'/v1/audio/speech',{method:'POST',headers:auth({'Content-Type':'application/json'}),body:JSON.stringify({model:m().id,input:text,voice:vs.value})});
+        if(!r.ok) throw new Error(await errText(r));
+        var url=URL.createObjectURL(await r.blob()); keepUrl('speech',url);
+        g('pgm-res-speech').innerHTML='<audio controls autoplay src="'+url+'"></audio><a class="pgm-dl" href="'+url+'" download="speech.'+esc(m().format||'mp3')+'">Download audio</a>';
+        var cost=costOf(r); setSt('speech','Done'+(cost!=null?' · this cost '+money(cost):''),'ok');
+      });
+    };
+  }
+
+  /* ───────── transcription ───────── */
+  async function buildStt(c){
+    var d=await models('stt'), list=d.data||[];
+    if(!list.length){ c.innerHTML=unavailable('stt'); return; }
+    var maxMb=d.max_file_mb||25, file=null, dur=0;
+    c.innerHTML=modelField('stt',list)
+      +'<div class="fld"><label class="fld-label">Audio file <span class="dim">(mp3, wav, m4a, ogg… up to '+maxMb+' MB)</span></label><input class="pgm-in" id="pgm-file-stt" type="file" accept="audio/*,video/mp4,.m4a,.mp3,.wav,.ogg,.webm,.flac"></div>'
+      +tail('stt','Transcribe ▷');
+    var ms=g('pgm-model-stt'), fi=g('pgm-file-stt');
+    function m(){ return list[ms.selectedIndex]; }
+    function price(){
+      var p=m().pricing_inr_per_minute;
+      g('pgm-price-stt').innerHTML=dur>0
+        ? 'About <b>'+money(dur/60*p)+'</b> for '+Math.floor(dur/60)+':'+('0'+Math.round(dur%60)).slice(-2)+' of audio · '+money(p)+' per minute.'
+        : money(p)+' per minute. You are billed for the real length of the audio.';
+    }
+    ms.onchange=function(){ g('pgm-desc-stt').textContent=m().description||''; price(); };
+    g('pgm-desc-stt').textContent=m().description||''; price();
+    fi.onchange=function(){
+      file=fi.files&&fi.files[0]||null; dur=0; price();
+      if(!file) return;
+      if(file.size>maxMb*1048576){ setSt('stt','That file is '+(file.size/1048576).toFixed(1)+' MB. The limit is '+maxMb+' MB.','err'); return; }
+      setSt('stt','','');
+      try{ var a=new Audio(); a.preload='metadata'; var u=URL.createObjectURL(file); a.src=u; a.onloadedmetadata=function(){ if(isFinite(a.duration)) dur=a.duration; price(); URL.revokeObjectURL(u); }; }catch(e){}
+    };
+    g('pgm-go-stt').onclick=function(){
+      if(!file){ setSt('stt','Choose an audio file first.','err'); return; }
+      if(file.size>maxMb*1048576){ setSt('stt','That file is too large (limit '+maxMb+' MB).','err'); return; }
+      run('stt',this,async function(){
+        var fd=new FormData(); fd.append('model',m().id); fd.append('file',file,file.name||'audio');
+        var r=await fetch(api()+'/v1/audio/transcriptions',{method:'POST',headers:auth(),body:fd});
+        if(!r.ok) throw new Error(await errText(r));
+        var j=await r.json(), box=document.createElement('div'); box.className='pgm-out'; box.textContent=j.text||'(No speech found in this audio.)';
+        var cp=document.createElement('button'); cp.className='pgm-dl'; cp.textContent='Copy text';
+        cp.onclick=function(){ try{ navigator.clipboard.writeText(j.text||''); cp.textContent='Copied'; }catch(e){} };
+        var res=g('pgm-res-stt'); res.appendChild(box); res.appendChild(cp);
+        var cost=costOf(r); setSt('stt','Done'+(cost!=null?' · this cost '+money(cost):''),'ok');
+      });
+    };
+  }
+
+  /* ───────── image ───────── */
+  function mime(b64){ return b64.indexOf('/9j/')===0?'image/jpeg':(b64.indexOf('UklGR')===0?'image/webp':'image/png'); }
+  async function buildImage(c){
+    var d=await models('image'), list=d.data||[];
+    if(!list.length){ c.innerHTML=unavailable('image'); return; }
+    var SIZES=[['1024x1024','Square · 1024×1024'],['1344x768','Wide · 1344×768'],['768x1344','Tall · 768×1344']];
+    c.innerHTML=modelField('image',list)
+      +'<div class="fld"><label class="fld-label">Prompt</label><textarea class="pgm-ta" id="pgm-text-image" maxlength="4000" placeholder="Describe the picture…">A cozy chai stall on a rainy evening in Kolhapur, warm lights, detailed illustration</textarea></div>'
+      +'<div class="pgm-row"><div class="fld"><label class="fld-label">Size</label><select class="pgm-sel" id="pgm-size-image">'+opts(SIZES)+'</select></div>'
+      +'<div class="fld"><label class="fld-label">How many</label><select class="pgm-sel" id="pgm-n-image">'+opts([['1','1 image'],['2','2 images'],['4','4 images']])+'</select></div></div>'
+      +tail('image','Generate image ▷');
+    var ms=g('pgm-model-image'), sz=g('pgm-size-image'), nn=g('pgm-n-image'), tx=g('pgm-text-image');
+    function m(){ return list[ms.selectedIndex]; }
+    function est(){ var p=m().pricing_inr_per_image_1024, wh=sz.value.split('x'), k=m().price_scales_with_size?(wh[0]*wh[1])/1048576:1; return p*k*Number(nn.value); }
+    function price(){ g('pgm-price-image').innerHTML='This will cost <b>'+money(est())+'</b> · '+money(m().pricing_inr_per_image_1024)+' per 1024×1024 image.'; g('pgm-go-image').innerHTML='Generate image · '+money(est())+' ▷'; }
+    ms.onchange=function(){ g('pgm-desc-image').textContent=m().description||''; price(); };
+    sz.onchange=price; nn.onchange=price; g('pgm-desc-image').textContent=m().description||''; price();
+    g('pgm-go-image').onclick=function(){
+      var prompt=tx.value.trim(); if(!prompt){ setSt('image','Describe the picture first.','err'); return; }
+      run('image',this,async function(){
+        var r=await fetch(api()+'/v1/images/generations',{method:'POST',headers:auth({'Content-Type':'application/json'}),body:JSON.stringify({model:m().id,prompt:prompt,n:Number(nn.value),size:sz.value,response_format:'b64_json'})});
+        if(!r.ok) throw new Error(await errText(r));
+        var j=await r.json(), html='<div class="pgm-imgs">';
+        (j.data||[]).forEach(function(im,i){
+          if(!im.b64_json) return; var u='data:'+mime(im.b64_json)+';base64,'+im.b64_json;
+          html+='<div><img alt="Generated image '+(i+1)+'" src="'+u+'"><a class="pgm-dl" href="'+u+'" download="image-'+(i+1)+'.'+(mime(im.b64_json).split('/')[1]==='jpeg'?'jpg':mime(im.b64_json).split('/')[1])+'">Download</a></div>';
+        });
+        g('pgm-res-image').innerHTML=html+'</div>';
+        var cost=costOf(r); setSt('image','Done'+(cost!=null?' · this cost '+money(cost):''),'ok');
+      });
+    };
+  }
+
+  /* ───────── video ───────── */
+  async function buildVideo(c){
+    var d=await models('video'), list=d.data||[];
+    if(!list.length){ c.innerHTML=unavailable('video'); return; }
+    var maxS=d.max_seconds||10, ARS=d.aspect_ratios||['16:9','9:16','1:1'];
+    c.innerHTML=modelField('video',list)
+      +'<div class="fld"><label class="fld-label">Prompt</label><textarea class="pgm-ta" id="pgm-text-video" maxlength="2000" placeholder="Describe the clip…">A paper boat floating down a rainy street, soft cinematic light</textarea></div>'
+      +'<div class="pgm-row"><div class="fld"><label class="fld-label">Length (seconds)</label><input class="pgm-in" id="pgm-dur-video" type="number" min="1" max="'+maxS+'" step="1" value="'+Math.min(5,maxS)+'"></div>'
+      +'<div class="fld"><label class="fld-label">Quality</label><select class="pgm-sel" id="pgm-res-sel-video"></select></div>'
+      +'<div class="fld"><label class="fld-label">Shape</label><select class="pgm-sel" id="pgm-ar-video">'+opts(ARS,'16:9')+'</select></div></div>'
+      +tail('video','Generate video ▷');
+    var ms=g('pgm-model-video'), du=g('pgm-dur-video'), rs=g('pgm-res-sel-video'), ar=g('pgm-ar-video'), tx=g('pgm-text-video');
+    function m(){ return list[ms.selectedIndex]; }
+    function secs(){ var v=Math.round(Number(du.value)); return v>=1&&v<=maxS?v:0; }
+    function est(){ return (m().pricing_inr_per_second||{})[rs.value]*secs(); }
+    function price(){
+      var s=secs(), e=est();
+      g('pgm-price-video').innerHTML=s?('About <b>'+money(e)+'</b> for '+s+' seconds at '+esc(rs.value)+', plus a small fixed fee of about ₹1. You are charged only if the video is finished. Failed videos cost nothing.'):('Choose a length from 1 to '+maxS+' seconds.');
+      g('pgm-go-video').innerHTML=s?('Generate video · about '+money(e+1)+' ▷'):'Generate video ▷';
+    }
+    function fillRes(){ var rl=m().resolutions||[]; rs.innerHTML=opts(rl,rl.indexOf('720p')>-1?'720p':rl[0]); g('pgm-desc-video').textContent=m().description||''; price(); }
+    ms.onchange=fillRes; rs.onchange=price; du.oninput=price; fillRes();
+    g('pgm-go-video').onclick=function(){
+      var prompt=tx.value.trim(); if(!prompt){ setSt('video','Describe the clip first.','err'); return; }
+      if(!secs()){ setSt('video','Length must be a whole number from 1 to '+maxS+' seconds.','err'); return; }
+      run('video',this,async function(){
+        var r=await fetch(api()+'/v1/videos',{method:'POST',headers:auth({'Content-Type':'application/json'}),body:JSON.stringify({model:m().id,prompt:prompt,duration:secs(),resolution:rs.value,aspect_ratio:ar.value})});
+        if(!r.ok) throw new Error(await errText(r));
+        var job=await r.json(), t0=Date.now();
+        setSt('video','Started. This usually takes 1 to 3 minutes. You can open other tabs. It keeps running.','');
+        while(true){
+          await sleep(4000);
+          if(Date.now()-t0>12*60*1000) throw new Error('This is taking too long. You are only charged if the video finishes.');
+          var pr=await fetch(api()+'/v1/videos/'+encodeURIComponent(job.id),{headers:auth()});
+          if(!pr.ok) throw new Error(await errText(pr));
+          var s=await pr.json();
+          if(s.status==='failed') throw new Error((s.error&&s.error.message)||'The video could not be made. You were not charged.');
+          if(s.status==='completed'){
+            var u=esc(s.url||'');
+            g('pgm-res-video').innerHTML='<video controls playsinline autoplay loop src="'+u+'"></video><a class="pgm-dl" href="'+u+'" target="_blank" rel="noopener">Open or download</a><div class="pgm-note">The link is temporary, so download the video soon.</div>';
+            setSt('video','Done'+(s.cost_paise!=null?' · this cost '+money(s.cost_paise/100):''),'ok');
+            return;
+          }
+          setSt('video','Making your video… '+Math.round((Date.now()-t0)/1000)+'s','');
+        }
+      });
+    };
+  }
+
+  /* ───────── embeddings ───────── */
+  async function buildEmb(c){
+    var d=await models('emb'), list=d.data||[];
+    if(!list.length){ c.innerHTML=unavailable('emb'); return; }
+    var maxIn=d.max_inputs_per_request||256;
+    c.innerHTML=modelField('emb',list)
+      +'<div class="fld"><label class="fld-label">Text <span class="dim">(one item per line, up to '+maxIn+')</span></label><textarea class="pgm-ta" id="pgm-text-emb" placeholder="One sentence per line…">UPI payments for developers in India\nHow do I top up my wallet?\nThe weather in Kolhapur today</textarea></div>'
+      +tail('emb','Create embeddings ▷');
+    var ms=g('pgm-model-emb'), tx=g('pgm-text-emb');
+    function m(){ return list[ms.selectedIndex]; }
+    function lines(){ return tx.value.split('\n').map(function(s){ return s.trim(); }).filter(Boolean); }
+    function price(){
+      var L=lines(), ch=L.join('').length, tok=Math.ceil(ch/4), p=m().pricing_inr_per_million_tokens;
+      g('pgm-price-emb').innerHTML='About <b>'+money(tok/1e6*p)+'</b> for roughly '+tok+' tokens · '+money(p)+' per million tokens · '+(m().dimensions||'?')+' numbers per vector.';
+    }
+    ms.onchange=function(){ g('pgm-desc-emb').textContent=m().description||''; price(); };
+    tx.oninput=price; g('pgm-desc-emb').textContent=m().description||''; price();
+    g('pgm-go-emb').onclick=function(){
+      var L=lines(); if(!L.length){ setSt('emb','Type at least one line of text.','err'); return; }
+      if(L.length>maxIn){ setSt('emb','Too many lines (max '+maxIn+').','err'); return; }
+      run('emb',this,async function(){
+        var r=await fetch(api()+'/v1/embeddings',{method:'POST',headers:auth({'Content-Type':'application/json'}),body:JSON.stringify({model:m().id,input:L})});
+        if(!r.ok) throw new Error(await errText(r));
+        var j=await r.json(), vec=(j.data&&j.data[0]&&j.data[0].embedding)||[];
+        var kv=document.createElement('div'); kv.className='pgm-kv';
+        kv.innerHTML='<span>Vectors <b>'+(j.data||[]).length+'</b></span><span>Numbers each <b>'+vec.length+'</b></span><span>Tokens <b>'+((j.usage&&j.usage.total_tokens)||0)+'</b></span>';
+        var pre=document.createElement('pre'); pre.className='pgm-pre';
+        pre.textContent='First vector (first 8 numbers):\n['+vec.slice(0,8).map(function(x){ return Number(x).toFixed(5); }).join(', ')+', …]';
+        var cp=document.createElement('button'); cp.className='pgm-dl'; cp.textContent='Copy all vectors as JSON';
+        cp.onclick=function(){ try{ navigator.clipboard.writeText(JSON.stringify(j.data.map(function(x){ return x.embedding; }))); cp.textContent='Copied'; }catch(e){} };
+        var res=g('pgm-res-emb'); res.appendChild(kv); res.appendChild(pre); res.appendChild(cp);
+        var cost=costOf(r); setSt('emb','Done'+(cost!=null?' · this cost '+money(cost):''),'ok');
+      });
+    };
+  }
+
+  var BUILD={speech:buildSpeech,stt:buildStt,image:buildImage,video:buildVideo,emb:buildEmb};
+
+  function ensureShell(){
+    var root=g('pgm'); if(!root||root.getAttribute('data-ready')) return root;
+    root.setAttribute('data-ready','1');
+    root.innerHTML='<p class="pgm-intro">These run real requests on your account and cost real money. <b>The price is shown before you press the button.</b></p>'
+      +'<div class="fld"><label class="fld-label">API key <span class="dim">(create one in your <a href="dashboard.html" style="color:inherit;text-decoration:underline">Dashboard</a>)</span></label><input class="pgm-in" id="pgm-key" autocomplete="off" spellcheck="false" placeholder="yk_live_…  (uses your generated key)"></div>'
+      +Object.keys(NAMES).map(function(t){ return '<div class="pgm-p" id="pgm-p-'+t+'" hidden></div>'; }).join('');
+    g('pgm-key').addEventListener('input',function(){ var k=g('pg-key'); if(k){ k.value=this.value; try{ k.dispatchEvent(new Event('input',{bubbles:true})); }catch(e){} } });
+    return root;
+  }
+
+  window.pgmTab=async function(t){
+    cur=t; var media=t!=='chat';
+    var main=document.querySelector('.pg-main'), cols=document.querySelector('.pg-cols');
+    if(main) main.classList.toggle('pgm-on',media);
+    if(cols) cols.classList.toggle('pgm-wide',media);
+    document.querySelectorAll('.pgm-tab').forEach(function(b){ var on=b.getAttribute('data-t')===t; b.classList.toggle('on',on); b.setAttribute('aria-selected',on?'true':'false'); });
+    try{ history.replaceState(null,'',media?('#'+t):location.pathname+location.search); }catch(e){}
+    if(!media) return;
+    ensureShell();
+    var k=g('pgm-key'), pk=g('pg-key'); if(k&&pk&&!k.value&&pk.value) k.value=pk.value;
+    Object.keys(NAMES).forEach(function(n){ var p=g('pgm-p-'+n); if(p) p.hidden=(n!==t); });
+    var p=g('pgm-p-'+t); if(!p||built[t]) return;
+    p.innerHTML='<p class="pgm-intro">Loading…</p>';
+    try{ await BUILD[t](p); built[t]=true; }
+    catch(e){ p.innerHTML='<p class="pgm-intro">Could not load this tool ('+esc(e.message||'network error')+'). <a href="#" onclick="pgmTab(\''+t+'\');return false" style="color:var(--cyan)">Try again</a></p>'; }
+  };
+
+  var h=(location.hash||'').replace('#','');
+  if(EP[h]) setTimeout(function(){ window.pgmTab(h); },0);
+})();
+</script>
 </body>
 </html>
