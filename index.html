@@ -809,7 +809,7 @@ html{scroll-behavior:smooth;}
 .ct-bar i{display:block;height:100%;border-radius:10px;background:linear-gradient(90deg,var(--green),#e6a100 75%,#d16800)}
 .ct-v{font:800 15px var(--fm);text-align:right;color:var(--text)}
 .iq-sq{display:inline-block;width:14px;height:14px;border-radius:3px;background:#7c3aed;margin-right:10px;vertical-align:middle}
-.iq{display:flex;gap:10px;align-items:flex-end;height:290px;padding-top:14px;border-bottom:1px solid var(--border);margin-bottom:0}
+.iq{display:flex;gap:7px;align-items:flex-end;height:290px;padding-top:14px;border-bottom:1px solid var(--border);margin-bottom:0}
 .iq-c{flex:1 1 0;min-width:0;display:flex;flex-direction:column;justify-content:flex-end;height:100%;text-decoration:none;color:var(--text)}
 .iq-b{display:flex;align-items:flex-start;justify-content:center;height:var(--h);background:var(--c);border-radius:8px 8px 0 0;color:#fff;padding-top:8px;transition:filter .15s}
 .iq-b b{font:800 15px var(--fm)}
@@ -817,7 +817,7 @@ html{scroll-behavior:smooth;}
 .iq-lg img{width:22px;height:22px;object-fit:contain}
 .iq-z{width:22px;height:22px;border-radius:6px;background:#1f7ae0;color:#fff;font:800 13px/22px var(--fd);text-align:center;font-style:normal}
 .iq-c:hover .iq-b{filter:brightness(1.12)}
-.iq-n{font-size:12px;font-weight:600;line-height:1.25;text-align:center;margin:8px 0 -68px;height:60px;position:relative;top:0;color:var(--text2)}
+.iq-n{font-size:11.5px;font-weight:600;line-height:1.25;text-align:center;margin:8px 0 -68px;height:60px;position:relative;top:0;color:var(--text2)}
 .iq{margin-bottom:76px}
 @media(max-width:640px){
   .iq{flex-direction:column;align-items:stretch;height:auto;gap:8px;border-bottom:0;margin-bottom:18px;padding-top:4px}
@@ -952,6 +952,7 @@ footer a:hover{color:var(--cyan)!important}
   .sf-brand{grid-column:1/-1}
   .site-foot{padding:48px 20px 120px}
 }
+#beyond-chat .feat:last-child:nth-child(odd){grid-column:1/-1}
 </style>
 
 <script src="/assets/yk.js" defer></script>
@@ -1105,19 +1106,20 @@ footer a:hover{color:var(--cyan)!important}
   <section class="section ct" aria-labelledby="ct-h">
     <div class="wrap"><div class="ct-box">
       <h2 id="ct-h"><span class="iq-sq" aria-hidden="true"></span>Intelligence</h2>
-      <p>Independent benchmark scores for the models you can call with one key. Higher is better.</p>
+      <p>Independent benchmark scores for today’s leading models. Higher is better.</p>
       <div class="iq" id="iq" role="img" aria-label="Bar chart of Artificial Analysis Intelligence Index scores"></div>
-      <div class="ct-foot"><span>Source: Artificial Analysis Intelligence Index, October 2026. Each model at its highest reasoning setting.</span><a href="models.html">Compare prices for every model</a></div>
+      <div class="ct-foot"><span>Source: Artificial Analysis Intelligence Index, November 2026. Each model at its highest reasoning setting.</span><a href="models.html">Compare prices for every model</a></div>
     </div></div>
   </section>
   <script>
   (function(){
-    var D=[['Claude Opus 5.5','anthropic/claude-opus-5-5',58,'#c4694a'],['Kimi K3.1 Pro','moonshot/kimi-k3.1-pro',55,'#0069b8'],['Claude Fable 5.1','anthropic/claude-fable-5-1',53,'#c4694a'],['GPT-6 Astra','openai/gpt-6-astra',53,'#1c2733'],['Gemini 4 Argon','google/gemini-4-argon',53,'#2ba24c'],['GPT-6.1 Sol','openai/gpt-6.1-sol',52,'#1c2733'],['Grok 4.7','xai/grok-4.7',46,'#6a5acd'],['DeepSeek V4.1 Flash','deepseek/deepseek-v4.1-flash',45,'#2d4fd6'],['GLM-5.3','zai/glm-5.3',45,'#1f7ae0']];
-    var LG={anthropic:'Anthropic',openai:'OpenAI',google:'Google',xai:'xAI',deepseek:'DeepSeek',moonshot:'Moonshot',zai:'Z.ai'};
+    var D=[['Claude Fable 5.2','anthropic/claude-fable-5-2',65,'#c4694a'],['Gemini 4 Carbon','google/gemini-4-carbon',60,'#2ba24c'],['Claude Opus 5.5','anthropic/claude-opus-5-5',59,'#c4694a'],['GPT-6 Astra','openai/gpt-6-astra',57,'#1c2733'],['GPT-6.1 Sol','openai/gpt-6.1-sol',55,'#1c2733'],['Claude Sonnet 5.5','anthropic/claude-sonnet-5-5',55,'#c4694a'],['GPT-6.1 Terra','openai/gpt-6.1-terra',51,'#1c2733'],['Muse Wonder Full','meta/muse-wonder-full',50,'#1f8cf0'],['Claude Fable 5.1','anthropic/claude-fable-5-1',49,'#c4694a'],['Kimi K3.1 Pro','moonshot/kimi-k3.1-pro',46,'#0069b8'],['Muse Wonder','meta/muse-wonder',44,'#1f8cf0'],['Claude Haiku 5.5','anthropic/claude-haiku-5-5',36,'#c4694a'],['Muse Ember','meta/muse-ember',36,'#1f8cf0'],['Grok 4.7','xai/grok-4.7',35,'#6a5acd']];
+    var LG={anthropic:'Anthropic',openai:'OpenAI',google:'Google',xai:'xAI',deepseek:'DeepSeek',moonshot:'Moonshot',zai:'Z.ai',meta:'Meta'};
+    var PG=['anthropic-claude-fable-5', 'anthropic-claude-fable-5-1', 'anthropic-claude-haiku-4-5', 'anthropic-claude-haiku-5-5', 'anthropic-claude-opus-4-6', 'anthropic-claude-opus-4-8', 'anthropic-claude-opus-5', 'anthropic-claude-opus-5-5', 'anthropic-claude-sonnet-4-6', 'anthropic-claude-sonnet-5', 'anthropic-claude-sonnet-5-5', 'deepseek-deepseek-v4-1-flash', 'deepseek-deepseek-v4-flash', 'deepseek-deepseek-v4-pro', 'fireworks-glm-4p5-air', 'fireworks-gpt-oss-20b', 'fireworks-kimi-k3', 'fireworks-llama-v3p1-nemotron-70b-instruct', 'fireworks-nemotron-3-super-120b-a12b-bf16', 'fireworks-nemotron-3-ultra', 'fireworks-nemotron-nano-3-30b-a3b', 'fireworks-nemotron-nano-v2-12b-vl', 'fireworks-qwen3-7-plus', 'google-gemini-2-5-flash', 'google-gemini-2-5-pro', 'google-gemini-3-1-flash-lite', 'google-gemini-3-1-pro', 'google-gemini-3-5-flash', 'google-gemini-3-5-flash-lite', 'google-gemini-3-6-flash', 'google-gemini-3-7-flash', 'google-gemini-3-8-flash', 'google-gemini-4-argon', 'minimax-minimax-m3', 'minimax-minimax-m3-1-flash', 'mistral-codestral', 'mistral-mistral-large', 'mistral-mistral-large-4', 'mistral-mistral-medium-3-5', 'mistral-mistral-small', 'moonshot-kimi-k2-6', 'moonshot-kimi-k2-7-code', 'moonshot-kimi-k3', 'moonshot-kimi-k3-1-pro', 'moonshot-kimi-k3-1-pro-highspeed', 'openai-gpt-4o-mini', 'openai-gpt-5-4-mini', 'openai-gpt-5-5', 'openai-gpt-5-6-luna', 'openai-gpt-5-6-sol', 'openai-gpt-5-6-terra', 'openai-gpt-6-1-sol', 'openai-gpt-6-astra', 'openai-gpt-6-luna', 'openai-gpt-oss-120b', 'openai-gpt-oss-20b', 'qwen-qwen3-6-27b', 'qwen-qwen3-7-plus', 'qwen-qwen3-8-27b', 'qwen-qwen3-8-flash', 'qwen-qwen3-8-max', 'siliconflow-gpt-oss-120b', 'siliconflow-minimax-m3', 'siliconflow-qwen3-6-27b', 'xai-grok-4-5', 'xai-grok-4-6', 'xai-grok-4-7', 'zai-glm-4-5-air', 'zai-glm-5-2', 'zai-glm-5-3'];
     var h=document.getElementById('iq'); if(!h) return;
     h.innerHTML=D.map(function(d){
-      return '<a class="iq-c" href="models/'+d[1].replace(/[^a-z0-9]+/gi,'-').toLowerCase()+'.html" title="'+d[0]+': '+d[2]+'">'
-        +'<span class="iq-b" style="--h:'+Math.round(d[2]/60*100)+'%;--c:'+d[3]+'"><b>'+d[2]+'</b></span><span class="iq-n"><span class="iq-lg">'+(d[1].split('/')[0]==='zai'?'<i class="iq-z">Z</i>':'<img src="assets/logos/'+d[1].split('/')[0]+'.png" alt="'+LG[d[1].split('/')[0]]+' logo" loading="lazy" onerror="this.remove()">')+'</span>'+d[0]+'</span></a>';
+      return '<a class="iq-c" href="'+(PG.indexOf(d[1].replace(/[^a-z0-9]+/gi,'-').toLowerCase())>-1?'models/'+d[1].replace(/[^a-z0-9]+/gi,'-').toLowerCase()+'.html':'models.html')+'" title="'+d[0]+': '+d[2]+'">'
+        +'<span class="iq-b" style="--h:'+Math.round(d[2]/68*100)+'%;--c:'+d[3]+'"><b>'+d[2]+'</b></span><span class="iq-n"><span class="iq-lg">'+(d[1].split('/')[0]==='zai'?'<i class="iq-z">Z</i>':'<img src="assets/logos/'+d[1].split('/')[0]+'.png" alt="'+LG[d[1].split('/')[0]]+' logo" loading="lazy" onerror="this.remove()">')+'</span>'+d[0]+'</span></a>';
     }).join('');
   })();
   </script>
@@ -1196,6 +1198,18 @@ footer a:hover{color:var(--cyan)!important}
   </section>
 
 
+  <section class="section" id="beyond-chat">
+    <div class="wrap">
+      <div class="section-head"><h2 class="s-title">More than chat</h2><div class="s-sub">Images, video, voice, transcription and embeddings use the same key and the same ₹ wallet. <a href="models.html#media" style="color:var(--saffron)">See all models and prices</a>.</div></div>
+      <div class="features">
+        <div class="feat"><div class="feat-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="10" r="1.6"/><path d="M21 16l-5-5-8 9"/></svg></div><div class="feat-title">Image generation</div><div class="feat-desc">Text to image with FLUX models. <span class="mono">/v1/images/generations</span>, paid per image in ₹ and only when you get a picture back.</div></div>
+        <div class="feat"><div class="feat-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M11 5L6 9H3v6h3l5 4z"/><path d="M15.5 8.5a5 5 0 010 7M18.5 5.5a9 9 0 010 13"/></svg></div><div class="feat-title">Text to speech</div><div class="feat-desc">Natural voices from ElevenLabs, OpenAI, Gemini and Grok. <span class="mono">/v1/audio/speech</span>, priced per 1,000 characters.</div></div>
+        <div class="feat"><div class="feat-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0014 0M12 18v3"/></svg></div><div class="feat-title">Speech to text</div><div class="feat-desc">Transcribe audio with OpenAI and Grok models. <span class="mono">/v1/audio/transcriptions</span>, billed per minute of audio.</div></div>
+        <div class="feat"><div class="feat-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="13" height="14" rx="2"/><path d="M16 10l5-3v10l-5-3z"/></svg></div><div class="feat-title">Video generation</div><div class="feat-desc">Text to video with Grok Imagine. <span class="mono">/v1/videos</span>, priced per second in ₹ and charged only when the clip is ready.</div></div>
+        <div class="feat"><div class="feat-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="6" cy="7" r="2"/><circle cx="18" cy="6" r="2"/><circle cx="12" cy="18" r="2"/><path d="M7.7 8.2l3 8M16.5 7.7l-3.3 8.5M8 7h8"/></svg></div><div class="feat-title">Embeddings</div><div class="feat-desc">Vectors for search and RAG from OpenAI, Gemini and Mistral. <span class="mono">/v1/embeddings</span>, billed per input token. From about ₹2 per million tokens.</div></div>
+      </div>
+    </div>
+  </section>
   <section class="section">
     <div class="wrap">
       <div class="section-head"><h2 class="s-title">How it works</h2><div class="s-sub">Three steps from zero to your first completion.</div></div>
@@ -2448,6 +2462,7 @@ function ykGetKey(){ window.location.href = 'dashboard.html'; }
     {g:1,n:'Roo Code',k:'VS Code agent',b:'R',h:'Settings → API Provider → "OpenAI Compatible".',c:gui()},
     {g:1,n:'Continue',k:'IDE assistant',b:'C',h:'Add this to your Continue config file.',c:function(m){ return 'models:\n  - name: Yantra\n    provider: openai\n    model: '+m+'\n    apiBase: '+BASE+'\n    apiKey: '+KEY; }},
     {g:1,n:'Aider',k:'terminal pair programmer',b:'A',h:'Set two environment variables, then pick the model.',c:function(m){ return 'export OPENAI_API_BASE='+BASE+'\nexport OPENAI_API_KEY='+KEY+'\naider --model openai/'+m; }},
+    {g:1,n:'OpenCode',k:'terminal coding agent',b:'O',h:'Save this as opencode.json in your project (or ~/.config/opencode/opencode.json), then run opencode and pick the model with /models.',c:function(m){ return '{\n  "$schema": "https://opencode.ai/config.json",\n  "provider": {\n    "yantra": {\n      "npm": "@ai-sdk/openai-compatible",\n      "name": "Yantra AI",\n      "options": {\n        "baseURL": "'+BASE+'",\n        "apiKey": "'+KEY+'"\n      },\n      "models": {\n        "'+m+'": { "name": "'+m+'" }\n      }\n    }\n  },\n  "model": "yantra/'+m+'"\n}'; }},
     {g:1,n:'Hermes Agent',k:'Nous Research agent',b:'H',h:'Run `hermes model`, choose a custom OpenAI-compatible endpoint, and enter these values.',c:gui()},
     {g:2,n:'n8n',k:'workflow automation',b:'n',h:'Credentials → OpenAI API → set the Base URL.',guide:'n8n-openai-india.html',c:gui()},
     {g:2,n:'Dify',k:'agent builder',b:'D',h:'Settings → Model Provider → "OpenAI-API-compatible".',c:gui()},
@@ -2471,8 +2486,10 @@ function ykGetKey(){ window.location.href = 'dashboard.html'; }
   TOOLS.forEach(function(t,i){
     var el=document.getElementById(host[t.g]); if(!el) return;
     var b=document.createElement('button'); b.type='button'; b.className='ag-tile'; b.setAttribute('aria-pressed','false');
-    var slug=t.n.toLowerCase().replace(/[^a-z0-9]/g,'');
-    b.innerHTML='<span class="ag-badge" aria-hidden="true"><img src="assets/logos/tools/'+slug+'.png" alt="" loading="lazy" onerror="this.replaceWith(document.createTextNode(\''+esc2(t.b)+'\'))"></span><span class="ag-tn">'+esc2(t.n)+'<span class="ag-tk">'+esc2(t.k)+'</span></span>';
+    var nm=t.n.toLowerCase(), cands=[];
+    [nm.replace(/[^a-z0-9]/g,''), nm.split(/[^a-z0-9]+/)[0], nm.replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'')].forEach(function(n){ if(n) ['png','svg','webp','jpg','jpeg'].forEach(function(e){ var f=n+'.'+e; if(cands.indexOf(f)<0) cands.push(f); }); });
+    b.innerHTML='<span class="ag-badge" aria-hidden="true"><img alt="" loading="lazy"></span><span class="ag-tn">'+esc2(t.n)+'<span class="ag-tk">'+esc2(t.k)+'</span></span>';
+    (function(img,letter){ var k=0; img.onerror=function(){ k++; if(k<cands.length){ img.src='assets/logos/tools/'+cands[k]; } else { img.replaceWith(document.createTextNode(letter)); } }; img.src='assets/logos/tools/'+cands[0]; })(b.querySelector('.ag-badge img'),t.b);
     b.addEventListener('click',function(){ show(i); try{ykTrack('cta_agent')}catch(e){} });
     el.appendChild(b); tiles[i]=b;
   });

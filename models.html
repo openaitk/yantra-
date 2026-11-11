@@ -762,7 +762,7 @@ html{scroll-behavior:smooth;}
     <header class="mx-head">
       <div>
         <h1 class="s-title">Models</h1>
-        <p class="mx-sub" aria-live="polite"><span id="mx-count">Every model</span> behind one key. <a href="#media" style="color:var(--cyan)">Image &amp; voice models ↓</a> Prices are ₹ per 1M tokens. Set your monthly usage and every row shows what it would cost you.</p>
+        <p class="mx-sub" aria-live="polite"><span id="mx-count">Every model</span> behind one key. <a href="#media" style="color:var(--cyan)">Image, voice, transcription, video &amp; embedding models ↓</a> Prices are ₹ per 1M tokens. Set your monthly usage and every row shows what it would cost you.</p>
       </div>
       <a class="mx-status" id="mx-status" href="status.html" hidden><i></i><span></span></a>
     </header>
@@ -814,31 +814,49 @@ html{scroll-behavior:smooth;}
     </div>
   </div>
 </main>
-<section id="media" aria-label="Image and voice models">
+<section id="media" aria-label="Image, voice, transcription, video and embedding models">
   <h2>Image models</h2>
   <p class="md-sub">Text to image via <code>/v1/images/generations</code>. Pay per image in ₹, only when you get a result.</p>
   <div class="md-grid" id="md-img"><span class="md-empty">Loading…</span></div>
-  <h2>Voice models</h2>
-  <p class="md-sub">Text to speech via <code>/v1/audio/speech</code>. Priced per 1,000 characters.</p>
+  <h2 id="voice-models">Voice models (text to speech)</h2>
+  <p class="md-sub">Text to speech via <code>/v1/audio/speech</code>. Priced per 1,000 characters. Pass the model id as <code>model</code> and one of its voices as <code>voice</code>.</p>
   <div class="md-grid" id="md-tts"><span class="md-empty">Loading…</span></div>
   <p class="md-voices" id="md-voices"></p>
+  <h2 id="stt-models">Speech-to-text models</h2>
+  <p class="md-sub">Transcription via <code>/v1/audio/transcriptions</code> (multipart upload). Priced per minute of audio, files up to 25 MB.</p>
+  <div class="md-grid" id="md-stt"><span class="md-empty">Loading…</span></div>
+  <h2 id="video-models">Video models</h2>
+  <p class="md-sub">Text to video via <code>/v1/videos</code>. Start a job, then check it until it completes. Priced per second of video by resolution, and charged only when the video is ready. Clips up to 10 seconds.</p>
+  <div class="md-grid" id="md-vid"><span class="md-empty">Loading…</span></div>
+  <h2 id="embedding-models">Embedding models</h2>
+  <p class="md-sub">Vectors for search, RAG and clustering via <code>/v1/embeddings</code>. Priced per 1 million input tokens. Up to 256 texts per request.</p>
+  <div class="md-grid" id="md-emb"><span class="md-empty">Loading…</span></div>
+  <p class="md-voices">Example: <code>curl https://api.aitklabs.in/v1/embeddings -H "Authorization: Bearer yk_live_…" -H "Content-Type: application/json" -d '{"model":"openai/text-embedding-3-small","input":["hello"]}'</code> · <a href="docs.html" style="color:var(--cyan)">Full docs</a></p>
 </section>
 <script>
 (function(){
   var base='https://api.aitklabs.in';
   function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
-  function card(m,price,unit){
-    return '<div class="md-card"><div class="md-t">'+esc(m.label||m.id)+'</div><div class="md-id">'+esc(m.id)+'</div><div class="md-d">'+esc(m.description||'')+'</div><div class="md-p">₹'+esc(price)+' <small>'+unit+'</small></div></div>';
+  function card(m,price,unit,extra){
+    return '<div class="md-card"><div class="md-t">'+esc(m.label||m.id)+'</div><div class="md-id">'+esc(m.id)+'</div><div class="md-d">'+esc(m.description||'')+'</div>'+(extra?'<div class="md-d">'+extra+'</div>':'')+'<div class="md-p">₹'+esc(price)+' <small>'+unit+'</small></div></div>';
   }
   function load(path,el,fn,empty){
     fetch(base+path).then(function(r){return r.json();}).then(function(d){
       var list=(d&&d.data)||[];
       el.innerHTML=list.length?list.map(fn).join(''):'<span class="md-empty">'+empty+'</span>';
-      if(path.indexOf('audio')>-1&&d.voices&&d.voices.length){var v=document.getElementById('md-voices');if(v)v.textContent='Voices: '+d.voices.join(', ')+' · up to '+(d.max_characters_per_request||5000)+' characters per request.';}
+      if(path==='/v1/audio/models'){var v=document.getElementById('md-voices');if(v)v.textContent='Up to '+(d.max_characters_per_request||5000)+' characters per request.';}
     }).catch(function(){el.innerHTML='<span class="md-empty">Couldn\'t reach the live list right now. Try again in a moment.</span>';});
   }
   load('/v1/images/models',document.getElementById('md-img'),function(m){return card(m,m.pricing_inr_per_image_1024,'per 1024×1024 image'+(m.price_scales_with_size?' (scales with size)':''));},'Image models are being enabled. Check back soon.');
-  load('/v1/audio/models',document.getElementById('md-tts'),function(m){return card(m,m.pricing_inr_per_1000_chars,'per 1,000 characters');},'Voice models are being enabled. Check back soon.');
+  load('/v1/audio/models',document.getElementById('md-tts'),function(m){
+    var v=(m.voices&&m.voices.length)?'Voices: '+esc(m.voices.slice(0,14).join(', '))+(m.voices.length>14?' and '+(m.voices.length-14)+' more':''):'';
+    return card(m,m.pricing_inr_per_1000_chars,'per 1,000 characters',v);},'Voice models are being enabled. Check back soon.');
+  load('/v1/audio/transcription-models',document.getElementById('md-stt'),function(m){return card(m,m.pricing_inr_per_minute,'per minute of audio');},'Speech-to-text models are being enabled. Check back soon.');
+  load('/v1/videos/models',document.getElementById('md-vid'),function(m){
+    var pr=m.pricing_inr_per_second||{},ks=Object.keys(pr),low=pr[ks[0]];
+    var rows=ks.map(function(k){return esc(k)+' ₹'+esc(pr[k].toFixed(2))+'/sec';}).join(' · ');
+    return card(m,low.toFixed(2),'per second, from '+esc(ks[0]),rows);},'Video models are being enabled. Check back soon.');
+  load('/v1/embeddings/models',document.getElementById('md-emb'),function(m){return card(m,m.pricing_inr_per_million_tokens,'per 1M tokens',esc(m.dimensions)+' dimensions'+(m.supports_dimensions_param?' (can be shortened)':'')+' · up to '+esc(m.max_input_tokens)+' tokens per text');},'Embedding models are being enabled. Check back soon.');
   if(location.hash==='#media'){setTimeout(function(){var e=document.getElementById('media');if(e)e.scrollIntoView();},400);}
 })();
 </script>

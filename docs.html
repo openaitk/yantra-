@@ -567,6 +567,72 @@ html{scroll-behavior:smooth;}
 .toast-note{display:none;}
 .toast-note.on{display:flex;flex-direction:column;}
 .page-head .s-sub{margin-left:0;margin-right:0;max-width:64ch;font-size:15px}
+
+/* ═══ DOCS PAGE (dx-) ═══ */
+html{scroll-behavior:smooth}
+.dx-head{margin-bottom:26px}
+.dx-head .s-title{font-size:clamp(30px,4vw,44px);margin-bottom:10px}
+.dx-sub{color:var(--text2);font-size:16px;line-height:1.65;max-width:62ch;margin:0}
+.dx-layout{display:grid;grid-template-columns:210px minmax(0,1fr);gap:44px;align-items:start}
+.dx-toc{position:sticky;top:calc(var(--nav-h) + 20px);display:flex;flex-direction:column;gap:2px;padding-bottom:20px;max-height:calc(100vh - var(--nav-h) - 40px);overflow-y:auto}
+.dx-toc-group{font-size:11px;font-weight:700;letter-spacing:.9px;text-transform:uppercase;color:var(--text3);margin:16px 0 6px 12px}
+.dx-toc-group:first-child{margin-top:0}
+.dx-toc a{display:block;padding:7px 12px;border-radius:9px;font-size:14px;color:var(--text2);border-left:2px solid transparent;transition:background .15s,color .15s}
+.dx-toc a:hover{background:rgba(0,105,184,.06);color:var(--text)}
+.dx-toc a.on{background:rgba(0,105,184,.09);color:var(--cyan);font-weight:600;border-left-color:var(--cyan)}
+.dx-body{min-width:0;max-width:780px}
+.dx-sec{padding:6px 0 34px;scroll-margin-top:calc(var(--nav-h) + 24px)}
+.dx-sec h2{font-family:var(--fd);font-weight:800;font-size:26px;letter-spacing:-.6px;margin:0 0 12px;color:var(--text)}
+.dx-sec p,.dx-lead{color:var(--text2);font-size:15px;line-height:1.75;margin:0 0 14px}
+.dx-sec p b{color:var(--text)}
+.dx-sec a,.dx-lead a,.dx-note a{color:var(--cyan);text-decoration:underline;text-decoration-color:rgba(0,105,184,.3);text-underline-offset:3px}
+.dx-sec .mono,.dx-lead .mono{font-family:var(--fm);font-size:12.5px;background:rgba(15,40,90,.06);padding:1px 6px;border-radius:6px;color:#16294a;white-space:nowrap}
+.dx-facts{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:4px 0 18px}
+.dx-fact{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:13px 16px;display:flex;flex-direction:column;gap:5px;min-width:0}
+.dx-fact span{font-size:11px;font-weight:700;letter-spacing:.7px;text-transform:uppercase;color:var(--text3)}
+.dx-fact code{font-family:var(--fm);font-size:13px;color:var(--text);overflow-wrap:anywhere}
+.dx-tabs{display:flex;gap:4px;margin:0 0 -1px;position:relative;z-index:1}
+.dx-tab{font-family:var(--fb);font-size:13px;font-weight:600;color:var(--text2);padding:9px 16px;border:1px solid transparent;border-bottom:none;border-radius:11px 11px 0 0;background:transparent;cursor:pointer}
+.dx-tab:hover{color:var(--text)}
+.dx-tab.on{background:#eaf0f9;border-color:var(--border);color:var(--cyan)}
+.dx-pane{display:none}.dx-pane.on{display:block}
+.dx-pane .codeblock{border-top-left-radius:0}
+.dx-sec .codeblock{margin:0 0 14px}
+.dx-sec .codeblock pre{margin:0}
+.dx-note{background:rgba(209,104,0,.07);border:1px solid rgba(209,104,0,.2);border-radius:12px;padding:12px 15px;font-size:14px!important;line-height:1.65!important;color:var(--text2)!important;margin-top:16px!important}
+.dx-list{margin:0 0 6px;padding:0;list-style:none}
+.dx-list li{position:relative;padding:5px 0 5px 22px;font-size:15px;line-height:1.7;color:var(--text2)}
+.dx-list li::before{content:'';position:absolute;left:5px;top:15px;width:6px;height:6px;border-radius:50%;background:var(--cyan);opacity:.55}
+.dx-tablewrap{overflow-x:auto;margin:0 0 16px;border:1px solid var(--border);border-radius:14px;background:var(--card)}
+.dx-table{width:100%;border-collapse:collapse;font-size:14px}
+.dx-table th{text-align:left;font-size:11px;font-weight:700;letter-spacing:.7px;text-transform:uppercase;color:var(--text3);padding:11px 16px;background:var(--card2);border-bottom:1px solid var(--border)}
+.dx-table td{padding:11px 16px;color:var(--text2);border-bottom:1px solid var(--border);vertical-align:top;line-height:1.55}
+.dx-table tr:last-child td{border-bottom:none}
+.dx-table td.mono{font-family:var(--fm);font-size:12.5px;color:var(--text);white-space:nowrap;font-weight:600}
+.dx-table td.err{color:#c0392b}
+.dx-steps{margin:0 0 18px;padding:0;list-style:none;counter-reset:dx}
+.dx-steps li{counter-increment:dx;position:relative;padding:6px 0 6px 40px;font-size:15px;line-height:1.7;color:var(--text2)}
+.dx-steps li::before{content:counter(dx);position:absolute;left:0;top:7px;width:26px;height:26px;border-radius:50%;background:rgba(0,105,184,.1);color:var(--cyan);font-weight:700;font-size:13px;display:flex;align-items:center;justify-content:center}
+.dx-steps li b{color:var(--text)}
+.dx-divider{display:flex;align-items:center;gap:14px;margin:8px 0 18px}
+.dx-divider::before,.dx-divider::after{content:'';flex:1;height:1px;background:var(--border)}
+.dx-divider span{font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--text3)}
+.dx-lead{margin-bottom:22px!important}
+@media(max-width:900px){
+  .dx-layout{grid-template-columns:minmax(0,1fr);gap:18px}
+  .dx-toc{position:sticky;top:var(--nav-h);z-index:50;flex-direction:row;align-items:center;gap:6px;overflow-x:auto;overflow-y:hidden;max-height:none;margin:0 -20px;width:calc(100% + 40px);max-width:100vw;box-sizing:border-box;padding:10px 20px;background:rgba(234,239,247,.985);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-bottom:1px solid var(--border);scrollbar-width:none}
+  .dx-toc::-webkit-scrollbar{display:none}
+  .dx-toc-group{display:none}
+  .dx-toc a{flex:0 0 auto;white-space:nowrap;padding:7px 14px;border-radius:100px;border:1px solid var(--border);background:var(--card);font-size:13px}
+  .dx-toc a.on{border-color:var(--cyan);border-left-width:1px}
+  .dx-sec{scroll-margin-top:calc(var(--nav-h) + 62px)}
+}
+@media(max-width:560px){
+  .dx-sec .codeblock{padding-top:46px}
+  .dx-facts{grid-template-columns:1fr}
+  .dx-sec h2{font-size:23px}
+  .dx-sec .mono,.dx-lead .mono{white-space:normal;overflow-wrap:anywhere}
+}
 </style>
 
 <script src="/assets/yk.js" defer></script>
@@ -616,20 +682,50 @@ html{scroll-behavior:smooth;}
 <!-- ═══════ DOCS ═══════ -->
 <main class="page on" id="page-docs">
   <div class="wrap">
-    <div class="page-head"><h1 class="s-title">Docs</h1><div class="s-sub">Yantra speaks the OpenAI API. If your code talks to OpenAI today, it talks to Yantra with two edits.</div></div>
+    <header class="dx-head">
+      <h1 class="s-title">Docs</h1>
+      <p class="dx-sub">Yantra works like the OpenAI API. If your code already talks to OpenAI, you only change two things: the base URL and the key.</p>
+    </header>
 
-    <div class="panel"><div class="panel-head"><span class="panel-title">1 · Base URL & key</span></div><div class="panel-body">
-      <p class="dim" style="margin:0 0 10px">Set your gateway base URL and your <span class="mono">yk_live_…</span> key. Everything else is standard OpenAI.</p>
-      <div class="kv"><span class="k">Base URL</span><span class="v mono">https://api.aitklabs.in/v1</span></div>
-      <div class="kv"><span class="k">Auth header</span><span class="v mono">Authorization: Bearer yk_live_…</span></div>
-    </div></div>
+    <div class="dx-layout">
+      <div class="dx-toc" id="dx-toc" role="navigation" aria-label="On this page">
+        <div class="dx-toc-group">Get started</div>
+        <a href="#quickstart">Quick start</a>
+        <a href="#opencode">Use with OpenCode</a>
+        <a href="#models">Choosing a model</a>
+        <a href="#open-weight">Open-weight models</a>
+        <div class="dx-toc-group">Beyond chat</div>
+        <a href="#images">Images</a>
+        <a href="#speech">Text to speech</a>
+        <a href="#transcription">Speech to text</a>
+        <a href="#video">Video</a>
+        <a href="#embeddings">Embeddings</a>
+        <div class="dx-toc-group">Reference</div>
+        <a href="#headers">Response headers</a>
+        <a href="#errors">Errors</a>
+      </div>
 
-    <div class="panel"><div class="panel-head"><span class="panel-title">2 · Python (OpenAI SDK)</span></div><div class="panel-body">
-      <div class="codeblock"><button class="cp" onclick="copyCode(this)">copy</button><pre>from openai import OpenAI
+      <div class="dx-body">
+
+        <section class="dx-sec" id="quickstart">
+          <h2>Quick start</h2>
+          <p>Create a key in your dashboard, then point any OpenAI library at Yantra. Everything else stays the same, so your existing prompts, tools and streaming code keep working.</p>
+          <div class="dx-facts">
+            <div class="dx-fact"><span>Base URL</span><code>https://api.aitklabs.in/v1</code></div>
+            <div class="dx-fact"><span>Auth header</span><code>Authorization: Bearer yk_live_…</code></div>
+          </div>
+
+          <div class="dx-tabset">
+          <div class="dx-tabs" role="tablist" aria-label="Code language">
+            <button class="dx-tab on" role="tab" data-tab="py">Python</button>
+            <button class="dx-tab" role="tab" data-tab="js">Node.js</button>
+            <button class="dx-tab" role="tab" data-tab="curl">cURL</button>
+          </div>
+          <div class="dx-pane on" data-pane="py"><div class="codeblock"><button class="cp" onclick="copyCode(this)">copy</button><pre>from openai import OpenAI
 
 client = OpenAI(
     base_url="https://api.aitklabs.in/v1",
-    api_key="yk_live_xxxxxxxxxxxx",   # your single Yantra key
+    api_key="yk_live_xxxxxxxxxxxx",   # your Yantra key
 )
 
 resp = client.chat.completions.create(
@@ -637,48 +733,111 @@ resp = client.chat.completions.create(
     messages=[{"role": "user", "content": "Hello from Yantra!"}],
 )
 print(resp.choices[0].message.content)
-print(resp.yantra)                   # which model/provider we routed to + ₹ cost</pre></div>
-    </div></div>
+print(resp.yantra)                   # which model and provider answered, and the cost in ₹</pre></div></div>
+          <div class="dx-pane" data-pane="js"><div class="codeblock"><button class="cp" onclick="copyCode(this)">copy</button><pre>import OpenAI from "openai";
 
-    <div class="panel"><div class="panel-head"><span class="panel-title">3 · cURL</span></div><div class="panel-body">
-      <div class="codeblock"><button class="cp" onclick="copyCode(this)">copy</button><pre>curl https://api.aitklabs.in/v1/chat/completions \
+const client = new OpenAI({
+  baseURL: "https://api.aitklabs.in/v1",
+  apiKey: "yk_live_xxxxxxxxxxxx",    // your Yantra key
+});
+
+const resp = await client.chat.completions.create({
+  model: "auto:cheap",               // or "openai/gpt-4o-mini", "anthropic/claude-sonnet-4-6", …
+  messages: [{ role: "user", content: "Hello from Yantra!" }],
+});
+console.log(resp.choices[0].message.content);</pre></div></div>
+          <div class="dx-pane" data-pane="curl"><div class="codeblock"><button class="cp" onclick="copyCode(this)">copy</button><pre>curl https://api.aitklabs.in/v1/chat/completions \
   -H "Authorization: Bearer yk_live_xxxxxxxxxxxx" \
   -H "Content-Type: application/json" \
   -d '{
     "model": "auto:reasoning",
     "messages": [{"role":"user","content":"Prove sqrt(2) is irrational."}]
-  }'</pre></div>
-    </div></div>
+  }'</pre></div></div>
+          </div>
+          <p class="dx-note">You pay in ₹ from your wallet, and a top-up starts at ₹10 with UPI. If your balance runs out, requests return a <span class="mono">402</span> until you add credit.</p>
+        </section>
 
-    <div class="panel"><div class="panel-head"><span class="panel-title">Images &amp; voice</span></div><div class="panel-body">
-      <p class="dim" style="margin:0 0 12px">Same key, same ₹ wallet. Image generation follows the OpenAI <span class="mono">/v1/images/generations</span> shape and text-to-speech follows <span class="mono">/v1/audio/speech</span>. You are charged only when a result is returned. List live models and prices at <span class="mono">GET /v1/images/models</span> and <span class="mono">GET /v1/audio/models</span>, or see the <a href="models.html#media" style="color:var(--cyan)">models page</a>.</p>
-      <div class="codeblock"><button class="cp" onclick="copyCode(this)">copy</button><pre>curl https://api.aitklabs.in/v1/images/generations \
-  -H "Authorization: Bearer yk_live_xxxxxxxxxxxx" \
-  -H "Content-Type: application/json" \
-  -d '{"model":"black-forest-labs/flux-1-schnell","prompt":"A diya on a rainy window, photo","size":"1024x1024","n":1}'
-# returns {"data":[{"b64_json":"..."}]}  (add "response_format":"url" for a hosted link, valid 1 hour)</pre></div>
-      <div class="codeblock" style="margin-top:12px"><button class="cp" onclick="copyCode(this)">copy</button><pre>curl https://api.aitklabs.in/v1/audio/speech \
-  -H "Authorization: Bearer yk_live_xxxxxxxxxxxx" \
-  -H "Content-Type: application/json" \
-  -d '{"model":"elevenlabs/flash-v2.5","input":"Namaste! Welcome to Yantra.","voice":"rachel"}' \
-  --output hello.mp3</pre></div>
-      <p class="dim" style="margin:12px 0 0">Limits: up to 4 images per request, sizes 256–2048 px; speech up to 5,000 characters per request, MP3 output, speed 0.7–1.2. Use the exact model ids from the list endpoints.</p>
-    </div></div>
+        <section class="dx-sec" id="opencode">
+          <h2>Use with OpenCode</h2>
+          <p>OpenCode is an open-source coding agent for your terminal. It can talk to any OpenAI-compatible endpoint, so Yantra works as a provider. You can use Claude, GPT, Grok, DeepSeek and the other models in the same OpenCode session, and pay in ₹ with UPI.</p>
+          <ol class="dx-steps">
+            <li><b>Set your key.</b> Put your Yantra key in an environment variable: <span class="mono">export YANTRA_API_KEY=yk_live_xxxxxxxxxxxx</span></li>
+            <li><b>Add the provider.</b> Save the config below as <span class="mono">opencode.json</span> in your project folder, or as <span class="mono">~/.config/opencode/opencode.json</span> to use it everywhere.</li>
+            <li><b>Pick a model.</b> Run <span class="mono">opencode</span>, type <span class="mono">/models</span> and choose a Yantra model.</li>
+          </ol>
+          <div class="dx-tabset">
+            <div class="dx-tabs" role="tablist" aria-label="OpenCode config format">
+              <button class="dx-tab on" role="tab" data-tab="oc1">opencode.json</button>
+              <button class="dx-tab" role="tab" data-tab="oc2">Newer versions</button>
+            </div>
+            <div class="dx-pane on" data-pane="oc1"><div class="codeblock"><button class="cp" onclick="copyCode(this)">copy</button><pre>{
+  "$schema": "https://opencode.ai/config.json",
+  "provider": {
+    "yantra": {
+      "npm": "@ai-sdk/openai-compatible",
+      "name": "Yantra AI",
+      "options": {
+        "baseURL": "https://api.aitklabs.in/v1",
+        "apiKey": "{env:YANTRA_API_KEY}"
+      },
+      "models": {
+        "anthropic/claude-sonnet-5-5": { "name": "Claude Sonnet 5.5" },
+        "anthropic/claude-fable-5-2":  { "name": "Claude Fable 5.2" },
+        "openai/gpt-5.5":              { "name": "GPT-5.5" },
+        "xai/grok-4.6":                { "name": "Grok 4.6" },
+        "deepseek/deepseek-v4-flash":  { "name": "DeepSeek V4 Flash" }
+      }
+    }
+  },
+  "model": "yantra/anthropic/claude-sonnet-5-5"
+}</pre></div></div>
+            <div class="dx-pane" data-pane="oc2"><div class="codeblock"><button class="cp" onclick="copyCode(this)">copy</button><pre>{
+  "$schema": "https://opencode.ai/config.json",
+  "providers": {
+    "yantra": {
+      "name": "Yantra AI",
+      "env": ["YANTRA_API_KEY"],
+      "package": "@opencode/ai/providers/openai-compatible",
+      "settings": { "baseURL": "https://api.aitklabs.in/v1" },
+      "models": {
+        "anthropic/claude-sonnet-5-5": { "name": "Claude Sonnet 5.5" },
+        "openai/gpt-5.5":              { "name": "GPT-5.5" },
+        "deepseek/deepseek-v4-flash":  { "name": "DeepSeek V4 Flash" }
+      }
+    }
+  }
+}</pre></div></div>
+          </div>
+          <ul class="dx-list">
+            <li>A coding agent calls tools all day, so pick a model with tool support. The <a href="models.html">models page</a> shows which models have it.</li>
+            <li>Add any model id from the models page to the <span class="mono">models</span> list. The key on the left must be the exact Yantra model id.</li>
+            <li>OpenCode releases use two config formats. If the first one is not picked up, use the second, and check <a href="https://opencode.ai/docs/providers" target="_blank" rel="noopener">OpenCode's provider docs</a> for your version. The same steps work for any other OpenAI-compatible tool.</li>
+            <li>Long coding sessions use many tokens. Your balance and the cost of each request are visible in the dashboard, and <span class="mono">auto:cheap</span> is a good model to start with.</li>
+          </ul>
+        </section>
 
-    <div class="panel"><div class="panel-head"><span class="panel-title">Routing modes</span></div><div class="panel-body">
-      <div class="kv"><span class="k mono">openai/gpt-4o-mini</span><span class="v dim">Explicit — route to exactly this model</span></div>
-      <div class="kv"><span class="k mono">auto</span><span class="v dim">Balanced default pick</span></div>
-      <div class="kv"><span class="k mono">auto:cheap</span><span class="v dim">Cheapest capable model</span></div>
-      <div class="kv"><span class="k mono">auto:fast</span><span class="v dim">Lowest-latency model</span></div>
-      <div class="kv"><span class="k mono">auto:reasoning</span><span class="v dim">Strong step-by-step reasoning</span></div>
-      <div class="kv"><span class="k mono">auto:long-context</span><span class="v dim">Largest context window</span></div>
-      <p class="dim" style="margin:12px 0 0">If the chosen provider returns a retryable error (429/5xx/timeout), Yantra automatically fails over to a sibling model of the same class and tells you via <span class="mono">x-yantra-fell-back</span>.</p>
-    </div></div>
+        <section class="dx-sec" id="models">
+          <h2>Choosing a model</h2>
+          <p>Pass an exact model id when you know what you want. Or let Yantra pick for you with one of the <span class="mono">auto</span> modes.</p>
+          <div class="dx-tablewrap"><table class="dx-table">
+            <thead><tr><th>Model value</th><th>What you get</th></tr></thead>
+            <tbody>
+              <tr><td class="mono">openai/gpt-4o-mini</td><td>Exactly that model</td></tr>
+              <tr><td class="mono">auto</td><td>A balanced default</td></tr>
+              <tr><td class="mono">auto:cheap</td><td>The cheapest model that can do the job</td></tr>
+              <tr><td class="mono">auto:fast</td><td>The model with the lowest latency</td></tr>
+              <tr><td class="mono">auto:reasoning</td><td>A model that is strong at step-by-step reasoning</td></tr>
+              <tr><td class="mono">auto:long-context</td><td>The largest context window</td></tr>
+            </tbody>
+          </table></div>
+          <p>If a provider returns a retryable error (429, a 5xx, or a timeout), Yantra switches to a similar model of the same kind and sets <span class="mono">x-yantra-fell-back: true</span> on the reply, so you can see it happened. Browse every model and its price on the <a href="models.html">models page</a>, or call <span class="mono">GET /v1/models</span>.</p>
+        </section>
 
-    <div class="panel"><div class="panel-head"><span class="panel-title">Open-weight models: one id, many hosts</span></div><div class="panel-body">
-      <p class="dim" style="margin:0 0 12px">Open-weight models such as <span class="mono">openai/gpt-oss-120b</span> or <span class="mono">qwen/qwen3.6-27b</span> have one id, named after the lab that made them. Yantra picks the host that serves it (cheapest healthy host first) and fails over to another host of the <b>same</b> model if one is down. You are billed the same price either way.</p>
-      <p class="dim" style="margin:0 0 10px">To choose hosts yourself, add an optional <span class="mono">provider</span> object (the same idea as OpenRouter):</p>
-      <div class="codeblock"><button class="cp" onclick="copyCode(this)">copy</button><pre>{
+        <section class="dx-sec" id="open-weight">
+          <h2>Open-weight models and hosts</h2>
+          <p>Open-weight models such as <span class="mono">openai/gpt-oss-120b</span> or <span class="mono">qwen/qwen3.6-27b</span> have one id, named after the lab that made them. Yantra chooses a host that serves the model, cheapest healthy host first. If that host is down, it tries another host of the <b>same</b> model. The price you pay is the same either way.</p>
+          <p>If you want to pick the hosts yourself, add an optional <span class="mono">provider</span> object. It works like OpenRouter's.</p>
+          <div class="codeblock"><button class="cp" onclick="copyCode(this)">copy</button><pre>{
   "model": "openai/gpt-oss-120b",
   "messages": [{"role":"user","content":"Hello"}],
   "provider": {
@@ -688,26 +847,170 @@ print(resp.yantra)                   # which model/provider we routed to + ₹ c
     "allow_fallbacks": false                 // never switch to a different model
   }
 }</pre></div>
-      <p class="dim" style="margin:12px 0 0"><span class="mono">GET /v1/models</span> lists each open-weight model's <span class="mono">hosts</span>. If none of a model's hosts match your preferences you get a <span class="mono">400 no_matching_provider</span> error. Older ids such as <span class="mono">fireworks/gpt-oss-20b</span> keep working.</p>
-    </div></div>
+          <p class="dx-note"><span class="mono">GET /v1/models</span> lists the hosts of each open-weight model. If none of a model's hosts match your settings, you get a <span class="mono">400 no_matching_provider</span> error. Older ids such as <span class="mono">fireworks/gpt-oss-20b</span> still work.</p>
+        </section>
 
-    <div class="panel"><div class="panel-head"><span class="panel-title">Response headers</span></div><div class="panel-body">
-      <div class="kv"><span class="k mono">x-yantra-routed-to</span><span class="v dim">Final model id</span></div>
-      <div class="kv"><span class="k mono">x-yantra-provider</span><span class="v dim">Provider that served it</span></div>
-      <div class="kv"><span class="k mono">x-yantra-cost-paise</span><span class="v dim">Charge for this request (paise)</span></div>
-      <div class="kv"><span class="k mono">x-yantra-balance-paise</span><span class="v dim">Remaining balance (paise)</span></div>
-      <div class="kv"><span class="k mono">x-yantra-fell-back</span><span class="v dim">true if failover occurred</span></div>
-    </div></div>
+        <div class="dx-divider"><span>Beyond chat</span></div>
+        <p class="dx-lead">Images, speech, transcription, video and embeddings use the same key and the same ₹ wallet. You are charged only when a result is returned. Each section below shows how to list the live models and prices, and you can see them all on the <a href="models.html#media">models page</a>.</p>
 
-    <div class="panel"><div class="panel-head"><span class="panel-title">Error codes</span></div><div class="panel-body">
-      <div class="kv"><span class="k mono err">401</span><span class="v dim">Missing or invalid API key</span></div>
-      <div class="kv"><span class="k mono err">402</span><span class="v dim">Insufficient credit — top up over UPI</span></div>
-      <div class="kv"><span class="k mono err">404</span><span class="v dim">Unknown model id</span></div>
-      <div class="kv"><span class="k mono err">429</span><span class="v dim">Rate limited (provider) — auto-retried</span></div>
-      <div class="kv"><span class="k mono err">502</span><span class="v dim">All providers in the class failed</span></div>
-    </div></div>
+        <section class="dx-sec" id="images">
+          <h2>Images</h2>
+          <p>Image generation follows the OpenAI <span class="mono">/v1/images/generations</span> format.</p>
+          <div class="codeblock"><button class="cp" onclick="copyCode(this)">copy</button><pre>curl https://api.aitklabs.in/v1/images/generations \
+  -H "Authorization: Bearer yk_live_xxxxxxxxxxxx" \
+  -H "Content-Type: application/json" \
+  -d '{"model":"black-forest-labs/flux-1-schnell","prompt":"A diya on a rainy window, photo","size":"1024x1024","n":1}'
+# returns {"data":[{"b64_json":"..."}]}</pre></div>
+          <ul class="dx-list">
+            <li>Up to 4 images per request, from 256 to 2048 px.</li>
+            <li>Add <span class="mono">"response_format":"url"</span> to get a hosted link instead of base64. The link is valid for 1 hour.</li>
+            <li>List live models and prices with <span class="mono">GET /v1/images/models</span>.</li>
+          </ul>
+        </section>
+
+        <section class="dx-sec" id="speech">
+          <h2>Text to speech</h2>
+          <p>Turn text into audio with <span class="mono">/v1/audio/speech</span>. Pick a model and one of its voices. You pay per 1,000 characters.</p>
+          <div class="codeblock"><button class="cp" onclick="copyCode(this)">copy</button><pre>curl https://api.aitklabs.in/v1/audio/speech \
+  -H "Authorization: Bearer yk_live_xxxxxxxxxxxx" \
+  -H "Content-Type: application/json" \
+  -d '{"model":"elevenlabs/flash-v2.5","input":"Namaste! Welcome to Yantra.","voice":"rachel"}' \
+  --output hello.mp3</pre></div>
+          <div class="dx-tablewrap"><table class="dx-table">
+            <thead><tr><th>Model</th><th>Voices (examples)</th></tr></thead>
+            <tbody>
+              <tr><td class="mono">elevenlabs/flash-v2.5</td><td class="mono">rachel</td></tr>
+              <tr><td class="mono">openai/gpt-4o-mini-tts</td><td class="mono">alloy, nova, onyx, shimmer</td></tr>
+              <tr><td class="mono">xai/grok-tts</td><td class="mono">ara, eve, leo, rex, sal</td></tr>
+              <tr><td class="mono">gemini/flash-tts</td><td class="mono">Kore, Puck, Zephyr</td></tr>
+            </tbody>
+          </table></div>
+          <ul class="dx-list">
+            <li>Up to 5,000 characters per request. Output is MP3 (Gemini voices return WAV). Speed can be 0.7 to 1.2.</li>
+            <li>OpenAI voices also accept an <span class="mono">instructions</span> field to steer tone and pace.</li>
+            <li>Each voice belongs to its model's provider. List every model and voice with <span class="mono">GET /v1/audio/models</span>.</li>
+          </ul>
+        </section>
+
+        <section class="dx-sec" id="transcription">
+          <h2>Speech to text</h2>
+          <p>Upload an audio file to <span class="mono">/v1/audio/transcriptions</span> and get the text back. You pay per minute of audio.</p>
+          <div class="codeblock"><button class="cp" onclick="copyCode(this)">copy</button><pre>curl https://api.aitklabs.in/v1/audio/transcriptions \
+  -H "Authorization: Bearer yk_live_xxxxxxxxxxxx" \
+  -F model=openai/gpt-4o-mini-transcribe \
+  -F file=@meeting.mp3
+# returns {"text":"..."}</pre></div>
+          <ul class="dx-list">
+            <li>Models: <span class="mono">openai/gpt-4o-mini-transcribe</span>, <span class="mono">openai/whisper-1</span>, <span class="mono">xai/grok-stt</span>.</li>
+            <li>Files up to 25 MB. Optional fields are <span class="mono">language</span>, <span class="mono">prompt</span> and <span class="mono">response_format</span> (json, text or verbose_json).</li>
+            <li>List live models and prices with <span class="mono">GET /v1/audio/transcription-models</span>.</li>
+          </ul>
+        </section>
+
+        <section class="dx-sec" id="video">
+          <h2>Video</h2>
+          <p>A video takes a little while to make, so it works in two steps. First you start a job, then you check on it until it is ready. You pay per second of video, and only when the video is finished.</p>
+          <div class="codeblock"><button class="cp" onclick="copyCode(this)">copy</button><pre># 1. Start a video. This returns {"id":"vid_...","status":"queued"}
+curl https://api.aitklabs.in/v1/videos \
+  -H "Authorization: Bearer yk_live_xxxxxxxxxxxx" \
+  -H "Content-Type: application/json" \
+  -d '{"model":"xai/grok-imagine-video-1.5-lite","prompt":"A paper boat drifting down a rain-soaked street","duration":5,"resolution":"720p"}'
+
+# 2. Check it every few seconds. When status is "completed", download the "url".
+curl https://api.aitklabs.in/v1/videos/vid_xxxxxxxx \
+  -H "Authorization: Bearer yk_live_xxxxxxxxxxxx"</pre></div>
+          <ul class="dx-list">
+            <li>Models: <span class="mono">xai/grok-imagine-video-1.5-lite</span>, <span class="mono">xai/grok-imagine-video</span>, <span class="mono">xai/grok-imagine-video-1.5</span>.</li>
+            <li>Fields: <span class="mono">prompt</span>, <span class="mono">duration</span> (1 to 10 seconds), <span class="mono">resolution</span> (480p, 720p or 1080p) and <span class="mono">aspect_ratio</span>.</li>
+            <li>Failed, blocked or timed-out videos cost nothing. Each account can have 2 videos in progress at a time.</li>
+            <li>The download link is temporary, so save the file soon after it completes.</li>
+            <li>List live models and prices with <span class="mono">GET /v1/videos/models</span>.</li>
+          </ul>
+        </section>
+
+        <section class="dx-sec" id="embeddings">
+          <h2>Embeddings</h2>
+          <p>Embeddings turn text into vectors for search, recommendations and RAG. The endpoint is <span class="mono">/v1/embeddings</span>, and you pay per input token.</p>
+          <div class="codeblock"><button class="cp" onclick="copyCode(this)">copy</button><pre>curl https://api.aitklabs.in/v1/embeddings \
+  -H "Authorization: Bearer yk_live_xxxxxxxxxxxx" \
+  -H "Content-Type: application/json" \
+  -d '{"model":"openai/text-embedding-3-small","input":["First text","Second text"]}'
+# returns {"data":[{"index":0,"embedding":[...]}, ...],"usage":{"prompt_tokens":N}}</pre></div>
+          <div class="dx-tablewrap"><table class="dx-table">
+            <thead><tr><th>Model</th><th>Dimensions</th></tr></thead>
+            <tbody>
+              <tr><td class="mono">openai/text-embedding-3-small</td><td>1536</td></tr>
+              <tr><td class="mono">openai/text-embedding-3-large</td><td>3072</td></tr>
+              <tr><td class="mono">gemini/gemini-embedding-001</td><td>3072</td></tr>
+              <tr><td class="mono">mistral/mistral-embed</td><td>1024</td></tr>
+            </tbody>
+          </table></div>
+          <ul class="dx-list">
+            <li>Send up to 256 texts per request. Inputs must be strings.</li>
+            <li>Use <span class="mono">dimensions</span> to shorten the vector on the OpenAI and Gemini models, and <span class="mono">encoding_format</span> for <span class="mono">float</span> or <span class="mono">base64</span>.</li>
+            <li>The OpenAI SDK works as usual: <span class="mono">client.embeddings.create(model="openai/text-embedding-3-small", input=["hello"])</span>.</li>
+            <li>List live models and prices with <span class="mono">GET /v1/embeddings/models</span>.</li>
+          </ul>
+        </section>
+
+        <div class="dx-divider"><span>Reference</span></div>
+
+        <section class="dx-sec" id="headers">
+          <h2>Response headers</h2>
+          <p>Chat replies include these headers so you can see where a request went and what it cost.</p>
+          <div class="dx-tablewrap"><table class="dx-table">
+            <tbody>
+              <tr><td class="mono">x-yantra-routed-to</td><td>The final model id</td></tr>
+              <tr><td class="mono">x-yantra-provider</td><td>The provider that served it</td></tr>
+              <tr><td class="mono">x-yantra-cost-paise</td><td>What this request cost, in paise</td></tr>
+              <tr><td class="mono">x-yantra-balance-paise</td><td>Your remaining balance, in paise</td></tr>
+              <tr><td class="mono">x-yantra-fell-back</td><td>true if Yantra switched to another model</td></tr>
+            </tbody>
+          </table></div>
+        </section>
+
+        <section class="dx-sec" id="errors">
+          <h2>Errors</h2>
+          <p>Errors use standard HTTP status codes. You are not charged for a request that fails.</p>
+          <div class="dx-tablewrap"><table class="dx-table">
+            <tbody>
+              <tr><td class="mono err">400</td><td>The request has a missing or invalid field, or the model is not available on that endpoint</td></tr>
+              <tr><td class="mono err">401</td><td>The API key is missing or invalid</td></tr>
+              <tr><td class="mono err">402</td><td>Not enough credit. Top up with UPI</td></tr>
+              <tr><td class="mono err">404</td><td>Unknown model id</td></tr>
+              <tr><td class="mono err">429</td><td>Rate limited, or a limit was reached. Chat requests are retried for you</td></tr>
+              <tr><td class="mono err">502</td><td>Every provider for that kind of model failed</td></tr>
+              <tr><td class="mono err">503</td><td>The model's provider is unavailable right now. Try again shortly</td></tr>
+            </tbody>
+          </table></div>
+          <p class="dx-note">Stuck? Email <a href="mailto:gettony3000@gmail.com">gettony3000@gmail.com</a> or check the <a href="status.html">status page</a>.</p>
+        </section>
+
+      </div>
+    </div>
   </div>
 </main>
+<script>
+(function(){
+  document.querySelectorAll('.dx-tabset').forEach(function(set){
+    var tabs=set.querySelectorAll('.dx-tab'),panes=set.querySelectorAll('.dx-pane');
+    tabs.forEach(function(t){t.addEventListener('click',function(){
+      tabs.forEach(function(x){x.classList.toggle('on',x===t);x.setAttribute('aria-selected',x===t?'true':'false');});
+      panes.forEach(function(p){p.classList.toggle('on',p.getAttribute('data-pane')===t.getAttribute('data-tab'));});
+    });});
+  });
+  var links=[].slice.call(document.querySelectorAll('#dx-toc a')),map={};
+  links.forEach(function(a){map[a.getAttribute('href').slice(1)]=a;});
+  function mark(id){links.forEach(function(a){a.classList.toggle('on',a===map[id]);});
+    var cur=map[id];var box=document.getElementById('dx-toc');
+    if(cur&&box&&box.scrollWidth>box.clientWidth&&window.innerWidth<=900){box.scrollTo({left:Math.max(0,cur.offsetLeft-40),behavior:'smooth'});}}
+  if('IntersectionObserver' in window){
+    var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting)mark(e.target.id);});},{rootMargin:'-90px 0px -65% 0px'});
+    document.querySelectorAll('.dx-sec').forEach(function(s){io.observe(s);});
+  }
+  mark('quickstart');
+})();
+</script>
 
 <footer style="border-top:1px solid var(--border);padding:34px 20px 100px;text-align:center;font-family:var(--fb)">
   <div style="display:flex;gap:22px;justify-content:center;flex-wrap:wrap;margin-bottom:14px;font-size:13px">
