@@ -881,9 +881,9 @@ html{scroll-behavior:smooth;}
   <!-- create key -->
   <!-- community models (OpenRouter long tail) -->
   <div class="modal" id="modal-community">
-    <div class="modal-head"><span class="modal-title">Browse community models <span class="dim" style="font-weight:400;font-size:12px">via OpenRouter</span></span><button class="modal-close" onclick="closeModals()">✕</button></div>
+    <div class="modal-head"><span class="modal-title">Browse community models</span><button class="modal-close" onclick="closeModals()">✕</button></div>
     <div class="modal-body">
-      <p class="dim" style="font-size:12.5px;margin:0 0 10px">300+ open-weight and niche models, routed through OpenRouter. Yantra's own 30+ models above stay the cheaper, direct path — this is for everything else.</p>
+      <p class="dim" style="font-size:12.5px;margin:0 0 10px">300+ open-weight and niche models. Yantra's own 30+ models above stay the cheaper, direct path — this is for everything else.</p>
       <input class="pg-input" id="community-search" placeholder="Search by name — e.g. llama, qwen, gemma…" oninput="filterCommunityModels()" style="width:100%;margin-bottom:10px">
       <div id="community-results" style="max-height:320px;overflow-y:auto"></div>
     </div>
@@ -998,7 +998,7 @@ var PROVIDERS = {
   novita:    { label:'Novita AI',     glyph:'◐' },
   fireworks: { label:'Fireworks AI',  glyph:'✦' },
   local:     { label:'Local models',  glyph:'⌂' },
-  openrouter:{ label:'OpenRouter',    glyph:'◇' }
+  openrouter:{ label:'Community',    glyph:'◇' }
 };
 /* provider id → diagram node suffix */
 var PROV2DIAG = { openai:'openai', anthropic:'anthropic', gemini:'google', deepseek:'deepseek', mistral:'mistral', local:'local' };
@@ -1014,7 +1014,7 @@ var VIRTUALS = ['auto','auto:cheap','auto:fast','auto:reasoning','auto:long-cont
 /* The gateway's /v1/models uses pricing_inr_per_1m / capabilities / context_window / owned_by; older builds used inr / tags / ctx / provider. Accept both. */
 var MODELS_NEW = {};
 function normGw(m){
-  return { id:m.id, provider:m.provider||m.owned_by||String(m.id||'').split('/')[0], label:m.label||m.id,
+  return { id:m.id, provider:m.provider||m.owned_by||String(m.id||'').split('/')[0], label:String(m.label||m.id).replace(/\s*\(OpenRouter\)\s*$/i,''),
     inr:m.inr||m.pricing_inr_per_1m, ctx:m.ctx||m.context_window||0, tags:m.tags||m.capabilities||[], blurb:m.blurb||m.description||'' };
 }
 var MODELS_COMMUNITY = {};
