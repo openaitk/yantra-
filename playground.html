@@ -911,8 +911,23 @@ var VIRTUALS = ['auto','auto:cheap','auto:fast','auto:reasoning','auto:long-cont
 // dropdown never change behavior. getModel() gets one additive fallback so
 // a community model, once explicitly chosen, still displays/cost-estimates
 // correctly — mirrors the exact same safety boundary as the backend registry.
+/* The gateway's /v1/models uses pricing_inr_per_1m / capabilities / context_window / owned_by; older builds used inr / tags / ctx / provider. Accept both. */
+var MODELS_NEW = {};
+function normGw(m){
+  return { id:m.id, provider:m.provider||m.owned_by||String(m.id||'').split('/')[0], label:m.label||m.id,
+    inr:m.inr||m.pricing_inr_per_1m, ctx:m.ctx||m.context_window||0, tags:m.tags||m.capabilities||[], blurb:m.blurb||m.description||'' };
+}
 var MODELS_COMMUNITY = {};
 var communityLoaded = false, communityLoading = false;
+function addNewModelsToDropdown(){
+  var ids=Object.keys(MODELS_NEW), sel=$('pg-model'); if(!ids.length||!sel) return;
+  var grp=sel.querySelector('optgroup[label="New models"]');
+  if(!grp){ grp=document.createElement('optgroup'); grp.label='New models'; sel.appendChild(grp); }
+  ids.sort().forEach(function(id){
+    if(sel.querySelector('option[value="'+id+'"]')) return;
+    var o=document.createElement('option'); o.value=id; o.textContent=MODELS_NEW[id].label; grp.appendChild(o);
+  });
+}
 function loadCommunityModels(){
   if(communityLoaded || communityLoading) return;
   communityLoading = true;
@@ -921,12 +936,16 @@ function loadCommunityModels(){
     .then(function(data){
       var list = data.data || data.models || [];
       list.forEach(function(m){
-        if(m.tags && m.tags.indexOf('community')>=0){ MODELS_COMMUNITY[m.id] = m; }
+        var n = normGw(m);
+        if(n.tags.indexOf('community')>=0){ MODELS_COMMUNITY[n.id] = n; }
         // Curated models: take pricing from the gateway, which is authoritative
         // and already includes our margin. This keeps the pricing page honest
         // if MARGIN_PCT changes server-side — the static values below are only
         // a pre-fetch fallback.
-        else if(MODELS[m.id] && m.inr){ MODELS[m.id].inr = m.inr; }
+        else if(MODELS[n.id]){ if(m.inr) MODELS[n.id].inr = m.inr; }
+        // Models the gateway added on its own (automatic curation) that this page does not list yet.
+        // Kept apart from MODELS on purpose: "auto" routing never picks them, same as on the server.
+        else if(n.inr && n.inr.in!=null && n.inr.out!=null){ n.isNew = true; MODELS_NEW[n.id] = n; }
       });
       communityLoaded = true;
     })
@@ -947,6 +966,7 @@ function loadCommunityModels(){
       // fetch must leave the existing value alone — otherwise a momentary
       // network problem silently reports the static-only count.
       if(statEl && communityLoaded){ var total=Object.keys(MODELS).length+count; statEl.textContent = '350+'; }
+      addNewModelsToDropdown();
       renderTicker();
       renderCommunityResults();
       if(typeof renderModels==='function') renderModels();
@@ -1032,7 +1052,7 @@ function selectCommunityModel(id){
 }
 
 function listModels(){ return Object.keys(MODELS).map(function(id){ var o={id:id}; for(var k in MODELS[id]) o[k]=MODELS[id][k]; return o; }); }
-function getModel(id){ return MODELS[id] || MODELS_COMMUNITY[id] || null; }
+function getModel(id){ return MODELS[id] || MODELS_COMMUNITY[id] || MODELS_NEW[id] || null; }
 function cheapestWithTag(tag){
   var best=null;
   for(var id in MODELS){ var m=MODELS[id]; if(m.tags.indexOf(tag)<0) continue; var c=m.inr.in+m.inr.out; if(!best||c<best.cost) best={id:id,cost:c}; }
@@ -1042,7 +1062,7 @@ function resolve(field){
   var m=(field||'').trim();
   if(m==='auto'||m==='auto:balanced'){ return cheapestWithTag('balanced')||cheapestWithTag('cheap')||'openai/gpt-4o-mini'; }
   if(m.indexOf('auto:')===0){ var tag=m.slice(5); return cheapestWithTag(tag)||'openai/gpt-4o-mini'; }
-  return MODELS[m]?m:null;
+  return (MODELS[m]||MODELS_NEW[m])?m:null;   // models the gateway added on its own can be chosen by name, but are never picked by "auto"
 }
 function fallbackChain(modelId, maxLen){
   maxLen=maxLen||3;
@@ -1171,7 +1191,7 @@ function initPlayground(){
     Object.keys(byProv).forEach(function(p){
       html+='<optgroup label="'+esc(PROVIDERS[p].label)+'">'+byProv[p].map(function(m){ return '<option value="'+esc(m.id)+'">'+esc(m.label)+'</option>'; }).join('')+'</optgroup>';
     });
-    sel.innerHTML=html; sel.value='auto:cheap';
+    sel.innerHTML=html; sel.value='auto:cheap'; addNewModelsToDropdown();
     var lk=store.get('yantra.lastkey'); if(lk && !$('pg-key').value) $('pg-key').value=lk;
     pgReady=true;
     onPgModelChange();

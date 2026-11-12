@@ -669,6 +669,8 @@ html{scroll-behavior:smooth;}
 }
 
 #page-models .mx-row.off{opacity:.55}
+#page-models .mx-new-b{font-size:10.5px;font-weight:800;padding:2px 8px;border-radius:100px;background:rgba(0,148,83,.12);color:#00794a;border:1px solid rgba(0,148,83,.3);white-space:nowrap}
+#page-models .mx-nm{font-weight:700}
 #page-models .mx-off-b{font-size:10.5px;font-weight:800;padding:2px 8px;border-radius:100px;background:rgba(196,38,46,.12);color:#c4262e;border:1px solid rgba(196,38,46,.3);white-space:nowrap}
 @media(prefers-reduced-motion:reduce){#page-models *{transition:none!important}}
 .page-head .s-sub{margin-left:0;margin-right:0;max-width:64ch;font-size:15px}
@@ -1009,6 +1011,12 @@ var VIRTUALS = ['auto','auto:cheap','auto:fast','auto:reasoning','auto:long-cont
 // dropdown never change behavior. getModel() gets one additive fallback so
 // a community model, once explicitly chosen, still displays/cost-estimates
 // correctly — mirrors the exact same safety boundary as the backend registry.
+/* The gateway's /v1/models uses pricing_inr_per_1m / capabilities / context_window / owned_by; older builds used inr / tags / ctx / provider. Accept both. */
+var MODELS_NEW = {};
+function normGw(m){
+  return { id:m.id, provider:m.provider||m.owned_by||String(m.id||'').split('/')[0], label:m.label||m.id,
+    inr:m.inr||m.pricing_inr_per_1m, ctx:m.ctx||m.context_window||0, tags:m.tags||m.capabilities||[], blurb:m.blurb||m.description||'' };
+}
 var MODELS_COMMUNITY = {};
 var communityLoaded = false, communityLoading = false;
 /* One request for /v1/models, shared by the live-price sync and the availability check. */
@@ -1028,12 +1036,16 @@ function loadCommunityModels(){
     .then(function(data){
       var list = data.data || data.models || [];
       list.forEach(function(m){
-        if(m.tags && m.tags.indexOf('community')>=0){ MODELS_COMMUNITY[m.id] = m; }
+        var n = normGw(m);
+        if(n.tags.indexOf('community')>=0){ MODELS_COMMUNITY[n.id] = n; }
         // Curated models: take pricing from the gateway, which is authoritative
         // and already includes our margin. This keeps the pricing page honest
         // if MARGIN_PCT changes server-side — the static values below are only
         // a pre-fetch fallback.
-        else if(MODELS[m.id] && m.inr){ MODELS[m.id].inr = m.inr; }
+        else if(MODELS[n.id]){ if(m.inr) MODELS[n.id].inr = m.inr; }
+        // Models the gateway added on its own (automatic curation) that this page does not list yet.
+        // Kept apart from MODELS on purpose: "auto" routing never picks them, same as on the server.
+        else if(n.inr && n.inr.in!=null && n.inr.out!=null){ n.isNew = true; MODELS_NEW[n.id] = n; }
       });
       communityLoaded = true;
     })
@@ -1056,6 +1068,7 @@ function loadCommunityModels(){
       if(statEl && communityLoaded){ var total=Object.keys(MODELS).length+count; statEl.textContent = '350+'; }
       renderTicker();
       renderCommunityResults();
+      if(window.mxRefreshProviders) window.mxRefreshProviders();
       if(typeof renderModels==='function') renderModels();
     });
 }
@@ -1127,8 +1140,9 @@ function selectCommunityModel(id){
   closeModals();
 }
 
+function listAll(){ return listModels().concat(Object.keys(MODELS_NEW).map(function(id){ return MODELS_NEW[id]; })); }
 function listModels(){ return Object.keys(MODELS).map(function(id){ var o={id:id}; for(var k in MODELS[id]) o[k]=MODELS[id][k]; return o; }); }
-function getModel(id){ return MODELS[id] || MODELS_COMMUNITY[id] || null; }
+function getModel(id){ return MODELS[id] || MODELS_COMMUNITY[id] || MODELS_NEW[id] || null; }
 function cheapestWithTag(tag){
   var best=null;
   for(var id in MODELS){ var m=MODELS[id]; if(m.tags.indexOf(tag)<0) continue; var c=m.inr.in+m.inr.out; if(!best||c<best.cost) best={id:id,cost:c}; }
@@ -1236,7 +1250,7 @@ function ctxLabel(n){ if(n>=1000000) return (n/1000000)+'M ctx'; if(n>=1000) ret
     if(S.cap==='community'){
       return Object.keys(MODELS_COMMUNITY).map(function(id){ var o={id:id}; for(var k in MODELS_COMMUNITY[id]) o[k]=MODELS_COMMUNITY[id][k]; return o; });
     }
-    return listModels();
+    return listAll();
   }
   function provLabel(p){ return (PROVIDERS[p]||{label:p}).label; }
   function buildChips(){
@@ -1245,8 +1259,9 @@ function ctxLabel(n){ if(n>=1000000) return (n/1000000)+'M ctx'; if(n>=1000) ret
     }).join('');
     var n=Object.keys(MODELS_COMMUNITY).length, el=g('community-chip-count'); if(el) el.textContent=n?'('+n+')':'';
   }
+  window.mxRefreshProviders=function(){ buildProv(); };
   function buildProv(){
-    var base=S.cap==='community'?pool():listModels(), cnt={};
+    var base=pool(), cnt={};
     base.forEach(function(m){ cnt[m.provider]=(cnt[m.provider]||0)+1; });
     var keys=Object.keys(cnt).sort(function(a,b){ return provLabel(a).localeCompare(provLabel(b)); });
     var cur=S.prov; if(cur!=='all' && !cnt[cur]) cur=S.prov='all';
@@ -1261,7 +1276,7 @@ function ctxLabel(n){ if(n>=1000000) return (n/1000000)+'M ctx'; if(n>=1000) ret
     var off=!!(S.avail&&!MODELS_COMMUNITY[m.id]&&MODELS[m.id]&&!S.avail[m.id]);
     return '<div class="mx-row'+(sel?' sel':'')+(off?' off':'')+'" data-id="'+e(m.id)+'">'
       +'<div class="mx-ckw"><input class="mx-ck" type="checkbox" '+(sel?'checked ':'')+'aria-label="Compare '+e(m.label)+'"></div>'
-      +'<div class="mx-name"><a href="models/'+slug(m.id)+'.html">'+e(m.label)+'</a>'+(off?' <span class="mx-off-b" title="Every host for this model is failing right now. It comes back automatically.">Unavailable now</span>':'')+(LEGACY[m.id]?' <span class="mx-legacy-b" title="Old id, kept so existing code keeps working. Served by the newer model.">Legacy id</span>':'')
+      +'<div class="mx-name">'+(m.isNew?'<span class="mx-nm">'+e(m.label)+'</span> <span class="mx-new-b" title="Added automatically by the gateway. Billed at the price shown.">New</span>':'<a href="models/'+slug(m.id)+'.html">'+e(m.label)+'</a>')+(off?' <span class="mx-off-b" title="Every host for this model is failing right now. It comes back automatically.">Unavailable now</span>':'')+(LEGACY[m.id]?' <span class="mx-legacy-b" title="Old id, kept so existing code keeps working. Served by the newer model.">Legacy id</span>':'')
         +'<div class="mx-meta"><span>'+e(provLabel(m.provider))+'</span><code>'+e(m.id)+'</code></div>'
         +(tags?'<div class="mx-tags">'+tags+'</div>':'')+(noteFor(m.id)?'<div class="mx-note">'+e(noteFor(m.id))+'</div>':'')+'</div>'
       +'<div class="mx-ctx r">'+ctx(m.ctx)+'</div>'
@@ -1434,7 +1449,7 @@ function renderTicker(){
   // Before the community catalog resolves we have no basis to claim a lower
   // number, so show the same figure as the server-rendered stat card. Once
   // real data is in, report exactly what's there.
-  var realTotal=Object.keys(MODELS).length+Object.keys(MODELS_COMMUNITY).length;
+  var realTotal=Object.keys(MODELS).length+Object.keys(MODELS_COMMUNITY).length+Object.keys(MODELS_NEW).length;
   var modelCount='350+';
   var items=[
     ['MODELS', String(modelCount), false],
