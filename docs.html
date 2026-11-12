@@ -3,21 +3,29 @@
 <head>
 
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<meta name="description" content="Yantra AI documentation: base URL, authentication, routing modes (auto, auto:cheap, auto:reasoning), response headers and error codes. A drop-in replacement for the OpenAI SDK — change two lines of code.">
-<meta property="og:title" content="Yantra AI Docs — Point Your OpenAI SDK Here">
-<meta property="og:description" content="Base URL, auth, routing modes, response headers, error codes — everything to switch your existing OpenAI integration to Yantra in two edits.">
-<meta property="og:type" content="website">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Use GPT, Claude, Gemini and DeepSeek through one OpenAI-compatible API. Change the base URL, pay in ₹ with UPI. Python, Node.js, cURL, OpenCode.">
+<meta name="robots" content="index,follow,max-snippet:-1,max-image-preview:large">
+<meta property="og:title" content="Yantra API Docs: one OpenAI-compatible key for every model">
+<meta property="og:description" content="Change two lines to use GPT, Claude, Gemini and open-weight models through one key. Pay in ₹ with UPI. Python, Node.js, cURL, OpenCode.">
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="Yantra AI">
+<meta property="og:locale" content="en_IN">
+<meta property="article:modified_time" content="2026-11-12T00:00:00+05:30">
 <meta property="og:url" content="https://apikeys.in/docs.html">
 <meta property="og:image" content="https://apikeys.in/assets/og-image.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta property="og:image:alt" content="Yantra AI — one API key for every AI model">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Yantra AI Docs — Point Your OpenAI SDK Here">
-<meta name="twitter:description" content="Base URL, auth, routing modes, response headers, error codes — everything to switch your existing OpenAI integration to Yantra in two edits.">
+<meta name="twitter:title" content="Yantra API Docs: one OpenAI-compatible key for every model">
+<meta name="twitter:description" content="Change two lines to use GPT, Claude, Gemini and open-weight models through one key. Pay in ₹ with UPI. Python, Node.js, cURL, OpenCode.">
 <meta name="twitter:image" content="https://apikeys.in/assets/og-image.png">
 <link rel="canonical" href="https://apikeys.in/docs.html">
+<link rel="alternate" hreflang="en-IN" href="https://apikeys.in/docs.html">
+<link rel="alternate" hreflang="x-default" href="https://apikeys.in/docs.html">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <!-- Favicons: PNG set covers Google's 48x48 search-result minimum + browser tabs;
      favicon.ico is the legacy fallback browsers check by default at the root. -->
 <link rel="icon" type="image/png" sizes="16x16" href="assets/favicon-16.png">
@@ -82,8 +90,135 @@
   ]
 }
 </script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "TechArticle",
+  "headline": "Yantra API documentation",
+  "description": "Use GPT, Claude, Gemini and DeepSeek through one OpenAI-compatible API. Change the base URL, pay in ₹ with UPI. Python, Node.js, cURL, OpenCode.",
+  "url": "https://apikeys.in/docs.html",
+  "mainEntityOfPage": "https://apikeys.in/docs.html",
+  "inLanguage": "en-IN",
+  "dateModified": "2026-11-12",
+  "proficiencyLevel": "Beginner",
+  "about": [
+    "OpenAI-compatible API",
+    "LLM API gateway",
+    "UPI payments in INR"
+  ],
+  "author": {
+    "@type": "Organization",
+    "name": "Yantra AI",
+    "url": "https://apikeys.in/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Yantra AI",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://apikeys.in/assets/icon-512.png"
+    }
+  }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "What is Yantra's base URL?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The base URL is https://api.aitklabs.in/v1. Set it as base_url in the OpenAI Python SDK or baseURL in the Node SDK, and use your yk_live_… key as the API key."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Does Yantra work with the OpenAI SDK?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. Yantra follows the OpenAI request and response format for chat, images, embeddings, speech and transcription. If your code already works with OpenAI, you only change the base URL and the API key."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How do I pay, and what does it cost to start?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "You pay in Indian rupees with UPI. Add credit to your wallet from ₹10, and each request is charged against it by what you use: tokens for chat and embeddings, images, characters for speech, minutes for transcription and seconds for video. There is no subscription."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Which models can I use?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Hundreds of models from OpenAI, Anthropic, Google, DeepSeek, xAI, Mistral and open-weight labs. The models page lists every model with its live price in ₹, and GET /v1/models returns the same list."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What do the auto modes do?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Instead of a model id you can send auto, auto:cheap, auto:fast, auto:reasoning or auto:long-context. Yantra then picks a suitable model for you. The reply tells you which model answered."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What happens if a provider is down?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "For a retryable error (429, 5xx or a timeout), Yantra switches to a similar model of the same kind and sets the header x-yantra-fell-back: true so you can see it happened."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Am I charged for failed requests?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No. A request that fails is not charged. Video is charged only when the finished video is ready."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How can I see what a request cost?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Every chat reply has the headers x-yantra-cost-paise and x-yantra-balance-paise. Your dashboard also shows your balance and the cost of each request."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Does Yantra store my prompts?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No. Prompt and reply content is not logged. Only token counts, cost and latency are recorded for billing."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I use Yantra in OpenCode, n8n and other tools?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. Any tool that lets you set a custom OpenAI-compatible base URL can use Yantra. See the OpenCode setup above or the n8n guide."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Where do I get help?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Email gettony3000@gmail.com or check the status page."
+      }
+    }
+  ]
+}
+</script>
 <meta name="theme-color" content="#eaeff7">
-<title>API Documentation — OpenAI-Compatible Endpoint | Yantra AI</title>
+<title>OpenAI-Compatible API Docs with UPI Billing | Yantra AI</title>
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
 <!-- QR generator (renders the upi:// intent as a scannable QR; degrades gracefully if blocked) -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
@@ -608,7 +743,7 @@ html{scroll-behavior:smooth}
 .dx-table th{text-align:left;font-size:11px;font-weight:700;letter-spacing:.7px;text-transform:uppercase;color:var(--text3);padding:11px 16px;background:var(--card2);border-bottom:1px solid var(--border)}
 .dx-table td{padding:11px 16px;color:var(--text2);border-bottom:1px solid var(--border);vertical-align:top;line-height:1.55}
 .dx-table tr:last-child td{border-bottom:none}
-.dx-table td.mono{font-family:var(--fm);font-size:12.5px;color:var(--text);white-space:nowrap;font-weight:600}
+.dx-sec .dx-table td.mono{font-family:var(--fm);font-size:12.5px;color:var(--text);white-space:nowrap;font-weight:600;background:none;padding:11px 16px;border-radius:0}
 .dx-table td.err{color:#c0392b}
 .dx-steps{margin:0 0 18px;padding:0;list-style:none;counter-reset:dx}
 .dx-steps li{counter-increment:dx;position:relative;padding:6px 0 6px 40px;font-size:15px;line-height:1.7;color:var(--text2)}
@@ -633,6 +768,27 @@ html{scroll-behavior:smooth}
   .dx-sec h2{font-size:23px}
   .dx-sec .mono,.dx-lead .mono{white-space:normal;overflow-wrap:anywhere}
 }
+
+/* docs v3: start strip, "try it" links, FAQ */
+.dx-meta{font-size:12.5px;color:var(--text3);margin:14px 0 0}
+.dx-start{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:22px 0 0}
+.dx-st{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:16px 18px;min-width:0}
+.dx-st b{display:flex;align-items:center;gap:10px;font-family:var(--fd);font-size:15px;color:var(--text);margin-bottom:6px}
+.dx-st b i{font-style:normal;flex:0 0 24px;height:24px;border-radius:50%;background:rgba(0,105,184,.1);color:var(--cyan);display:inline-flex;align-items:center;justify-content:center;font-size:12.5px;font-family:var(--fb)}
+.dx-st p{margin:0;font-size:13.5px;line-height:1.6;color:var(--text2)}
+.dx-st a{color:var(--cyan);text-decoration:underline;text-decoration-color:rgba(0,105,184,.3);text-underline-offset:3px}
+.dx-st .mono{font-family:var(--fm);font-size:12px;background:rgba(15,40,90,.06);padding:1px 6px;border-radius:6px;color:#16294a;overflow-wrap:anywhere}
+.dx-sec a.dx-try{display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:700;color:var(--cyan);text-decoration:none;border:1px solid rgba(0,105,184,.28);padding:6px 14px;border-radius:100px;margin:0 0 14px;background:rgba(0,105,184,.05);transition:background .15s}
+.dx-sec a.dx-try:hover{background:rgba(0,105,184,.11)}
+.dx-table td a{color:var(--cyan)}
+.dx-faq details{border:1px solid var(--border);border-radius:14px;background:var(--card);margin:0 0 10px}
+.dx-faq summary{cursor:pointer;list-style:none;padding:14px 46px 14px 16px;font-weight:700;font-size:15px;line-height:1.5;color:var(--text);position:relative}
+.dx-faq summary::-webkit-details-marker{display:none}
+.dx-faq summary::after{content:'+';position:absolute;right:16px;top:50%;transform:translateY(-50%);font-size:22px;line-height:1;color:var(--cyan);font-weight:500}
+.dx-faq details[open] summary::after{content:'\2013'}
+.dx-faq details p{padding:0 16px 14px;margin:0!important}
+.dx-next{display:flex;flex-wrap:wrap;gap:8px 18px;margin:18px 0 0;font-size:14px}
+@media(max-width:900px){.dx-start{grid-template-columns:minmax(0,1fr)}}
 </style>
 
 <script src="/assets/yk.js" defer></script>
@@ -683,33 +839,43 @@ html{scroll-behavior:smooth}
 <main class="page on" id="page-docs">
   <div class="wrap">
     <header class="dx-head">
-      <h1 class="s-title">Docs</h1>
-      <p class="dx-sub">Yantra works like the OpenAI API. If your code already talks to OpenAI, you only change two things: the base URL and the key.</p>
+      <h1 class="s-title">Yantra API documentation</h1>
+      <p class="dx-sub">Use GPT, Claude, Gemini, DeepSeek and open-weight models through one OpenAI-compatible API. Change two things in your code, the base URL and the key, and pay in ₹ with UPI.</p>
+      <div class="dx-start">
+        <div class="dx-st"><b><i>1</i>Get a key</b><p>Top up from ₹10 with UPI and create a key in your <a href="dashboard.html">dashboard</a>.</p></div>
+        <div class="dx-st"><b><i>2</i>Change two lines</b><p>Set the base URL to <span class="mono">https://api.aitklabs.in/v1</span> and use your key.</p></div>
+        <div class="dx-st"><b><i>3</i>Call any model</b><p>Send a model id or <span class="mono">auto:cheap</span>. See the <a href="#quickstart">quick start</a>.</p></div>
+      </div>
+      <p class="dx-meta">Last updated <time datetime="2026-11-12">12 November 2026</time></p>
     </header>
 
     <div class="dx-layout">
       <div class="dx-toc" id="dx-toc" role="navigation" aria-label="On this page">
         <div class="dx-toc-group">Get started</div>
         <a href="#quickstart">Quick start</a>
-        <a href="#opencode">Use with OpenCode</a>
+        <a href="#endpoints">All endpoints</a>
         <a href="#models">Choosing a model</a>
-        <a href="#open-weight">Open-weight models</a>
         <div class="dx-toc-group">Beyond chat</div>
         <a href="#images">Images</a>
         <a href="#speech">Text to speech</a>
         <a href="#transcription">Speech to text</a>
         <a href="#video">Video</a>
         <a href="#embeddings">Embeddings</a>
+        <div class="dx-toc-group">Integrations</div>
+        <a href="#opencode">OpenCode</a>
         <div class="dx-toc-group">Reference</div>
         <a href="#headers">Response headers</a>
         <a href="#errors">Errors</a>
+        <a href="#open-weight">Open-weight hosts</a>
+        <div class="dx-toc-group">Help</div>
+        <a href="#faq">FAQ</a>
       </div>
 
       <div class="dx-body">
 
         <section class="dx-sec" id="quickstart">
           <h2>Quick start</h2>
-          <p>Create a key in your dashboard, then point any OpenAI library at Yantra. Everything else stays the same, so your existing prompts, tools and streaming code keep working.</p>
+          <p>Point any OpenAI library at Yantra. Your prompts, streaming and tools keep working as they are.</p>
           <div class="dx-facts">
             <div class="dx-fact"><span>Base URL</span><code>https://api.aitklabs.in/v1</code></div>
             <div class="dx-fact"><span>Auth header</span><code>Authorization: Bearer yk_live_…</code></div>
@@ -757,6 +923,149 @@ console.log(resp.choices[0].message.content);</pre></div></div>
           <p class="dx-note">You pay in ₹ from your wallet, and a top-up starts at ₹10 with UPI. If your balance runs out, requests return a <span class="mono">402</span> until you add credit.</p>
         </section>
 
+        <section class="dx-sec" id="endpoints">
+          <h2>All endpoints</h2>
+          <p>Every endpoint lives under <span class="mono">https://api.aitklabs.in/v1</span>, uses the same key and follows the OpenAI format. You pay in ₹ for what you use.</p>
+          <div class="dx-tablewrap"><table class="dx-table">
+            <thead><tr><th>What you do</th><th>Endpoint</th><th>You pay per</th></tr></thead>
+            <tbody>
+              <tr><td><a href="#quickstart">Chat</a></td><td class="mono">POST /chat/completions</td><td>token</td></tr>
+              <tr><td><a href="#images">Images</a></td><td class="mono">POST /images/generations</td><td>image</td></tr>
+              <tr><td><a href="#speech">Text to speech</a></td><td class="mono">POST /audio/speech</td><td>1,000 characters</td></tr>
+              <tr><td><a href="#transcription">Speech to text</a></td><td class="mono">POST /audio/transcriptions</td><td>minute of audio</td></tr>
+              <tr><td><a href="#video">Video</a></td><td class="mono">POST /videos</td><td>second of video</td></tr>
+              <tr><td><a href="#embeddings">Embeddings</a></td><td class="mono">POST /embeddings</td><td>input token</td></tr>
+              <tr><td><a href="models.html">List models</a></td><td class="mono">GET /models</td><td>free</td></tr>
+            </tbody>
+          </table></div>
+        </section>
+
+        <section class="dx-sec" id="models">
+          <h2>Choosing a model</h2>
+          <p>Pass an exact model id when you know what you want. Or let Yantra pick for you with one of the <span class="mono">auto</span> modes.</p>
+          <div class="dx-tablewrap"><table class="dx-table">
+            <thead><tr><th>Model value</th><th>What you get</th></tr></thead>
+            <tbody>
+              <tr><td class="mono">openai/gpt-4o-mini</td><td>Exactly that model</td></tr>
+              <tr><td class="mono">auto</td><td>A balanced default</td></tr>
+              <tr><td class="mono">auto:cheap</td><td>The cheapest model that can do the job</td></tr>
+              <tr><td class="mono">auto:fast</td><td>The model with the lowest latency</td></tr>
+              <tr><td class="mono">auto:reasoning</td><td>A model that is strong at step-by-step reasoning</td></tr>
+              <tr><td class="mono">auto:long-context</td><td>The largest context window</td></tr>
+            </tbody>
+          </table></div>
+          <p>If a provider returns a retryable error (429, a 5xx, or a timeout), Yantra switches to a similar model of the same kind and sets <span class="mono">x-yantra-fell-back: true</span> on the reply, so you can see it happened. Browse every model and its price on the <a href="models.html">models page</a>, or call <span class="mono">GET /v1/models</span>.</p>
+        </section>
+
+        <div class="dx-divider"><span>Beyond chat</span></div>
+        <p class="dx-lead">Images, speech, transcription, video and embeddings use the same key and the same ₹ wallet. You are charged only when a result is returned. Each section below shows how to list the live models and prices, and you can see them all on the <a href="models.html#media">models page</a>.</p>
+
+        <section class="dx-sec" id="images">
+          <h2>Images</h2>
+          <p>Image generation follows the OpenAI <span class="mono">/v1/images/generations</span> format.</p>
+          <a class="dx-try" href="playground.html#image">Try it in the playground →</a>
+          <div class="codeblock"><button class="cp" onclick="copyCode(this)">copy</button><pre>curl https://api.aitklabs.in/v1/images/generations \
+  -H "Authorization: Bearer yk_live_xxxxxxxxxxxx" \
+  -H "Content-Type: application/json" \
+  -d '{"model":"black-forest-labs/flux-1-schnell","prompt":"A diya on a rainy window, photo","size":"1024x1024","n":1}'
+# returns {"data":[{"b64_json":"..."}]}</pre></div>
+          <ul class="dx-list">
+            <li>Up to 4 images per request, from 256 to 2048 px.</li>
+            <li>Add <span class="mono">"response_format":"url"</span> to get a hosted link instead of base64. The link is valid for 1 hour.</li>
+            <li>List live models and prices with <span class="mono">GET /v1/images/models</span>.</li>
+          </ul>
+        </section>
+
+        <section class="dx-sec" id="speech">
+          <h2>Text to speech</h2>
+          <p>Turn text into audio with <span class="mono">/v1/audio/speech</span>. Pick a model and one of its voices. You pay per 1,000 characters.</p>
+          <a class="dx-try" href="playground.html#speech">Try it in the playground →</a>
+          <div class="codeblock"><button class="cp" onclick="copyCode(this)">copy</button><pre>curl https://api.aitklabs.in/v1/audio/speech \
+  -H "Authorization: Bearer yk_live_xxxxxxxxxxxx" \
+  -H "Content-Type: application/json" \
+  -d '{"model":"elevenlabs/flash-v2.5","input":"Namaste! Welcome to Yantra.","voice":"rachel"}' \
+  --output hello.mp3</pre></div>
+          <div class="dx-tablewrap"><table class="dx-table">
+            <thead><tr><th>Model</th><th>Voices (examples)</th></tr></thead>
+            <tbody>
+              <tr><td class="mono">elevenlabs/flash-v2.5</td><td class="mono">rachel</td></tr>
+              <tr><td class="mono">openai/gpt-4o-mini-tts</td><td class="mono">alloy, nova, onyx, shimmer</td></tr>
+              <tr><td class="mono">xai/grok-tts</td><td class="mono">ara, eve, leo, rex, sal</td></tr>
+              <tr><td class="mono">gemini/flash-tts</td><td class="mono">Kore, Puck, Zephyr</td></tr>
+            </tbody>
+          </table></div>
+          <ul class="dx-list">
+            <li>Up to 5,000 characters per request. Output is MP3 (Gemini voices return WAV). Speed can be 0.7 to 1.2.</li>
+            <li>OpenAI voices also accept an <span class="mono">instructions</span> field to steer tone and pace.</li>
+            <li>Each voice belongs to its model's provider. List every model and voice with <span class="mono">GET /v1/audio/models</span>.</li>
+          </ul>
+        </section>
+
+        <section class="dx-sec" id="transcription">
+          <h2>Speech to text</h2>
+          <p>Upload an audio file to <span class="mono">/v1/audio/transcriptions</span> and get the text back. You pay per minute of audio.</p>
+          <a class="dx-try" href="playground.html#stt">Try it in the playground →</a>
+          <div class="codeblock"><button class="cp" onclick="copyCode(this)">copy</button><pre>curl https://api.aitklabs.in/v1/audio/transcriptions \
+  -H "Authorization: Bearer yk_live_xxxxxxxxxxxx" \
+  -F model=openai/gpt-4o-mini-transcribe \
+  -F file=@meeting.mp3
+# returns {"text":"..."}</pre></div>
+          <ul class="dx-list">
+            <li>Models: <span class="mono">openai/gpt-4o-mini-transcribe</span>, <span class="mono">openai/whisper-1</span>, <span class="mono">xai/grok-stt</span>.</li>
+            <li>Files up to 25 MB. Optional fields are <span class="mono">language</span>, <span class="mono">prompt</span> and <span class="mono">response_format</span> (json, text or verbose_json).</li>
+            <li>List live models and prices with <span class="mono">GET /v1/audio/transcription-models</span>.</li>
+          </ul>
+        </section>
+
+        <section class="dx-sec" id="video">
+          <h2>Video</h2>
+          <p>A video takes a little while to make, so it works in two steps. First you start a job, then you check on it until it is ready. You pay per second of video, and only when the video is finished.</p>
+          <a class="dx-try" href="playground.html#video">Try it in the playground →</a>
+          <div class="codeblock"><button class="cp" onclick="copyCode(this)">copy</button><pre># 1. Start a video. This returns {"id":"vid_...","status":"queued"}
+curl https://api.aitklabs.in/v1/videos \
+  -H "Authorization: Bearer yk_live_xxxxxxxxxxxx" \
+  -H "Content-Type: application/json" \
+  -d '{"model":"xai/grok-imagine-video-1.5-lite","prompt":"A paper boat drifting down a rain-soaked street","duration":5,"resolution":"720p"}'
+
+# 2. Check it every few seconds. When status is "completed", download the "url".
+curl https://api.aitklabs.in/v1/videos/vid_xxxxxxxx \
+  -H "Authorization: Bearer yk_live_xxxxxxxxxxxx"</pre></div>
+          <ul class="dx-list">
+            <li>Models: <span class="mono">xai/grok-imagine-video-1.5-lite</span>, <span class="mono">xai/grok-imagine-video</span>, <span class="mono">xai/grok-imagine-video-1.5</span>.</li>
+            <li>Fields: <span class="mono">prompt</span>, <span class="mono">duration</span> (1 to 10 seconds), <span class="mono">resolution</span> (480p, 720p or 1080p) and <span class="mono">aspect_ratio</span>.</li>
+            <li>Failed, blocked or timed-out videos cost nothing. Each account can have 2 videos in progress at a time.</li>
+            <li>The download link is temporary, so save the file soon after it completes.</li>
+            <li>List live models and prices with <span class="mono">GET /v1/videos/models</span>.</li>
+          </ul>
+        </section>
+
+        <section class="dx-sec" id="embeddings">
+          <h2>Embeddings</h2>
+          <p>Embeddings turn text into vectors for search, recommendations and RAG. The endpoint is <span class="mono">/v1/embeddings</span>, and you pay per input token.</p>
+          <a class="dx-try" href="playground.html#emb">Try it in the playground →</a>
+          <div class="codeblock"><button class="cp" onclick="copyCode(this)">copy</button><pre>curl https://api.aitklabs.in/v1/embeddings \
+  -H "Authorization: Bearer yk_live_xxxxxxxxxxxx" \
+  -H "Content-Type: application/json" \
+  -d '{"model":"openai/text-embedding-3-small","input":["First text","Second text"]}'
+# returns {"data":[{"index":0,"embedding":[...]}, ...],"usage":{"prompt_tokens":N}}</pre></div>
+          <div class="dx-tablewrap"><table class="dx-table">
+            <thead><tr><th>Model</th><th>Dimensions</th></tr></thead>
+            <tbody>
+              <tr><td class="mono">openai/text-embedding-3-small</td><td>1536</td></tr>
+              <tr><td class="mono">openai/text-embedding-3-large</td><td>3072</td></tr>
+              <tr><td class="mono">gemini/gemini-embedding-001</td><td>3072</td></tr>
+              <tr><td class="mono">mistral/mistral-embed</td><td>1024</td></tr>
+            </tbody>
+          </table></div>
+          <ul class="dx-list">
+            <li>Send up to 256 texts per request. Inputs must be strings.</li>
+            <li>Use <span class="mono">dimensions</span> to shorten the vector on the OpenAI and Gemini models, and <span class="mono">encoding_format</span> for <span class="mono">float</span> or <span class="mono">base64</span>.</li>
+            <li>The OpenAI SDK works as usual: <span class="mono">client.embeddings.create(model="openai/text-embedding-3-small", input=["hello"])</span>.</li>
+            <li>List live models and prices with <span class="mono">GET /v1/embeddings/models</span>.</li>
+          </ul>
+        </section>
+
+        <div class="dx-divider"><span>Integrations</span></div>
         <section class="dx-sec" id="opencode">
           <h2>Use with OpenCode</h2>
           <p>OpenCode is an open-source coding agent for your terminal. It can talk to any OpenAI-compatible endpoint, so Yantra works as a provider. You can use Claude, GPT, Grok, DeepSeek and the other models in the same OpenCode session, and pay in ₹ with UPI.</p>
@@ -816,145 +1125,7 @@ console.log(resp.choices[0].message.content);</pre></div></div>
           </ul>
         </section>
 
-        <section class="dx-sec" id="models">
-          <h2>Choosing a model</h2>
-          <p>Pass an exact model id when you know what you want. Or let Yantra pick for you with one of the <span class="mono">auto</span> modes.</p>
-          <div class="dx-tablewrap"><table class="dx-table">
-            <thead><tr><th>Model value</th><th>What you get</th></tr></thead>
-            <tbody>
-              <tr><td class="mono">openai/gpt-4o-mini</td><td>Exactly that model</td></tr>
-              <tr><td class="mono">auto</td><td>A balanced default</td></tr>
-              <tr><td class="mono">auto:cheap</td><td>The cheapest model that can do the job</td></tr>
-              <tr><td class="mono">auto:fast</td><td>The model with the lowest latency</td></tr>
-              <tr><td class="mono">auto:reasoning</td><td>A model that is strong at step-by-step reasoning</td></tr>
-              <tr><td class="mono">auto:long-context</td><td>The largest context window</td></tr>
-            </tbody>
-          </table></div>
-          <p>If a provider returns a retryable error (429, a 5xx, or a timeout), Yantra switches to a similar model of the same kind and sets <span class="mono">x-yantra-fell-back: true</span> on the reply, so you can see it happened. Browse every model and its price on the <a href="models.html">models page</a>, or call <span class="mono">GET /v1/models</span>.</p>
-        </section>
-
-        <section class="dx-sec" id="open-weight">
-          <h2>Open-weight models and hosts</h2>
-          <p>Open-weight models such as <span class="mono">openai/gpt-oss-120b</span> or <span class="mono">qwen/qwen3.6-27b</span> have one id, named after the lab that made them. Yantra chooses a host that serves the model, cheapest healthy host first. If that host is down, it tries another host of the <b>same</b> model. The price you pay is the same either way.</p>
-          <p>If you want to pick the hosts yourself, add an optional <span class="mono">provider</span> object. It works like OpenRouter's.</p>
-          <div class="codeblock"><button class="cp" onclick="copyCode(this)">copy</button><pre>{
-  "model": "openai/gpt-oss-120b",
-  "messages": [{"role":"user","content":"Hello"}],
-  "provider": {
-    "order": ["fireworks", "siliconflow"],   // try these first, in this order
-    "only": ["fireworks"],                   // or: use only these hosts
-    "ignore": ["siliconflow"],               // or: never use these
-    "allow_fallbacks": false                 // never switch to a different model
-  }
-}</pre></div>
-          <p class="dx-note"><span class="mono">GET /v1/models</span> lists the hosts of each open-weight model. If none of a model's hosts match your settings, you get a <span class="mono">400 no_matching_provider</span> error. Older ids such as <span class="mono">fireworks/gpt-oss-20b</span> still work.</p>
-        </section>
-
-        <div class="dx-divider"><span>Beyond chat</span></div>
-        <p class="dx-lead">Images, speech, transcription, video and embeddings use the same key and the same ₹ wallet. You are charged only when a result is returned. Each section below shows how to list the live models and prices, and you can see them all on the <a href="models.html#media">models page</a>.</p>
-
-        <section class="dx-sec" id="images">
-          <h2>Images</h2>
-          <p>Image generation follows the OpenAI <span class="mono">/v1/images/generations</span> format.</p>
-          <div class="codeblock"><button class="cp" onclick="copyCode(this)">copy</button><pre>curl https://api.aitklabs.in/v1/images/generations \
-  -H "Authorization: Bearer yk_live_xxxxxxxxxxxx" \
-  -H "Content-Type: application/json" \
-  -d '{"model":"black-forest-labs/flux-1-schnell","prompt":"A diya on a rainy window, photo","size":"1024x1024","n":1}'
-# returns {"data":[{"b64_json":"..."}]}</pre></div>
-          <ul class="dx-list">
-            <li>Up to 4 images per request, from 256 to 2048 px.</li>
-            <li>Add <span class="mono">"response_format":"url"</span> to get a hosted link instead of base64. The link is valid for 1 hour.</li>
-            <li>List live models and prices with <span class="mono">GET /v1/images/models</span>.</li>
-          </ul>
-        </section>
-
-        <section class="dx-sec" id="speech">
-          <h2>Text to speech</h2>
-          <p>Turn text into audio with <span class="mono">/v1/audio/speech</span>. Pick a model and one of its voices. You pay per 1,000 characters.</p>
-          <div class="codeblock"><button class="cp" onclick="copyCode(this)">copy</button><pre>curl https://api.aitklabs.in/v1/audio/speech \
-  -H "Authorization: Bearer yk_live_xxxxxxxxxxxx" \
-  -H "Content-Type: application/json" \
-  -d '{"model":"elevenlabs/flash-v2.5","input":"Namaste! Welcome to Yantra.","voice":"rachel"}' \
-  --output hello.mp3</pre></div>
-          <div class="dx-tablewrap"><table class="dx-table">
-            <thead><tr><th>Model</th><th>Voices (examples)</th></tr></thead>
-            <tbody>
-              <tr><td class="mono">elevenlabs/flash-v2.5</td><td class="mono">rachel</td></tr>
-              <tr><td class="mono">openai/gpt-4o-mini-tts</td><td class="mono">alloy, nova, onyx, shimmer</td></tr>
-              <tr><td class="mono">xai/grok-tts</td><td class="mono">ara, eve, leo, rex, sal</td></tr>
-              <tr><td class="mono">gemini/flash-tts</td><td class="mono">Kore, Puck, Zephyr</td></tr>
-            </tbody>
-          </table></div>
-          <ul class="dx-list">
-            <li>Up to 5,000 characters per request. Output is MP3 (Gemini voices return WAV). Speed can be 0.7 to 1.2.</li>
-            <li>OpenAI voices also accept an <span class="mono">instructions</span> field to steer tone and pace.</li>
-            <li>Each voice belongs to its model's provider. List every model and voice with <span class="mono">GET /v1/audio/models</span>.</li>
-          </ul>
-        </section>
-
-        <section class="dx-sec" id="transcription">
-          <h2>Speech to text</h2>
-          <p>Upload an audio file to <span class="mono">/v1/audio/transcriptions</span> and get the text back. You pay per minute of audio.</p>
-          <div class="codeblock"><button class="cp" onclick="copyCode(this)">copy</button><pre>curl https://api.aitklabs.in/v1/audio/transcriptions \
-  -H "Authorization: Bearer yk_live_xxxxxxxxxxxx" \
-  -F model=openai/gpt-4o-mini-transcribe \
-  -F file=@meeting.mp3
-# returns {"text":"..."}</pre></div>
-          <ul class="dx-list">
-            <li>Models: <span class="mono">openai/gpt-4o-mini-transcribe</span>, <span class="mono">openai/whisper-1</span>, <span class="mono">xai/grok-stt</span>.</li>
-            <li>Files up to 25 MB. Optional fields are <span class="mono">language</span>, <span class="mono">prompt</span> and <span class="mono">response_format</span> (json, text or verbose_json).</li>
-            <li>List live models and prices with <span class="mono">GET /v1/audio/transcription-models</span>.</li>
-          </ul>
-        </section>
-
-        <section class="dx-sec" id="video">
-          <h2>Video</h2>
-          <p>A video takes a little while to make, so it works in two steps. First you start a job, then you check on it until it is ready. You pay per second of video, and only when the video is finished.</p>
-          <div class="codeblock"><button class="cp" onclick="copyCode(this)">copy</button><pre># 1. Start a video. This returns {"id":"vid_...","status":"queued"}
-curl https://api.aitklabs.in/v1/videos \
-  -H "Authorization: Bearer yk_live_xxxxxxxxxxxx" \
-  -H "Content-Type: application/json" \
-  -d '{"model":"xai/grok-imagine-video-1.5-lite","prompt":"A paper boat drifting down a rain-soaked street","duration":5,"resolution":"720p"}'
-
-# 2. Check it every few seconds. When status is "completed", download the "url".
-curl https://api.aitklabs.in/v1/videos/vid_xxxxxxxx \
-  -H "Authorization: Bearer yk_live_xxxxxxxxxxxx"</pre></div>
-          <ul class="dx-list">
-            <li>Models: <span class="mono">xai/grok-imagine-video-1.5-lite</span>, <span class="mono">xai/grok-imagine-video</span>, <span class="mono">xai/grok-imagine-video-1.5</span>.</li>
-            <li>Fields: <span class="mono">prompt</span>, <span class="mono">duration</span> (1 to 10 seconds), <span class="mono">resolution</span> (480p, 720p or 1080p) and <span class="mono">aspect_ratio</span>.</li>
-            <li>Failed, blocked or timed-out videos cost nothing. Each account can have 2 videos in progress at a time.</li>
-            <li>The download link is temporary, so save the file soon after it completes.</li>
-            <li>List live models and prices with <span class="mono">GET /v1/videos/models</span>.</li>
-          </ul>
-        </section>
-
-        <section class="dx-sec" id="embeddings">
-          <h2>Embeddings</h2>
-          <p>Embeddings turn text into vectors for search, recommendations and RAG. The endpoint is <span class="mono">/v1/embeddings</span>, and you pay per input token.</p>
-          <div class="codeblock"><button class="cp" onclick="copyCode(this)">copy</button><pre>curl https://api.aitklabs.in/v1/embeddings \
-  -H "Authorization: Bearer yk_live_xxxxxxxxxxxx" \
-  -H "Content-Type: application/json" \
-  -d '{"model":"openai/text-embedding-3-small","input":["First text","Second text"]}'
-# returns {"data":[{"index":0,"embedding":[...]}, ...],"usage":{"prompt_tokens":N}}</pre></div>
-          <div class="dx-tablewrap"><table class="dx-table">
-            <thead><tr><th>Model</th><th>Dimensions</th></tr></thead>
-            <tbody>
-              <tr><td class="mono">openai/text-embedding-3-small</td><td>1536</td></tr>
-              <tr><td class="mono">openai/text-embedding-3-large</td><td>3072</td></tr>
-              <tr><td class="mono">gemini/gemini-embedding-001</td><td>3072</td></tr>
-              <tr><td class="mono">mistral/mistral-embed</td><td>1024</td></tr>
-            </tbody>
-          </table></div>
-          <ul class="dx-list">
-            <li>Send up to 256 texts per request. Inputs must be strings.</li>
-            <li>Use <span class="mono">dimensions</span> to shorten the vector on the OpenAI and Gemini models, and <span class="mono">encoding_format</span> for <span class="mono">float</span> or <span class="mono">base64</span>.</li>
-            <li>The OpenAI SDK works as usual: <span class="mono">client.embeddings.create(model="openai/text-embedding-3-small", input=["hello"])</span>.</li>
-            <li>List live models and prices with <span class="mono">GET /v1/embeddings/models</span>.</li>
-          </ul>
-        </section>
-
         <div class="dx-divider"><span>Reference</span></div>
-
         <section class="dx-sec" id="headers">
           <h2>Response headers</h2>
           <p>Chat replies include these headers so you can see where a request went and what it cost.</p>
@@ -984,6 +1155,31 @@ curl https://api.aitklabs.in/v1/videos/vid_xxxxxxxx \
             </tbody>
           </table></div>
           <p class="dx-note">Stuck? Email <a href="mailto:gettony3000@gmail.com">gettony3000@gmail.com</a> or check the <a href="status.html">status page</a>.</p>
+        </section>
+
+        <section class="dx-sec" id="open-weight">
+          <h2>Open-weight models and hosts</h2>
+          <p class="dx-note" style="margin-top:0">Advanced. You only need this if you want to choose which host serves an open-weight model.</p>
+          <p>Open-weight models such as <span class="mono">openai/gpt-oss-120b</span> or <span class="mono">qwen/qwen3.6-27b</span> have one id, named after the lab that made them. Yantra chooses a host that serves the model, cheapest healthy host first. If that host is down, it tries another host of the <b>same</b> model. The price you pay is the same either way.</p>
+          <p>If you want to pick the hosts yourself, add an optional <span class="mono">provider</span> object. It works like OpenRouter's.</p>
+          <div class="codeblock"><button class="cp" onclick="copyCode(this)">copy</button><pre>{
+  "model": "openai/gpt-oss-120b",
+  "messages": [{"role":"user","content":"Hello"}],
+  "provider": {
+    "order": ["fireworks", "siliconflow"],   // try these first, in this order
+    "only": ["fireworks"],                   // or: use only these hosts
+    "ignore": ["siliconflow"],               // or: never use these
+    "allow_fallbacks": false                 // never switch to a different model
+  }
+}</pre></div>
+          <p class="dx-note"><span class="mono">GET /v1/models</span> lists the hosts of each open-weight model. If none of a model's hosts match your settings, you get a <span class="mono">400 no_matching_provider</span> error. Older ids such as <span class="mono">fireworks/gpt-oss-20b</span> still work.</p>
+        </section>
+
+        <div class="dx-divider"><span>Help</span></div>
+        <section class="dx-sec dx-faq" id="faq">
+          <h2>Frequently asked questions</h2>
+          <details><summary>What is Yantra&#x27;s base URL?</summary><p>The base URL is <span class="mono">https://api.aitklabs.in/v1</span>. Set it as <span class="mono">base_url</span> in the OpenAI Python SDK or <span class="mono">baseURL</span> in the Node SDK, and use your <span class="mono">yk_live_…</span> key as the API key.</p></details><details><summary>Does Yantra work with the OpenAI SDK?</summary><p>Yes. Yantra follows the OpenAI request and response format for chat, images, embeddings, speech and transcription. If your code already works with OpenAI, you only change the base URL and the API key.</p></details><details><summary>How do I pay, and what does it cost to start?</summary><p>You pay in Indian rupees with UPI. Add credit to your wallet from ₹10, and each request is charged against it by what you use: tokens for chat and embeddings, images, characters for speech, minutes for transcription and seconds for video. There is no subscription.</p></details><details><summary>Which models can I use?</summary><p>Hundreds of models from OpenAI, Anthropic, Google, DeepSeek, xAI, Mistral and open-weight labs. The <a href="models.html">models page</a> lists every model with its live price in ₹, and <span class="mono">GET /v1/models</span> returns the same list.</p></details><details><summary>What do the auto modes do?</summary><p>Instead of a model id you can send <span class="mono">auto</span>, <span class="mono">auto:cheap</span>, <span class="mono">auto:fast</span>, <span class="mono">auto:reasoning</span> or <span class="mono">auto:long-context</span>. Yantra then picks a suitable model for you. The reply tells you which model answered.</p></details><details><summary>What happens if a provider is down?</summary><p>For a retryable error (429, 5xx or a timeout), Yantra switches to a similar model of the same kind and sets the header <span class="mono">x-yantra-fell-back: true</span> so you can see it happened.</p></details><details><summary>Am I charged for failed requests?</summary><p>No. A request that fails is not charged. Video is charged only when the finished video is ready.</p></details><details><summary>How can I see what a request cost?</summary><p>Every chat reply has the headers <span class="mono">x-yantra-cost-paise</span> and <span class="mono">x-yantra-balance-paise</span>. Your dashboard also shows your balance and the cost of each request.</p></details><details><summary>Does Yantra store my prompts?</summary><p>No. Prompt and reply content is not logged. Only token counts, cost and latency are recorded for billing.</p></details><details><summary>Can I use Yantra in OpenCode, n8n and other tools?</summary><p>Yes. Any tool that lets you set a custom OpenAI-compatible base URL can use Yantra. See the <a href="#opencode">OpenCode setup</a> above or the <a href="n8n-openai-india.html">n8n guide</a>.</p></details><details><summary>Where do I get help?</summary><p>Email <a href="mailto:gettony3000@gmail.com">gettony3000@gmail.com</a> or check the <a href="status.html">status page</a>.</p></details>
+          <div class="dx-next"><a href="models.html">Browse all models</a><a href="playground.html">Try the playground</a><a href="llm-api-pricing-india.html">LLM API pricing in India</a><a href="openai-alternative-india.html">OpenAI alternative for India</a><a href="guides.html">All guides</a></div>
         </section>
 
       </div>

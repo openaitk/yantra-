@@ -19,7 +19,7 @@
 - [Models](https://apikeys.in/models.html): live, searchable catalog of all 350+ models with current INR pricing per million tokens
 - [Playground](https://apikeys.in/playground.html): try any model in the browser, no signup required — real routing and cost shown live
 - [Workspace](https://apikeys.in/workspace.html): multi-file project editor where an AI proposes changes as reviewable diffs; code stays in the browser
-- [Docs](https://apikeys.in/docs.html): base URL, auth, routing modes, response headers, error codes — everything needed to integrate
+- [Docs](https://apikeys.in/docs.html): quick start (Python, Node.js, cURL), all endpoints, routing modes, images, text to speech, speech to text, video, embeddings, OpenCode setup, response headers, error codes and a FAQ — everything needed to integrate
 
 ## Guides (India-specific)
 
@@ -30,10 +30,12 @@
 - [OpenAI alternative for India](https://apikeys.in/openai-alternative-india.html) · [OpenRouter alternative for India](https://apikeys.in/openrouter-alternative-india.html)
 - [Use GPT, Claude and Gemini in n8n](https://apikeys.in/n8n-openai-india.html)
 - [Image generation API (FLUX) in India](https://apikeys.in/ai-image-generation-api-india.html)
+- [Video, voice, speech-to-text and embedding models with live ₹ prices](https://apikeys.in/models.html#media)
 
 ## Typical questions this site answers
 
 - How do I use an AI API from India without an international credit card? (UPI billing)
 - Is there a cheap way to access GPT, Claude, and Gemini through one API key? (yes — one key, per-token INR billing)
 - What is the minimum amount to start? (₹10)
+- Can I also get text to speech, transcription and embeddings through the same key? (yes — /v1/videos, /v1/audio/speech, /v1/audio/transcriptions and /v1/embeddings, billed in ₹)
 - Does my existing OpenAI integration work without a rewrite? (yes — change the base URL and key only)
