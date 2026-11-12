@@ -6,7 +6,7 @@
 
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<meta name="description" content="Yantra AI is an LLM API gateway for India. One API key for GPT, Claude, Gemini, DeepSeek and 350+ AI models. Pay with UPI in ₹ — top up from just ₹10, no international credit card needed. Drop-in replacement for the OpenAI SDK.">
+<meta name="description" content="One OpenAI-compatible API key for GPT, Claude, Gemini, DeepSeek and 350+ models. Pay in ₹ with UPI from ₹10. No credit card needed.">
 <meta property="og:title" content="Yantra AI — One key. Every model. Pay with UPI.">
 <meta property="og:description" content="An LLM API gateway with one OpenAI-compatible endpoint that intelligently routes every AI API request. Indian-rupee billing over UPI.">
 <meta property="og:type" content="website">
@@ -121,7 +121,7 @@
 }
 </script>
 <meta name="theme-color" content="#eaeff7">
-<title>Yantra AI — LLM API Gateway for OpenAI, Claude, Gemini | Pay with UPI</title>
+<title>Yantra AI: One API for GPT, Claude & Gemini | Pay with UPI</title>
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
 <!-- QR generator (renders the upi:// intent as a scannable QR; degrades gracefully if blocked) -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
@@ -313,6 +313,52 @@ html{scroll-behavior:smooth;}
 .rd-cta{display:block;text-align:center;margin-top:10px;font-weight:700;font-size:13px;color:var(--cyan);text-decoration:none}
 .diagram-caption{font-size:11px;color:var(--text3);margin-top:10px;text-align:center;line-height:1.5;}
 .diagram-caption b{color:var(--cyan);} .diagram-caption .gr{color:var(--green);}
+/* ════ 3D routing diagram ════ */
+.dg-scene{position:relative;perspective:1100px;perspective-origin:50% 36%;container-type:inline-size;margin:4px 0 0;padding:0 1%}
+.dg-stage{position:relative;width:100%;aspect-ratio:360/480;transform-style:preserve-3d;transform:rotateX(9deg);will-change:transform}
+.dg-plane{position:absolute;inset:-1% -3%;border-radius:6cqw;transform:translateZ(-30px);background-image:radial-gradient(rgba(15,40,90,.16) 1px,transparent 1.5px);background-size:4.4cqw 4.4cqw;-webkit-mask-image:radial-gradient(closest-side,#000 58%,transparent 100%);mask-image:radial-gradient(closest-side,#000 58%,transparent 100%)}
+.dg-glow{position:absolute;left:12%;right:12%;top:30%;height:30%;transform:translateZ(-20px);background:radial-gradient(closest-side,rgba(0,105,184,.20),transparent);animation:dg-breathe 5s ease-in-out infinite}
+.dg-slab{position:absolute;left:4%;right:4%;border-radius:5cqw;transform:translateZ(-8px);background:linear-gradient(180deg,rgba(255,255,255,.82),rgba(226,237,251,.55));border:1px solid rgba(0,105,184,.17);box-shadow:inset 0 1px 0 #fff,0 22px 40px -26px rgba(15,40,90,.5)}
+.dg-slab{transform-style:preserve-3d}
+.dg-slab span{position:absolute;left:2.6cqw;top:1.2cqw;padding:.5cqw 1.6cqw;border-radius:1.4cqw;background:rgba(255,255,255,.92);font:700 max(8px,2.1cqw) var(--fm);letter-spacing:.14em;text-transform:uppercase;color:var(--text3);transform:translateZ(24px)}
+.dg-svg{position:absolute;inset:0;width:100%;height:100%;transform:translateZ(14px);overflow:visible;pointer-events:none}
+.dg-svg .flow-edge{fill:none;stroke:rgba(15,40,90,.26);stroke-width:1.6;stroke-linecap:round;stroke-dasharray:2 6;animation:dg-dash 1.5s linear infinite;filter:none}
+.dg-svg .flow-edge.active{stroke:rgba(0,105,184,.4);filter:none}
+.dg-svg .flow-fx{fill:none;stroke:var(--cyan);stroke-width:2.8;stroke-linecap:round;filter:drop-shadow(0 0 3px rgba(0,150,255,.7))}
+.dg-svg .flow-fx.fx-p{stroke:var(--green);filter:drop-shadow(0 0 3px rgba(0,190,110,.65))}
+.dg-svg .flow-fx.bad{stroke:#d92d20;filter:drop-shadow(0 0 3px rgba(217,45,32,.6))}
+.dg-n{position:absolute;display:flex;align-items:center;gap:2.4cqw;padding:0 2.6cqw;border-radius:2.9cqw;text-align:left;transform:translate(-50%,-50%) translateZ(30px);transform-style:preserve-3d;
+  background:linear-gradient(180deg,#fff,#edf3fc);border:1px solid rgba(15,40,90,.13);box-shadow:inset 0 1px 0 #fff,0 12px 22px -12px rgba(15,40,90,.5);
+  animation:dg-float 6.5s ease-in-out var(--d,0s) infinite;transition:background .4s,border-color .4s,box-shadow .4s}
+.dg-n::before{content:"";position:absolute;inset:14% 5% -16%;border-radius:inherit;background:rgba(15,40,90,.30);filter:blur(7px);transform:translateZ(-38px)}
+.dg-n::after{content:"";position:absolute;inset:-1px;border-radius:inherit;pointer-events:none}
+.dg-n .nb{flex:none;width:5.4cqw;height:5.4cqw;min-width:17px;min-height:17px;border-radius:50%;display:grid;place-items:center;background:linear-gradient(135deg,#1c83d4,#0b4f94);color:#fff;font:700 max(9px,2.5cqw) var(--fm);box-shadow:0 3px 8px -2px rgba(0,105,184,.6)}
+.dg-n .tx{min-width:0}
+.dg-n b{display:block;font:700 max(10px,3.1cqw)/1.15 var(--fd);color:var(--text);letter-spacing:-.1px;white-space:nowrap}
+.dg-n i{display:block;font:500 max(8.5px,2.45cqw)/1.25 var(--fb);font-style:normal;color:var(--text3);white-space:nowrap;margin-top:.2cqw}
+.dg-n.prov{flex-direction:column;justify-content:center;gap:.9cqw;padding:0;text-align:center}
+.dg-n.prov b{font:700 max(7px,2.1cqw)/1 var(--fb);letter-spacing:-.2px;color:var(--text2)}
+.dg-n .lg{width:6.6cqw;height:6.6cqw;min-width:20px;min-height:20px;border-radius:50%;background:#fff;border:1px solid rgba(15,40,90,.12);display:grid;place-items:center;padding:3px;box-shadow:0 4px 10px -4px rgba(15,40,90,.35)}
+.dg-n .lg img{width:100%;height:100%;object-fit:contain;display:block}
+.dg-n.active{background:linear-gradient(180deg,#f3f9ff,#d9eafa);border-color:rgba(0,105,184,.6);box-shadow:inset 0 1px 0 #fff,0 0 0 1px rgba(0,105,184,.22),0 14px 30px -10px rgba(0,105,184,.65)}
+.dg-n.active b{color:var(--cyan)}
+.dg-n.prov.active{background:linear-gradient(180deg,#f2fcf7,#d5f3e5);border-color:rgba(0,148,83,.6);box-shadow:inset 0 1px 0 #fff,0 0 0 1px rgba(0,148,83,.22),0 14px 30px -10px rgba(0,148,83,.6)}
+.dg-n.prov.active b{color:var(--green)}
+.dg-n.fail{background:linear-gradient(180deg,#fff5f4,#fbdcd8);border-color:rgba(217,45,32,.65);box-shadow:inset 0 1px 0 #fff,0 14px 30px -10px rgba(217,45,32,.55);animation:dg-shake .5s ease 1,dg-float 6.5s ease-in-out .5s infinite}
+.dg-n.fail b{color:#d92d20}
+.dg-n.ping::after{animation:dg-ping .75s ease-out}
+.dg-orb,.dg-tr{position:absolute;left:0;top:0;border-radius:50%;pointer-events:none;opacity:0}
+.dg-orb{width:4.4cqw;height:4.4cqw;min-width:14px;min-height:14px;margin:-2.2cqw 0 0 -2.2cqw;background:radial-gradient(circle at 34% 30%,#fff 0,#8bd4ff 34%,#0069b8 78%);box-shadow:0 0 0 .7cqw rgba(0,105,184,.16),0 0 3.2cqw rgba(0,150,255,.8);transition:opacity .25s}
+.dg-tr{width:2.6cqw;height:2.6cqw;min-width:8px;min-height:8px;margin:-1.3cqw 0 0 -1.3cqw;background:rgba(0,140,240,.55);filter:blur(.4px)}
+.dg-orb.on{opacity:1}
+.dg-orb.pv{background:radial-gradient(circle at 34% 30%,#fff 0,#8ff0c0 34%,#009453 78%);box-shadow:0 0 0 .7cqw rgba(0,148,83,.16),0 0 3.2cqw rgba(0,200,120,.75)}
+@keyframes dg-float{0%,100%{transform:translate(-50%,-50%) translateZ(26px)}50%{transform:translate(-50%,-50%) translateZ(40px)}}
+@keyframes dg-dash{to{stroke-dashoffset:-16}}
+@keyframes dg-breathe{0%,100%{opacity:.55;transform:translateZ(-20px) scale(.94)}50%{opacity:1;transform:translateZ(-20px) scale(1.04)}}
+@keyframes dg-ping{0%{box-shadow:0 0 0 0 rgba(0,140,240,.5)}100%{box-shadow:0 0 0 3.6cqw rgba(0,140,240,0)}}
+@keyframes dg-shake{0%,100%{transform:translate(-50%,-50%) translateZ(30px)}20%{transform:translate(calc(-50% - 5px),-50%) translateZ(30px)}40%{transform:translate(calc(-50% + 5px),-50%) translateZ(30px)}60%{transform:translate(calc(-50% - 3px),-50%) translateZ(30px)}80%{transform:translate(calc(-50% + 3px),-50%) translateZ(30px)}}
+@media(prefers-reduced-motion:reduce){.dg-n,.dg-glow,.dg-svg .flow-edge{animation:none}.dg-stage{transform:rotateX(6deg)}}
+
 
 /* ════ STATS ════ */
 .stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--border);border:1px solid var(--border);border-radius:var(--r2);overflow:hidden;margin:44px 0;animation:fade-up .6s .5s ease both;}
@@ -1047,43 +1093,39 @@ footer a:hover{color:var(--cyan)!important}
             <span class="diagram-title">Intelligent Request Routing</span>
             <span class="diagram-live"><span class="dot"></span> LIVE</span>
           </div>
-          <svg class="diagram-svg" id="route-diagram" viewBox="0 0 360 500" xmlns="http://www.w3.org/2000/svg" aria-label="Request routing diagram">
-            <!-- edges: pipeline -->
-            <path class="flow-edge" id="e-dev-gw"     d="M90,50 L90,78"></path>
-            <path class="flow-edge" id="e-gw-auth"    d="M90,108 L90,136"></path>
-            <path class="flow-edge" id="e-auth-router" d="M90,166 L90,194"></path>
-            <path class="flow-edge" id="e-fmt-user"   d="M90,430 L90,458"></path>
-            <!-- edges: router → providers -->
-            <path class="flow-edge" id="er-openai"   d="M150,209 C190,209 190,194 220,194"></path>
-            <path class="flow-edge" id="er-anthropic" d="M150,209 C190,209 190,230 220,230"></path>
-            <path class="flow-edge" id="er-google"   d="M150,209 C190,220 190,266 220,266"></path>
-            <path class="flow-edge" id="er-deepseek" d="M150,209 C190,240 190,302 220,302"></path>
-            <path class="flow-edge" id="er-mistral"  d="M150,209 C190,260 190,338 220,338"></path>
-            <path class="flow-edge" id="er-local"    d="M150,209 C190,280 190,374 220,374"></path>
-            <!-- edges: providers → formatter -->
-            <path class="flow-edge" id="ef-openai"   d="M220,194 C188,194 188,415 160,415"></path>
-            <path class="flow-edge" id="ef-anthropic" d="M220,230 C188,230 188,415 160,415"></path>
-            <path class="flow-edge" id="ef-google"   d="M220,266 C188,266 188,415 160,415"></path>
-            <path class="flow-edge" id="ef-deepseek" d="M220,302 C188,302 188,415 160,415"></path>
-            <path class="flow-edge" id="ef-mistral"  d="M220,338 C188,338 188,415 160,415"></path>
-            <path class="flow-edge" id="ef-local"    d="M220,374 C188,374 188,415 160,415"></path>
-
-            <!-- pipeline nodes -->
-            <g class="flow-node" id="n-dev"><rect x="30" y="20" width="120" height="30" rx="7"></rect><text class="flow-label" x="90" y="39" text-anchor="middle">Developer App</text></g>
-            <g class="flow-node" id="n-gateway"><rect x="30" y="78" width="120" height="30" rx="7"></rect><text class="flow-label" x="90" y="97" text-anchor="middle">API Gateway</text></g>
-            <g class="flow-node" id="n-auth"><rect x="20" y="136" width="140" height="30" rx="7"></rect><text class="flow-label" x="90" y="151" text-anchor="middle">Auth · Keys</text><text class="flow-label" x="90" y="161" text-anchor="middle" style="font-size:7.5px">Billing</text></g>
-            <g class="flow-node" id="n-router"><rect x="30" y="194" width="120" height="30" rx="7"></rect><text class="flow-label" x="90" y="213" text-anchor="middle">Routing Engine</text></g>
-            <g class="flow-node" id="n-formatter"><rect x="20" y="400" width="140" height="30" rx="7"></rect><text class="flow-label" x="90" y="419" text-anchor="middle">Response Formatter</text></g>
-            <g class="flow-node" id="n-user"><rect x="40" y="458" width="100" height="30" rx="7"></rect><text class="flow-label" x="90" y="477" text-anchor="middle">User</text></g>
-
-            <!-- provider nodes -->
-            <g class="flow-node prov" id="p-openai"><rect x="220" y="180" width="120" height="28" rx="7"></rect><text class="flow-label" x="280" y="198" text-anchor="middle">OpenAI</text></g>
-            <g class="flow-node prov" id="p-anthropic"><rect x="220" y="216" width="120" height="28" rx="7"></rect><text class="flow-label" x="280" y="234" text-anchor="middle">Anthropic</text></g>
-            <g class="flow-node prov" id="p-google"><rect x="220" y="252" width="120" height="28" rx="7"></rect><text class="flow-label" x="280" y="270" text-anchor="middle">Google Gemini</text></g>
-            <g class="flow-node prov" id="p-deepseek"><rect x="220" y="288" width="120" height="28" rx="7"></rect><text class="flow-label" x="280" y="306" text-anchor="middle">DeepSeek</text></g>
-            <g class="flow-node prov" id="p-mistral"><rect x="220" y="324" width="120" height="28" rx="7"></rect><text class="flow-label" x="280" y="342" text-anchor="middle">Mistral</text></g>
-            <g class="flow-node prov" id="p-local"><rect x="220" y="360" width="120" height="28" rx="7"></rect><text class="flow-label" x="280" y="378" text-anchor="middle">Local Models</text></g>
-          </svg>
+          <div class="dg-scene" role="group" aria-label="How a request flows: your app sends it to Yantra, which checks your key and balance, picks the best model, calls the provider and returns one standard reply.">
+          <div class="dg-stage" id="dg-stage">
+            <div class="dg-plane"></div><div class="dg-glow"></div>
+            <div class="dg-slab" style="top:10.000%;height:39.167%"><span>Yantra</span></div>
+            <div class="dg-slab" style="top:51.250%;height:18.750%"><span>AI providers</span></div>
+            <svg class="dg-svg" id="route-diagram" viewBox="0 0 360 480" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <path class="flow-edge" id="e-dev-gw" d="M180,43 L180,69"></path>
+              <path class="flow-edge" id="e-gw-auth" d="M180,107 L180,125"></path>
+              <path class="flow-edge" id="e-auth-router" d="M180,163 L180,181"></path>
+              <path class="flow-edge" id="e-fmt-user" d="M180,405 L180,429"></path>
+              <path class="flow-edge" id="er-openai" d="M180,219 C180,243 40,241 40,264"></path>
+              <path class="flow-edge" id="er-anthropic" d="M180,219 C180,243 96,241 96,264"></path>
+              <path class="flow-edge" id="er-google" d="M180,219 C180,243 152,241 152,264"></path>
+              <path class="flow-edge" id="er-deepseek" d="M180,219 C180,243 208,241 208,264"></path>
+              <path class="flow-edge" id="er-mistral" d="M180,219 C180,243 264,241 264,264"></path>
+              <path class="flow-edge" id="er-local" d="M180,219 C180,243 320,241 320,264"></path>
+              <path class="flow-edge" id="ef-openai" d="M40,320 C40,344 180,343 180,367"></path>
+              <path class="flow-edge" id="ef-anthropic" d="M96,320 C96,344 180,343 180,367"></path>
+              <path class="flow-edge" id="ef-google" d="M152,320 C152,344 180,343 180,367"></path>
+              <path class="flow-edge" id="ef-deepseek" d="M208,320 C208,344 180,343 180,367"></path>
+              <path class="flow-edge" id="ef-mistral" d="M264,320 C264,344 180,343 180,367"></path>
+              <path class="flow-edge" id="ef-local" d="M320,320 C320,344 180,343 180,367"></path>
+            </svg>
+            <div class="dg-n dg-pipe" id="n-dev" style="left:50.000%;top:5.000%;width:47.222%;height:7.917%;--d:-0s"><span class="nb">1</span><span class="tx"><b>Your app</b><i>sends one request</i></span></div>
+            <div class="dg-n dg-pipe" id="n-gateway" style="left:50.000%;top:18.333%;width:55.556%;height:7.917%;--d:-1.1s"><span class="nb">2</span><span class="tx"><b>Yantra API</b><i>one OpenAI-style endpoint</i></span></div>
+            <div class="dg-n dg-pipe" id="n-auth" style="left:50.000%;top:30.000%;width:55.556%;height:7.917%;--d:-2.2s"><span class="nb">3</span><span class="tx"><b>Auth &amp; billing</b><i>checks key, charges in ₹</i></span></div>
+            <div class="dg-n dg-pipe" id="n-router" style="left:50.000%;top:41.667%;width:55.556%;height:7.917%;--d:-3.3s"><span class="nb">4</span><span class="tx"><b>Smart router</b><i>picks the best model</i></span></div>
+            <div class="dg-n prov" id="p-openai" style="left:11.111%;top:60.833%;width:13.889%;height:11.667%;--d:-0.0s"><span class="lg"><img src="assets/logos/openai.png" alt="" width="22" height="22" loading="lazy" decoding="async"></span><b>OpenAI</b></div><div class="dg-n prov" id="p-anthropic" style="left:26.667%;top:60.833%;width:13.889%;height:11.667%;--d:-0.9s"><span class="lg"><img src="assets/logos/anthropic.png" alt="" width="22" height="22" loading="lazy" decoding="async"></span><b>Anthropic</b></div><div class="dg-n prov" id="p-google" style="left:42.222%;top:60.833%;width:13.889%;height:11.667%;--d:-1.8s"><span class="lg"><img src="assets/logos/google.png" alt="" width="22" height="22" loading="lazy" decoding="async"></span><b>Gemini</b></div><div class="dg-n prov" id="p-deepseek" style="left:57.778%;top:60.833%;width:13.889%;height:11.667%;--d:-2.7s"><span class="lg"><img src="assets/logos/deepseek.png" alt="" width="22" height="22" loading="lazy" decoding="async"></span><b>DeepSeek</b></div><div class="dg-n prov" id="p-mistral" style="left:73.333%;top:60.833%;width:13.889%;height:11.667%;--d:-3.6s"><span class="lg"><img src="assets/logos/mistral.png" alt="" width="22" height="22" loading="lazy" decoding="async"></span><b>Mistral</b></div><div class="dg-n prov" id="p-local" style="left:88.889%;top:60.833%;width:13.889%;height:11.667%;--d:-4.5s"><span class="lg"><svg viewBox="0 0 24 24" width="100%" height="100%" fill="none" stroke="#0069b8" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="6" y="6" width="12" height="12" rx="2"/><rect x="9.5" y="9.5" width="5" height="5" rx="1"/><path d="M9 2v3M15 2v3M9 19v3M15 19v3M2 9h3M2 15h3M19 9h3M19 15h3"/></svg></span><b>Local</b></div>
+            <div class="dg-n dg-pipe" id="n-formatter" style="left:50.000%;top:80.417%;width:55.556%;height:7.917%;--d:-4.4s"><span class="nb">5</span><span class="tx"><b>Reply formatter</b><i>same format every time</i></span></div>
+            <div class="dg-n dg-pipe" id="n-user" style="left:50.000%;top:93.333%;width:47.222%;height:7.917%;--d:-5.5s"><span class="nb">6</span><span class="tx"><b>Back to you</b><i>reply + cost in ₹</i></span></div>
+            <div class="dg-tr"></div><div class="dg-tr"></div><div class="dg-tr"></div><div class="dg-tr"></div><div class="dg-tr"></div><div class="dg-orb" id="dg-orb"></div>
+          </div>
+        </div>
           <div class="diagram-caption" id="diagram-caption">Idle — send a request in the playground to watch a live route.</div>
           <div class="rd" id="route-demo">
             <div class="rd-t">Try it · pick what matters <span style="text-transform:none;letter-spacing:0;font-weight:500">(example routes; the live router chooses by current availability)</span></div>
@@ -1674,17 +1716,75 @@ var ALL_DIAG=['n-dev','n-gateway','n-auth','n-router','n-formatter','n-user',
   'e-dev-gw','e-gw-auth','e-auth-router','e-fmt-user',
   'er-openai','er-anthropic','er-google','er-deepseek','er-mistral','er-local',
   'ef-openai','ef-anthropic','ef-google','ef-deepseek','ef-mistral','ef-local'];
-function clearDiagram(prefix){ for(var i=0;i<ALL_DIAG.length;i++){ var el=$(prefix+ALL_DIAG[i]); if(el) el.classList.remove('active'); } }
-function lightSeq(prefix, provSuffix){
-  clearDiagram(prefix);
-  var seq=['n-dev','e-dev-gw','n-gateway','e-gw-auth','n-auth','e-auth-router','n-router',
-    'er-'+provSuffix,'p-'+provSuffix,'ef-'+provSuffix,'n-formatter','e-fmt-user','n-user'];
-  var i=0;
-  (function step(){
-    if(i>=seq.length) return;
-    var el=$(prefix+seq[i]); if(el) el.classList.add('active');
-    i++; setTimeout(step, 140);
-  })();
+function dgReduced(){ try{ return window.matchMedia && window.matchMedia('(prefers-reduced-motion:reduce)').matches; }catch(e){ return false; } }
+var DG={id:0};
+function dgFx(prefix){
+  var stage=$(prefix+'dg-stage'); if(!stage) return null;
+  if(stage._fx) return stage._fx;
+  var svg=stage.querySelector('svg'); if(!svg) return null;
+  var map={}, list=svg.querySelectorAll('path.flow-edge');
+  for(var i=0;i<list.length;i++){
+    var base=list[i], len=base.getTotalLength(); if(!len) continue;
+    var c=document.createElementNS('http://www.w3.org/2000/svg','path');
+    c.setAttribute('d',base.getAttribute('d'));
+    c.setAttribute('class','flow-fx'+(/^(er|ef)-/.test(base.id.replace(prefix,''))?' fx-p':''));
+    c.style.strokeDasharray=len; c.style.strokeDashoffset=len;
+    svg.appendChild(c);
+    map[base.id.replace(prefix,'')]={el:c,len:len,base:base};
+  }
+  stage._fx=map; return map;
+}
+function dgMarkFail(prefix,suf){ var fx=dgFx(prefix); if(fx&&fx['er-'+suf]) fx['er-'+suf].el.classList.add('bad'); }
+function clearDiagram(prefix){
+  for(var i=0;i<ALL_DIAG.length;i++){ var el=$(prefix+ALL_DIAG[i]); if(el) el.classList.remove('active','fail','ping'); }
+  var fx=dgFx(prefix); if(fx) Object.keys(fx).forEach(function(k){ var f=fx[k]; f.el.classList.remove('bad'); f.el.style.strokeDashoffset=f.len; });
+  var o=$(prefix+'dg-orb'); if(o) o.classList.remove('on');
+}
+function lightSeq(prefix, provSuffix, opt){
+  opt=opt||{}; clearDiagram(prefix);
+  var run=++DG.id, fx=dgFx(prefix), orb=$(prefix+'dg-orb');
+  function lit(id){ var el=$(prefix+id); if(!el) return; el.classList.add('active'); if(!dgReduced()){ el.classList.add('ping'); setTimeout(function(){ el.classList.remove('ping'); },800); } }
+  var s=provSuffix;
+  var legs=[['e-dev-gw','n-gateway',380],['e-gw-auth','n-auth',320],['e-auth-router','n-router',320],['er-'+s,'p-'+s,640],['*','',300],['ef-'+s,'n-formatter',640],['e-fmt-user','n-user',340]];
+  if(opt.stopAtProvider) legs=legs.slice(0,4);
+  lit('n-dev');
+  if(!fx||!orb||dgReduced()){            /* no 3D stage here (or reduced motion): show the whole route at once */
+    legs.forEach(function(l){ if(l[0]!=='*'){ var e=$(prefix+l[0]); if(e) e.classList.add('active'); if(fx&&fx[l[0]]) fx[l[0]].el.style.strokeDashoffset=0; } if(l[1]) lit(l[1]); });
+    return;
+  }
+  var W=360,H=480, trails=orb.parentNode.querySelectorAll('.dg-tr'), cum=[], tot=0;
+  legs.forEach(function(l){ tot+=l[2]; cum.push(tot); });
+  var erE=fx['er-'+s], efE=fx['ef-'+s];
+  var vFrom=erE.base.getPointAtLength(erE.len), vTo=efE.base.getPointAtLength(0);
+  function ease(u){ return .5-.5*Math.cos(Math.PI*u); }
+  function posAt(ms){
+    ms=Math.max(0,Math.min(tot,ms));
+    var i=0; while(i<legs.length-1&&ms>cum[i]) i++;
+    var st=i?cum[i-1]:0, u=(ms-st)/legs[i][2], e=ease(Math.max(0,Math.min(1,u))), x,y,z=18;
+    if(legs[i][0]==='*'){ x=vFrom.x+(vTo.x-vFrom.x)*e; y=vFrom.y+(vTo.y-vFrom.y)*e; z=18+30*Math.sin(Math.PI*e); }
+    else { var f=fx[legs[i][0]], p=f.base.getPointAtLength(e*f.len); x=p.x; y=p.y; }
+    return {x:x,y:y,z:z,i:i,e:e};
+  }
+  function put(el,p){ el.style.left=(p.x/W*100)+'%'; el.style.top=(p.y/H*100)+'%'; el.style.transform='translateZ('+p.z.toFixed(1)+'px)'; }
+  orb.classList.remove('pv'); orb.classList.add('on');
+  var t0=null, arrived=-1;
+  function frame(now){
+    if(run!==DG.id) return;
+    if(t0===null) t0=now;
+    var el=now-t0, p=posAt(el);
+    for(var i=0;i<legs.length;i++){
+      var f=fx[legs[i][0]]; if(!f) continue;
+      if(i<p.i) f.el.style.strokeDashoffset=0; else if(i===p.i) f.el.style.strokeDashoffset=f.len*(1-p.e);
+    }
+    while(arrived+1<legs.length && el>=cum[arrived+1]-30){ arrived++; if(legs[arrived][1]) lit(legs[arrived][1]); }
+    var inProv=legs[p.i][0]==='*'||legs[p.i][0].indexOf('er-')===0&&p.e>.85||legs[p.i][0].indexOf('ef-')===0&&p.e<.15;
+    orb.classList.toggle('pv',inProv);
+    put(orb,p);
+    for(var k=0;k<trails.length;k++){ var q=posAt(el-(k+1)*55); put(trails[k],q); trails[k].style.opacity=el>(k+1)*55&&el<tot+200?(0.5-k*0.09):0; }
+    if(el<tot+60) requestAnimationFrame(frame);
+    else { var last=legs[legs.length-1]; if(last[0]!=='*'&&fx[last[0]]) fx[last[0]].el.style.strokeDashoffset=0; for(var j=0;j<trails.length;j++) trails[j].style.opacity=0; setTimeout(function(){ if(run===DG.id) orb.classList.remove('on'); },180); }
+  }
+  requestAnimationFrame(frame);
 }
 function animateRoute(routedAs, providerId, fellBack, opts){
   opts=opts||{}; var prefix=opts.prefix||''; var capId=opts.capId||'diagram-caption';
@@ -1734,11 +1834,12 @@ function animateRoute(routedAs, providerId, fellBack, opts){
     if(mode==='failover'){
       var alt=pool('reasoning').filter(function(x){return x.m.provider!==p.m.provider;});
       var a=alt.length?alt[Math.floor(alt.length/2)]:null;
-      lightSeq('', suf);
+      lightSeq('', suf, {stopAtProvider:true});
       setTimeout(function(){
         if(current!=='failover') return;
         var el=$(('p-'+suf)); if(el){ el.classList.remove('active'); el.classList.add('fail'); }
         var edge=$('er-'+suf); if(edge) edge.classList.remove('active');
+        dgMarkFail('', suf);
         if(cap) cap.innerHTML='<b style="color:#d92d20">'+esc(prov)+' returned an error</b>';
         out.innerHTML='<span class="rd-bad">Simulated: '+esc(prov)+' returns a 503.</span> Retrying…';
       },1900);
@@ -2337,22 +2438,26 @@ function initScrollReveal(){
 }
 
 function initDiagramTilt(){
-  var card = document.querySelector('.diagram-card'); if(!card) return;
-  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion:reduce)').matches;
-  var canHover = window.matchMedia && window.matchMedia('(hover:hover) and (pointer:fine)').matches;
-  if(reduce || !canHover) return;
-  var rect;
-  function updateRect(){ rect = card.getBoundingClientRect(); }
-  updateRect();
-  window.addEventListener('resize', updateRect);
-  card.addEventListener('mousemove', function(e){
-    var px=(e.clientX-rect.left)/rect.width, py=(e.clientY-rect.top)/rect.height;
-    var rx=((py-0.5)*-6).toFixed(2), ry=((px-0.5)*6).toFixed(2);
-    card.style.transform='perspective(900px) rotateX('+rx+'deg) rotateY('+ry+'deg)';
+  var card=document.querySelector('.diagram-card'), st=document.getElementById('dg-stage'); if(!card||!st) return;
+  var rx=9, ry=0, tx=9, ty=0, hover=false, vis=true, raf=0;
+  function set(){ st.style.transform='rotateX('+rx.toFixed(2)+'deg) rotateY('+ry.toFixed(2)+'deg)'; }
+  set(); if(dgReduced()) return;
+  function loop(ts){
+    raf=0; if(!vis||document.hidden) return;
+    if(!hover){ var t=ts/1000; tx=9+Math.sin(t*.5)*2.2; ty=Math.sin(t*.36)*7; }
+    rx+=(tx-rx)*.07; ry+=(ty-ry)*.07; set();
+    raf=requestAnimationFrame(loop);
+  }
+  function kick(){ if(!raf) raf=requestAnimationFrame(loop); }
+  card.addEventListener('pointermove',function(e){
+    if(e.pointerType==='touch') return;
+    var r=card.getBoundingClientRect(), px=(e.clientX-r.left)/r.width-.5, py=(e.clientY-r.top)/r.height-.5;
+    hover=true; ty=Math.max(-15,Math.min(15,px*26)); tx=9-Math.max(-12,Math.min(12,py*20)); kick();
   });
-  card.addEventListener('mouseleave', function(){
-    card.style.transform='perspective(900px) rotateX(0deg) rotateY(0deg)';
-  });
+  card.addEventListener('pointerleave',function(){ hover=false; });
+  document.addEventListener('visibilitychange',kick);
+  try{ new IntersectionObserver(function(en){ vis=en[0].isIntersecting; if(vis) kick(); },{threshold:0}).observe(card); }catch(e){}
+  kick();
 }
 
 function init(){
