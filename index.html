@@ -297,20 +297,56 @@ html{scroll-behavior:smooth;}
 /* interactive route demo */
 .flow-node.prov.fail rect{stroke:#d92d20;fill:rgba(217,45,32,0.10);}
 .flow-node.prov.fail .flow-label{fill:#d92d20;}
-.rd{margin-top:14px;border-top:1px dashed var(--border2);padding-top:14px}
-.rd-t{font-size:11px;letter-spacing:1.2px;text-transform:uppercase;color:var(--text3);font-weight:700;margin-bottom:8px;text-align:center}
-.rd-chips{display:flex;flex-wrap:wrap;gap:7px;justify-content:center}
-.rd-chip{font:inherit;font-size:12.5px;font-weight:700;padding:8px 12px;border-radius:100px;border:1.5px solid var(--border2);background:var(--card);color:var(--text);cursor:pointer;transition:all .15s}
-.rd-chip:hover{border-color:var(--cyan)}
-.rd-chip.on{background:var(--cyan);border-color:var(--cyan);color:#fff}
-.rd-out{margin-top:12px;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:12px 14px;font-size:12.5px;color:var(--text2);line-height:1.55;min-height:92px}
+/* ════ interactive route demo — 3D console ════ */
+.rd{margin-top:16px;padding:16px 16px 14px;border-radius:22px;position:relative;background:linear-gradient(180deg,rgba(255,255,255,.94),rgba(228,239,252,.72));border:1px solid rgba(0,105,184,.16);box-shadow:inset 0 1px 0 #fff,0 28px 46px -32px rgba(15,40,90,.6)}
+.rd-t{display:flex;flex-direction:column;gap:2px;text-align:left;margin-bottom:13px;text-transform:none;letter-spacing:0}
+.rd-tt{font:800 15.5px var(--fd);color:var(--text)}
+.rd-ts{font:500 12px var(--fb);color:var(--text3)}
+.rd-chips{display:grid;grid-template-columns:repeat(4,1fr);gap:9px;perspective:700px}
+.rd-chip{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;min-height:68px;padding:9px 6px;border-radius:15px;border:1px solid rgba(15,40,90,.12);background:linear-gradient(180deg,#fff,#ebf1fa);color:var(--text2);font:700 11.5px/1.2 var(--fb);text-align:center;cursor:pointer;
+  box-shadow:0 4px 0 #c6d6ea,0 14px 16px -10px rgba(15,40,90,.5),inset 0 1px 0 #fff;transition:transform .16s,box-shadow .16s,background .25s,color .25s,border-color .25s}
+.rd-chip:hover{transform:translateY(-2px) rotateX(9deg);color:var(--text)}
+.rd-chip:active{transform:translateY(3px);box-shadow:0 1px 0 #c6d6ea,0 6px 10px -8px rgba(15,40,90,.5),inset 0 1px 0 #fff}
+.rd-chip.on,.rd-chip.on:hover{background:linear-gradient(180deg,#2b92e4,#0069b8);border-color:#0a5aa0;color:#fff;transform:translateY(3px);
+  box-shadow:0 1px 0 #064a85,0 0 0 3px rgba(0,140,240,.16),0 14px 22px -8px rgba(0,120,220,.7),inset 0 1px 0 rgba(255,255,255,.38)}
+.rd-chip:focus-visible{outline:2px solid var(--cyan);outline-offset:3px}
+.rd-ic{width:22px;height:22px;display:block;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.rd-out{margin-top:15px;position:relative;overflow:hidden;background:linear-gradient(180deg,#fff,#f2f7ff);border:1px solid rgba(15,40,90,.1);border-radius:16px;padding:14px 16px 14px 19px;font-size:12.5px;color:var(--text2);line-height:1.5;min-height:132px;box-shadow:0 16px 26px -20px rgba(15,40,90,.55),inset 0 1px 0 #fff}
+.rd-out::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:linear-gradient(180deg,#2b92e4,#12b374)}
 .rd-out b{color:var(--text)}
-.rd-out .rd-m{font-size:14px;color:var(--cyan);font-weight:800}
-.rd-out .rd-bad{color:#d92d20;font-weight:700}
-.rd-out .rd-ok{color:var(--green);font-weight:700}
-.rd-code{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:10px;background:#0b1730;color:#cfe3ff;border-radius:10px;padding:9px 12px;font-family:var(--fm);font-size:12px}
-.rd-code button{font:inherit;font-size:11px;font-weight:700;border:0;border-radius:7px;padding:5px 9px;background:#1b3a6b;color:#fff;cursor:pointer}
-.rd-cta{display:block;text-align:center;margin-top:10px;font-weight:700;font-size:13px;color:var(--cyan);text-decoration:none}
+.rd-hd{display:flex;flex-wrap:wrap;align-items:baseline;gap:3px 9px}
+.rd-m{font:800 17px/1.15 var(--fd);color:var(--cyan)}
+.rd-pv{font-size:12px;font-weight:600;color:var(--text2)}
+.rd-why{font-size:12px;color:var(--text3);margin:3px 0 11px}
+.rd-pr{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.rd-pr>div{background:rgba(0,105,184,.06);border:1px solid rgba(0,105,184,.13);border-radius:12px;padding:8px 9px;min-width:0}
+.rd-pr>div.hl{background:linear-gradient(180deg,rgba(0,148,83,.11),rgba(0,148,83,.05));border-color:rgba(0,148,83,.3)}
+.rd-pr small{display:block;font:700 9.5px var(--fm);letter-spacing:.08em;text-transform:uppercase;color:var(--text3)}
+.rd-pr b{display:block;font:800 17px/1.2 var(--fd);color:var(--text);margin-top:3px;white-space:nowrap}
+.rd-pr .hl b{color:var(--green)}
+.rd-pr em{display:block;font-style:normal;font-size:10px;line-height:1.3;color:var(--text3);margin-top:1px}
+.rd-out .rd-bad{display:block;color:#d92d20;font:800 15px var(--fd);margin-bottom:4px}
+.rd-out .rd-ok{display:block;color:var(--green);font:800 15px var(--fd);margin-bottom:4px}
+.rd-code{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:13px;background:linear-gradient(180deg,#10213f,#091428);color:#cfe3ff;border-radius:14px;padding:10px 10px 10px 14px;font:12.5px var(--fm);border:1px solid rgba(120,170,255,.2);box-shadow:inset 0 1px 0 rgba(255,255,255,.08),0 16px 26px -18px rgba(5,15,40,.85)}
+.rd-code span{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.rd-code::before{content:"";flex:none;width:7px;height:7px;border-radius:50%;background:#2fdc8f;box-shadow:0 0 9px #2fdc8f}
+.rd-code span{flex:1}
+.rd-code button{flex:none;font:700 11.5px var(--fb);border:0;border-radius:9px;padding:7px 14px;background:linear-gradient(180deg,#3577c9,#1b4f94);color:#fff;cursor:pointer;box-shadow:0 2px 0 #123a70;transition:transform .12s,box-shadow .12s}
+.rd-code button:active{transform:translateY(2px);box-shadow:0 0 0 #123a70}
+.rd-cta{display:flex;align-items:center;justify-content:center;gap:9px;margin-top:15px;height:50px;border-radius:15px;background:linear-gradient(180deg,#2b92e4,#0069b8);color:#fff;font:800 14.5px var(--fd);text-decoration:none;
+  box-shadow:0 4px 0 #064a85,0 18px 28px -12px rgba(0,105,184,.8),inset 0 1px 0 rgba(255,255,255,.35);transition:transform .15s,box-shadow .15s}
+.rd-cta i{font-style:normal;transition:transform .2s}
+.rd-cta:hover{transform:translateY(-2px);box-shadow:0 6px 0 #064a85,0 22px 30px -12px rgba(0,105,184,.85),inset 0 1px 0 rgba(255,255,255,.35)}
+.rd-cta:hover i{transform:translateX(4px)}
+.rd-cta:active{transform:translateY(3px);box-shadow:0 1px 0 #064a85,0 8px 14px -10px rgba(0,105,184,.8),inset 0 1px 0 rgba(255,255,255,.35)}
+.rd-fn{margin-top:11px;text-align:center;font-size:10.5px;color:var(--text3);line-height:1.4}
+@media(max-width:520px){
+  .rd{padding:14px 12px 12px}
+  .rd-chips{grid-template-columns:1fr 1fr;gap:9px}
+  .rd-chip{flex-direction:row;justify-content:flex-start;gap:9px;min-height:50px;padding:0 12px;font-size:12px;text-align:left}
+  .rd-pr b{font-size:15px}
+}
+@media(prefers-reduced-motion:reduce){.rd-chip,.rd-cta,.rd-cta i{transition:none}}
 .diagram-caption{font-size:11px;color:var(--text3);margin-top:10px;text-align:center;line-height:1.5;}
 .diagram-caption b{color:var(--cyan);} .diagram-caption .gr{color:var(--green);}
 /* ════ 3D routing diagram ════ */
@@ -1144,16 +1180,17 @@ footer a:hover{color:var(--cyan)!important}
         </div>
           <div class="diagram-caption" id="diagram-caption">Idle — send a request in the playground to watch a live route.</div>
           <div class="rd" id="route-demo">
-            <div class="rd-t">Try it · pick what matters <span style="text-transform:none;letter-spacing:0;font-weight:500">(example routes; the live router chooses by current availability)</span></div>
+            <div class="rd-t"><span class="rd-tt">Try it live</span><span class="rd-ts">Pick what matters and watch where Yantra sends your request</span></div>
             <div class="rd-chips" role="group" aria-label="Routing mode">
-              <button type="button" class="rd-chip" data-mode="cheap">💰 Cheapest</button>
-              <button type="button" class="rd-chip" data-mode="fast">⚡ Fastest</button>
-              <button type="button" class="rd-chip" data-mode="reasoning">🧠 Smartest</button>
-              <button type="button" class="rd-chip" data-mode="failover">🛡 If a provider fails</button>
+              <button type="button" class="rd-chip" data-mode="cheap" title="Lowest cost per request"><svg class="rd-ic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M8.5 8h7M8.5 11.2h7M8.7 8c4.2 0 4.2 5.4 0 5.4h-.4l5.6 4"/></svg><span>Cheapest</span></button>
+              <button type="button" class="rd-chip" data-mode="fast" title="Lowest delay"><svg class="rd-ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M13 2.5 4.5 14h6.6l-1 7.5L19.5 10h-6.6z"/></svg><span>Fastest</span></button>
+              <button type="button" class="rd-chip" data-mode="reasoning" title="Best step-by-step reasoning"><svg class="rd-ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M11 3.5l1.9 5.4 5.4 1.9-5.4 1.9L11 18.1l-1.9-5.4L3.7 10.8l5.4-1.9z"/><path d="M19 15.5l.7 2 2 .7-2 .7-.7 2-.7-2-2-.7 2-.7z"/></svg><span>Smartest</span></button>
+              <button type="button" class="rd-chip" data-mode="failover" title="See automatic failover"><svg class="rd-ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l8 3v6c0 4.5-3.2 8-8 9-4.8-1-8-4.5-8-9V6z"/><path d="M8.6 12.2l2.5 2.5 4.4-5"/></svg><span>If a provider fails</span></button>
             </div>
-            <div class="rd-out" id="rd-out" aria-live="polite">Tap a mode to see which model Yantra would pick and what it costs.</div>
+            <div class="rd-out" id="rd-out" aria-live="polite">Tap a key above to see which model Yantra would pick and what it costs.</div>
             <div class="rd-code"><span id="rd-code">"model": "auto:cheap"</span><button type="button" id="rd-copy">Copy</button></div>
-            <a class="rd-cta" href="dashboard.html">Get your free key and try it →</a>
+            <a class="rd-cta" href="dashboard.html"><span>Get your free API key</span><i>→</i></a>
+            <div class="rd-fn">Example routes. The live router chooses by current availability.</div>
           </div>
 
         </div>
@@ -1857,7 +1894,7 @@ function animateRoute(routedAs, providerId, fellBack, opts){
         var edge=$('er-'+suf); if(edge) edge.classList.remove('active');
         dgMarkFail('', suf);
         if(cap) cap.innerHTML='<b style="color:#d92d20">'+esc(prov)+' returned an error</b>';
-        out.innerHTML='<span class="rd-bad">Simulated: '+esc(prov)+' returns a 503.</span> Retrying…';
+        out.innerHTML='<span class="rd-bad">'+esc(prov)+' is down (simulated 503)</span>Yantra is retrying on another provider…';
       },1900);
       setTimeout(function(){
         if(current!=='failover'||!a) return;
@@ -1865,7 +1902,7 @@ function animateRoute(routedAs, providerId, fellBack, opts){
         lightSeq('', PROV2DIAG[a.m.provider]);
         var ap=PROVIDERS[a.m.provider]?PROVIDERS[a.m.provider].label:a.m.provider;
         if(cap) cap.innerHTML='Retried on <b>'+esc(a.m.label)+'</b> · '+esc(ap)+' <span class="sf">· failover</span>';
-        out.innerHTML='<span class="rd-ok">Your request still succeeded.</span><br>Yantra retried on <span class="rd-m">'+esc(a.m.label)+'</span> ('+esc(ap)+'). Your app saw one normal answer, and you were billed once.';
+        out.innerHTML='<span class="rd-ok">Your request still succeeded</span>Yantra retried on <span class="rd-m">'+esc(a.m.label)+'</span> ('+esc(ap)+'). Your app saw one normal answer, and you were billed once.';
       },3200);
       return;
     }
@@ -1874,9 +1911,11 @@ function animateRoute(routedAs, providerId, fellBack, opts){
     lightSeq('', suf);
     if(cap) cap.innerHTML='Routed to <b>'+esc(p.m.label)+'</b> · '+esc(prov);
     var why={cheap:'lowest cost per request',fast:'built for low latency',reasoning:'strong step-by-step reasoning'}[mode];
-    out.innerHTML='<span class="rd-m">'+esc(p.m.label)+'</span> via '+esc(prov)+' <span class="dim">· '+why+'</span><br>'
-      +'Price: <b>'+inr(p.m.inr.in)+'</b> in / <b>'+inr(p.m.inr.out)+'</b> out per 1M tokens<br>'
-      +'1,000 typical requests ≈ <b>'+inr(per1k(p.m))+'</b> <span class="dim">(500 in + 300 out tokens each)</span>';
+    out.innerHTML='<div class="rd-hd"><span class="rd-m">'+esc(p.m.label)+'</span><span class="rd-pv">via '+esc(prov)+'</span></div>'
+      +'<div class="rd-why">'+why+'</div>'
+      +'<div class="rd-pr"><div><small>Input</small><b>'+inr(p.m.inr.in)+'</b><em>per 1M tokens</em></div>'
+      +'<div><small>Output</small><b>'+inr(p.m.inr.out)+'</b><em>per 1M tokens</em></div>'
+      +'<div class="hl"><small>1,000 requests</small><b>≈ '+inr(per1k(p.m))+'</b><em>500 in + 300 out each</em></div></div>';
   }
   function start(){
     var box=$('route-demo'); if(!box) return;
