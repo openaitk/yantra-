@@ -357,7 +357,15 @@ html{scroll-behavior:smooth;}
 @keyframes dg-breathe{0%,100%{opacity:.55;transform:translateZ(-20px) scale(.94)}50%{opacity:1;transform:translateZ(-20px) scale(1.04)}}
 @keyframes dg-ping{0%{box-shadow:0 0 0 0 rgba(0,140,240,.5)}100%{box-shadow:0 0 0 3.6cqw rgba(0,140,240,0)}}
 @keyframes dg-shake{0%,100%{transform:translate(-50%,-50%) translateZ(30px)}20%{transform:translate(calc(-50% - 5px),-50%) translateZ(30px)}40%{transform:translate(calc(-50% + 5px),-50%) translateZ(30px)}60%{transform:translate(calc(-50% - 3px),-50%) translateZ(30px)}80%{transform:translate(calc(-50% + 3px),-50%) translateZ(30px)}}
-@media(prefers-reduced-motion:reduce){.dg-n,.dg-glow,.dg-svg .flow-edge{animation:none}.dg-stage{transform:rotateX(6deg)}}
+
+.dg-tool{position:absolute;display:flex;align-items:center;gap:1.2cqw;padding:.7cqw 1.9cqw .7cqw .7cqw;border-radius:99px;background:rgba(255,255,255,.74);border:1px solid rgba(15,40,90,.10);box-shadow:0 6px 12px -8px rgba(15,40,90,.35);font:600 max(7px,1.95cqw)/1 var(--fb);color:var(--text3);white-space:nowrap;pointer-events:none;
+  transform:translate(-50%,-50%) translateZ(3px);animation:dg-drift 9s ease-in-out var(--d,0s) infinite}
+.dg-tool .tb{flex:none;width:4.2cqw;height:4.2cqw;min-width:14px;min-height:14px;border-radius:50%;background:#fff;border:1px solid rgba(15,40,90,.1);display:grid;place-items:center;overflow:hidden;font:700 max(7px,2cqw) var(--fm);color:var(--cyan)}
+.dg-tool .tb img{width:100%;height:100%;object-fit:contain;display:block;padding:12%}
+.dg-cap{position:absolute;transform:translate(-50%,-50%) translateZ(3px);font:700 max(7px,1.8cqw) var(--fm);letter-spacing:.16em;text-transform:uppercase;color:var(--text3);opacity:.8;white-space:nowrap}
+@keyframes dg-drift{0%,100%{transform:translate(-50%,-50%) translateZ(3px)}50%{transform:translate(-50%,calc(-50% - 4px)) translateZ(3px)}}
+@container (max-width:400px){.dg-tool .nm{display:none}.dg-tool{padding:.7cqw}.dg-tool:not(.has-logo){display:none}.dg-cap{display:none}}
+@media(prefers-reduced-motion:reduce){.dg-n,.dg-tool,.dg-glow,.dg-svg .flow-edge{animation:none}.dg-stage{transform:rotateX(6deg)}}
 
 
 /* ════ STATS ════ */
@@ -2562,6 +2570,31 @@ function ykGetKey(){ window.location.href = 'dashboard.html'; }
       mark(); restart();
     }).catch(function(){});
   }catch(e){}
+})();
+
+/* ---- tool logos floating in the routing-diagram background ---- */
+(function(){
+  var st=document.getElementById('dg-stage'); if(!st) return;
+  var W=360,H=480, L=[['Cursor',40],['Roo Code',88],['Aider',136],['Hermes',184],['Dify',228],['LangChain',350],['CrewAI',408]],
+      R=[['Cline',64],['Continue',112],['OpenCode',160],['n8n',208],['Flowise',355],['LlamaIndex',412],['Open WebUI',460]];
+  function cap(txt,x,y){ var c=document.createElement('div'); c.className='dg-cap'; c.textContent=txt; c.style.left=(x/W*100)+'%'; c.style.top=(y/H*100)+'%'; st.appendChild(c); }
+  cap('Works with',44,10); cap('your tools',316,34);
+  function chip(item,x,i){
+    var nm=item[0], low=nm.toLowerCase(), cands=[];
+    [low.replace(/[^a-z0-9]/g,''), low.split(/[^a-z0-9]+/)[0], low.replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'')].forEach(function(n){ if(n) ['png','svg','webp','jpg','jpeg'].forEach(function(e){ var f=n+'.'+e; if(cands.indexOf(f)<0) cands.push(f); }); });
+    if(low==='hermes') ['hermesagent.png','hermesagent.svg','hermesagent.webp'].forEach(function(f){ cands.push(f); });
+    var d=document.createElement('div'); d.className='dg-tool'; d.title=nm+' works with Yantra';
+    d.style.left=(x/W*100)+'%'; d.style.top=(item[1]/H*100)+'%'; d.style.setProperty('--d','-'+(i*1.3).toFixed(1)+'s');
+    d.innerHTML='<span class="tb" aria-hidden="true"><img alt=""></span><span class="nm"></span>';
+    d.querySelector('.nm').textContent=nm;
+    var img=d.querySelector('img'), k=0;
+    img.onerror=function(){ k++; if(k<cands.length){ img.src='assets/logos/tools/'+cands[k]; } else { img.replaceWith(document.createTextNode(nm.charAt(0))); } };
+    img.onload=function(){ d.classList.add('has-logo'); };
+    img.src='assets/logos/tools/'+cands[0];
+    st.appendChild(d);
+  }
+  L.forEach(function(it,i){ chip(it,11.5/100*W,i*2); });
+  R.forEach(function(it,i){ chip(it,88.5/100*W,i*2+1); });
 })();
 
 /* ---- AI tools that can run through Yantra ---- */
