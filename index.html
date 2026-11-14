@@ -6,6 +6,7 @@
 
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="robots" content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1">
 <meta name="description" content="One OpenAI-compatible API key for GPT, Claude, Gemini, DeepSeek and 350+ models. Pay in ₹ with UPI from ₹10. No credit card needed.">
 <meta property="og:title" content="Yantra AI — One key. Every model. Pay with UPI.">
 <meta property="og:description" content="An LLM API gateway with one OpenAI-compatible endpoint that intelligently routes every AI API request. Indian-rupee billing over UPI.">
@@ -20,6 +21,8 @@
 <meta name="twitter:description" content="An LLM API gateway with one OpenAI-compatible endpoint that intelligently routes every AI API request. Indian-rupee billing over UPI.">
 <meta name="twitter:image" content="https://apikeys.in/assets/og-image.png">
 <link rel="canonical" href="https://apikeys.in/">
+<link rel="alternate" hreflang="en-IN" href="https://apikeys.in/">
+<link rel="alternate" hreflang="x-default" href="https://apikeys.in/">
 <!-- Favicons: PNG set covers Google's 48x48 search-result minimum + browser tabs;
      favicon.ico is the legacy fallback browsers check by default at the root. -->
 <link rel="icon" type="image/png" sizes="16x16" href="assets/favicon-16.png">
@@ -122,6 +125,8 @@
 </script>
 <meta name="theme-color" content="#eaeff7">
 <title>Yantra AI: One API for GPT, Claude & Gemini | Pay with UPI</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
 <!-- QR generator (renders the upi:// intent as a scannable QR; degrades gracefully if blocked) -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
@@ -148,9 +153,9 @@
 
   --cyan:#0069b8; --cyan2:#005599;
   --green:#009453; --purple:#7c3aed; --pink:#d10057; --amber:#985f00;
-  --saffron:#d16800;            /* UPI / India accent — deepened for contrast */
+  --saffron:#a85400;            /* UPI / India accent — deepened for contrast */
 
-  --text:#0f1e33; --text2:#4a5a75; --text3:#78889f; --muted:#4a5a75;
+  --text:#0f1e33; --text2:#4a5a75; --text3:#5a6a84; --muted:#4a5a75;
 
   /* On light, "glow" becomes a soft coloured shadow rather than emitted light. */
   --glow-c:rgba(0,105,184,0.10); --glow-g:rgba(0,148,83,0.08); --glow-p:rgba(124,58,237,0.10);
@@ -1149,6 +1154,20 @@ footer a:hover{color:var(--cyan)!important}
 .faq-q::after{display:grid;place-items:center;width:28px;height:28px;border-radius:50%;background:rgba(0,105,184,.09);font-size:18px;line-height:1}
 .faq-item[open] .faq-q::after{background:var(--cyan);color:#fff}
 @media(prefers-reduced-motion:reduce){.feat,.feat::before,.feat .feat-icon{transition:none}.feat:hover{transform:none}}
+
+/* ════ accessibility: comfortable tap targets, visible focus ════ */
+.feat-link{padding:9px 0;margin-top:4px}
+.ag-link{display:inline-block;padding:9px 0}
+.ag-btn{min-height:34px}
+.rd-code button,.ht-copy{min-height:34px}
+a:focus-visible,button:focus-visible,summary:focus-visible,[tabindex]:focus-visible{outline:2px solid var(--cyan);outline-offset:3px;border-radius:8px}
+.stats-grid .stat-card:focus-visible{outline-offset:-3px}
+@media(max-width:900px){
+  .faq-q{min-height:48px}
+  .site-foot a{display:inline-block;padding:6px 0}
+  .s-sub a,.feat-desc a,.faq-a a{padding:4px 0;display:inline-block}
+  .swb-foot a,.ct-box a{display:inline-block;padding:7px 0}
+}
 </style>
 
 <script src="/assets/yk.js" defer></script>
