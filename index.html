@@ -127,9 +127,9 @@
 <title>Yantra AI: One API for GPT, Claude & Gemini | Pay with UPI</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
-<!-- QR generator (renders the upi:// intent as a scannable QR; degrades gracefully if blocked) -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<!-- Fonts load without blocking first paint: the page renders at once in the fallback font, then swaps. -->
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&family=Instrument+Sans:wght@400;500;600&display=swap" onload="this.onload=null;this.rel='stylesheet'">
+<noscript><link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet"></noscript>
 <style>
 /* ═══════════════════════════════════════════════════════
    YANTRA — DESIGN SYSTEM
@@ -264,6 +264,8 @@ nav{position:fixed;top:0;left:0;right:0;width:100%;height:var(--nav-h);z-index:2
 ::-moz-selection{background:rgba(0,105,184,0.22);color:#fff;}
 html{scroll-behavior:smooth;}
 @media(prefers-reduced-motion:reduce){ html{scroll-behavior:auto;} }
+/* Pause decorative infinite animations while the diagram is off screen (battery + frame rate on phones). */
+.dg-paused *, .dg-paused *::before, .dg-paused *::after{ animation-play-state:paused !important; }
 *{scrollbar-width:thin;scrollbar-color:var(--border2) transparent;}
 ::-webkit-scrollbar{width:10px;height:10px;}
 ::-webkit-scrollbar-track{background:transparent;}
@@ -2431,8 +2433,23 @@ function renderTxns(){
   }).join('');
 }
 function renderBilling(){ refreshBalance(); renderTxns(); onAmtInput(); }
+// The QR library (third-party, ~20 KB) is fetched only when a UPI QR is first needed, so it never delays page load.
+var _qrLoading=null;
+function ykLoadQR(cb){
+  if(window.QRCode) return cb();
+  if(!_qrLoading){
+    _qrLoading=[];
+    var sc=document.createElement('script');
+    sc.src='https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js';
+    sc.async=true;
+    sc.onload=sc.onerror=function(){ var q=_qrLoading; _qrLoading=null; q.forEach(function(f){ f(); }); };
+    document.head.appendChild(sc);
+  }
+  _qrLoading.push(cb);
+}
 function renderQR(text){
   var box=$('upi-qr'); if(!box) return; box.innerHTML='';
+  if(!window.QRCode){ ykLoadQR(function(){ renderQR(text); }); return; }
   if(window.QRCode){
     try{ new QRCode(box, { text:text, width:184, height:184, colorDark:'#eef3fa', colorLight:'#0f1e33', correctLevel:QRCode.CorrectLevel.M }); return; }catch(e){}
   }
@@ -2844,6 +2861,16 @@ function ykGetKey(){ window.location.href = 'dashboard.html'; }
   if(!reduce && 'IntersectionObserver' in window){
     new IntersectionObserver(function(es){ es.forEach(function(e){ if(e.isIntersecting&&!timer&&cur<0){ tick(); timer=setInterval(tick,1600); } else if(!e.isIntersecting&&timer){ clearInterval(timer); timer=null; } }); },{threshold:.2}).observe(document.getElementById('ag'));
   }
+})();
+</script>
+<script>
+/* Perf: stop the diagram's endless CSS animations while it is off screen or the tab is hidden. */
+(function(){
+  var card=document.querySelector('.diagram-card'); if(!card) return;
+  var seen=true, hid=false;
+  function apply(){ card.classList.toggle('dg-paused', !seen || hid); }
+  if('IntersectionObserver' in window){ new IntersectionObserver(function(e){ seen=e[0].isIntersecting; apply(); },{rootMargin:'80px'}).observe(card); }
+  document.addEventListener('visibilitychange',function(){ hid=document.hidden; apply(); });
 })();
 </script>
 </body>
