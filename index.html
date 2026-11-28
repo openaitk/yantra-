@@ -1643,6 +1643,8 @@ function jset(k,v){ store.set(k, JSON.stringify(v)); }
 
 /* ════════════ model registry (mirrors backend src/router/registry.js) ════════════ */
 var MODELS = {
+  "openai/gpt-6.2-sol": { provider:"openai", label:"GPT-6.2 Sol", inr:{in:217.35,out:1086.75}, ctx:270000, tags:["reasoning","vision","flagship"], blurb:"Newest Sol - $2/$10 per 1M tokens, same price as 6.1." },
+  "openai/gpt-6.2-astra": { provider:"openai", label:"GPT-6.2 Astra", inr:{in:869.4,out:4347}, ctx:270000, tags:["reasoning","vision","flagship"], blurb:"OpenAI's top model - now $8/$40, 20% below GPT-6 Astra." },
   "openai/gpt-6.1-sol": { provider:"openai", label:"GPT-6.1 Sol", inr:{in:217.35,out:1086.75}, ctx:270000, tags:["reasoning","vision","tools","flagship"], blurb:"Near-Astra intelligence at a fifth of the price - $2/$10." },
   "openai/gpt-6-luna": { provider:"openai", label:"GPT-6 Luna", inr:{in:10.87,out:54.34}, ctx:270000, tags:["fast","cheap","vision","tools"], blurb:"Cheapest GPT-6 - $0.10/$0.50 per 1M tokens." },
   "openai/gpt-6-astra": { provider:"openai", label:"GPT-6 Astra", inr:{in:1086.75,out:5433.75}, ctx:1100000, tags:["reasoning","vision","tools","flagship","long-context"], blurb:"OpenAI's new frontier flagship — succeeds Sol, priced 2.5x higher." },
@@ -1665,6 +1667,9 @@ var MODELS = {
   "anthropic/claude-haiku-4-5": { provider:"anthropic", label:"Claude Haiku 4.5", inr:{in:108.68,out:543.38}, ctx:200000, tags:["fast","cheap","tools"], blurb:"Fastest Claude — real-time tasks." },
   "google/gemini-3.1-pro": { provider:"gemini", label:"Gemini 3.1 Pro", inr:{in:217.35,out:1304.1}, ctx:1000000, tags:["reasoning","vision","long-context","flagship"], blurb:"Reasoning-first Google flagship, 1M context (preview)." },
   "google/gemini-3.6-flash": { provider:"gemini", label:"Gemini 3.6 Flash", inr:{in:81.51,out:407.54}, ctx:1000000, tags:["fast","vision","long-context","code"], blurb:"Previous-gen Flash tier." },
+  "google/gemini-4-carbon": { provider:"gemini", label:"Gemini 4 Carbon", get inr(){ return Date.now()>=Date.UTC(2026,11,1) ? {in:434.7,out:2173.5} : {in:217.35,out:1086.75}; }, ctx:1000000, tags:["reasoning","vision","long-context","flagship"], blurb:"Gemini 4 Carbon - 1M context, intro pricing until Nov 30." },
+  "google/gemini-4-neon": { provider:"gemini", label:"Gemini 4 Neon", inr:{in:326.03,out:1630.13}, ctx:1000000, tags:["reasoning","vision","long-context","flagship"], blurb:"Gemini 4 Neon - Google's newest flagship, $3/$15 per 1M." },
+  "google/gemini-4-hydrogen": { provider:"gemini", label:"Gemini 4 Hydrogen", inr:{in:163.01,out:815.06}, ctx:1000000, tags:["fast","vision","long-context","cheap"], blurb:"Gemini 4 Hydrogen - fast 1M-context tier, $1.50/$7.50 per 1M." },
   "google/gemini-4-argon": { provider:"gemini", label:"Gemini 4 Argon", get inr(){ return Date.now()>=Date.UTC(2026,11,1) ? {in:434.7,out:2173.5} : {in:217.35,out:1086.75}; }, ctx:1000000, tags:["reasoning","vision","tools","long-context","flagship"], blurb:"Latest Google flagship - 1M context, intro pricing until Nov 30." },
   "google/gemini-3.8-flash": { provider:"gemini", label:"Gemini 3.8 Flash", inr:{in:81.51,out:407.54}, ctx:1000000, tags:["fast","vision","long-context","code"], blurb:"Latest Gemini Flash." },
   "google/gemini-3.7-flash": { provider:"gemini", label:"Gemini 3.7 Flash", inr:{in:81.65,out:407.1}, ctx:1000000, tags:["fast","vision","long-context","code","reasoning"], blurb:"Google's newest Flash tier — introductory pricing through Dec 2026." },

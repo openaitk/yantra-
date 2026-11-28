@@ -136,6 +136,22 @@
     },
     {
       "@type": "Question",
+      "name": "Does Yantra support tool calling (function calling)?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. Send tools in /v1/chat/completions and the response contains tool_calls in the standard OpenAI format, including streaming. It works with OpenAI-style models and Claude, and with LangChain and n8n agents. Gemini models do not support tools through Yantra yet."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Does Yantra support the OpenAI Responses API and JSON output?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. POST /v1/responses works with every chat model, including streaming, function tools and image input. JSON output works through response_format and text.format. Responses are not stored, so previous_response_id is not supported."
+      }
+    },
+    {
+      "@type": "Question",
       "name": "Does Yantra work with the OpenAI SDK?",
       "acceptedAnswer": {
         "@type": "Answer",
@@ -846,7 +862,7 @@ html{scroll-behavior:smooth}
         <div class="dx-st"><b><i>2</i>Change two lines</b><p>Set the base URL to <span class="mono">https://api.aitklabs.in/v1</span> and use your key.</p></div>
         <div class="dx-st"><b><i>3</i>Call any model</b><p>Send a model id or <span class="mono">auto:cheap</span>. See the <a href="#quickstart">quick start</a>.</p></div>
       </div>
-      <p class="dx-meta">Last updated <time datetime="2026-11-12">12 November 2026</time></p>
+      <p class="dx-meta">Last updated <time datetime="2026-11-22">22 November 2026</time></p>
     </header>
 
     <div class="dx-layout">
@@ -861,6 +877,9 @@ html{scroll-behavior:smooth}
         <a href="#transcription">Speech to text</a>
         <a href="#video">Video</a>
         <a href="#embeddings">Embeddings</a>
+        <div class="dx-toc-group">Agents &amp; tools</div>
+        <a href="#tool-calling">Tool calling</a>
+        <a href="#responses-api">Responses API &amp; JSON</a>
         <div class="dx-toc-group">Integrations</div>
         <a href="#opencode">OpenCode</a>
         <div class="dx-toc-group">Reference</div>
@@ -930,6 +949,7 @@ console.log(resp.choices[0].message.content);</pre></div></div>
             <thead><tr><th>What you do</th><th>Endpoint</th><th>You pay per</th></tr></thead>
             <tbody>
               <tr><td><a href="#quickstart">Chat</a></td><td class="mono">POST /chat/completions</td><td>token</td></tr>
+              <tr><td><a href="#responses-api">Responses API</a></td><td class="mono">POST /responses</td><td>token</td></tr>
               <tr><td><a href="#images">Images</a></td><td class="mono">POST /images/generations</td><td>image</td></tr>
               <tr><td><a href="#speech">Text to speech</a></td><td class="mono">POST /audio/speech</td><td>1,000 characters</td></tr>
               <tr><td><a href="#transcription">Speech to text</a></td><td class="mono">POST /audio/transcriptions</td><td>minute of audio</td></tr>
@@ -973,6 +993,22 @@ console.log(resp.choices[0].message.content);</pre></div></div>
             <li>Up to 4 images per request, from 256 to 2048 px.</li>
             <li>Add <span class="mono">"response_format":"url"</span> to get a hosted link instead of base64. The link is valid for 1 hour.</li>
             <li>List live models and prices with <span class="mono">GET /v1/images/models</span>.</li>
+          </ul>
+          <h3 id="image-edits">Reference images (keep a character consistent)</h3>
+          <p>Send one or more reference images to <span class="mono">POST /v1/images/edits</span> together with a prompt. The model keeps the look of the people or objects in your references. This works with <span class="mono">black-forest-labs/flux-2-pro</span> and <span class="mono">black-forest-labs/flux-2-max</span>. Models that support it show <span class="mono">supports_reference_images: true</span> in <span class="mono">GET /v1/images/models</span>.</p>
+          <div class="codeblock"><button class="cp" onclick="copyCode(this)">copy</button><pre>curl https://api.aitklabs.in/v1/images/edits \
+  -H "Authorization: Bearer yk_live_xxxxxxxxxxxx" \
+  -F model=black-forest-labs/flux-2-pro \
+  -F prompt="The same girl riding a bicycle through a market, watercolor" \
+  -F image=@character.png \
+  -F image=@outfit.png
+# returns {"data":[{"b64_json":"..."}]}</pre></div>
+          <ul class="dx-list">
+            <li>Up to 4 reference images per request, each PNG, JPEG or WebP and up to 8 MB. Repeat the <span class="mono">image</span> field for each one.</li>
+            <li>You can also send JSON with <span class="mono">"images": ["&lt;base64&gt;", ...]</span> (or one <span class="mono">"image"</span>). A data URL such as <span class="mono">data:image/png;base64,...</span> works too. JSON requests are limited to about 3 MB in total, so use multipart for bigger files.</li>
+            <li>Image URLs are not downloaded. Upload the file or send base64.</li>
+            <li>Each reference image adds a small amount to the price on top of the per-image price. <span class="mono">response_format</span> and <span class="mono">n</span> work as in generations.</li>
+            <li><span class="mono">/v1/images/generations</span> does not take reference images. If you send <span class="mono">input_image</span> there you get an error that points you to <span class="mono">/v1/images/edits</span>, and you are not charged.</li>
           </ul>
         </section>
 
@@ -1063,6 +1099,134 @@ curl https://api.aitklabs.in/v1/videos/vid_xxxxxxxx \
             <li>The OpenAI SDK works as usual: <span class="mono">client.embeddings.create(model="openai/text-embedding-3-small", input=["hello"])</span>.</li>
             <li>List live models and prices with <span class="mono">GET /v1/embeddings/models</span>.</li>
           </ul>
+        </section>
+
+        <div class="dx-divider"><span>Agents &amp; tools</span></div>
+        <section class="dx-sec" id="tool-calling">
+          <h2>Tool calling (function calling)</h2>
+          <p>Give the model a list of functions it may call, and it replies with the function name and arguments instead of text. Your code runs the function and sends the result back. This is how AI agents work, and it is what LangChain, n8n and the OpenAI Agents SDK use. Yantra passes <span class="mono">tools</span> to the model and returns the calls in the standard OpenAI format, so existing agent code runs unchanged.</p>
+          <div class="dx-facts">
+            <div class="dx-fact"><span>Works on</span><code>OpenAI, DeepSeek, Mistral, xAI, Kimi, GLM, Fireworks, Novita and Claude models</code></div>
+            <div class="dx-fact"><span>Not yet on</span><code>Gemini models (they return a 400 error, never a wrong answer)</code></div>
+          </div>
+
+          <div class="dx-tabset">
+          <div class="dx-tabs" role="tablist" aria-label="Code language">
+            <button class="dx-tab on" role="tab" data-tab="tc-py">Python</button>
+            <button class="dx-tab" role="tab" data-tab="tc-lc">LangChain</button>
+            <button class="dx-tab" role="tab" data-tab="tc-curl">cURL</button>
+          </div>
+          <div class="dx-pane on" data-pane="tc-py"><div class="codeblock"><button class="cp" onclick="copyCode(this)">copy</button><pre>import json
+from openai import OpenAI
+
+client = OpenAI(base_url="https://api.aitklabs.in/v1", api_key="yk_live_xxxxxxxxxxxx")
+
+tools = [{
+    "type": "function",
+    "function": {
+        "name": "get_weather",
+        "description": "Get the current weather for a city",
+        "parameters": {
+            "type": "object",
+            "properties": {"city": {"type": "string"}},
+            "required": ["city"],
+        },
+    },
+}]
+
+messages = [{"role": "user", "content": "What is the weather in Pune?"}]
+resp = client.chat.completions.create(model="openai/gpt-4o-mini", messages=messages, tools=tools)
+
+msg = resp.choices[0].message
+if resp.choices[0].finish_reason == "tool_calls":
+    messages.append(msg)                              # keep the assistant's tool call in the history
+    for call in msg.tool_calls:
+        args = json.loads(call.function.arguments)    # {"city": "Pune"}
+        result = f"32°C and sunny in {args['city']}"  # run your real function here
+        messages.append({"role": "tool", "tool_call_id": call.id, "content": result})
+    final = client.chat.completions.create(model="openai/gpt-4o-mini", messages=messages, tools=tools)
+    print(final.choices[0].message.content)</pre></div></div>
+          <div class="dx-pane" data-pane="tc-lc"><div class="codeblock"><button class="cp" onclick="copyCode(this)">copy</button><pre>from langchain_openai import ChatOpenAI
+from langchain_core.tools import tool
+
+@tool
+def get_weather(city: str) -&gt; str:
+    """Get the current weather for a city."""
+    return f"32°C and sunny in {city}"
+
+llm = ChatOpenAI(
+    base_url="https://api.aitklabs.in/v1",
+    api_key="yk_live_xxxxxxxxxxxx",
+    model="openai/gpt-4o-mini",
+).bind_tools([get_weather])
+
+ai = llm.invoke("What is the weather in Pune?")
+print(ai.tool_calls)   # [{'name': 'get_weather', 'args': {'city': 'Pune'}, 'id': 'call_…'}]</pre></div></div>
+          <div class="dx-pane" data-pane="tc-curl"><div class="codeblock"><button class="cp" onclick="copyCode(this)">copy</button><pre>curl https://api.aitklabs.in/v1/chat/completions \
+  -H "Authorization: Bearer yk_live_xxxxxxxxxxxx" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "model": "openai/gpt-4o-mini",
+    "messages": [{"role":"user","content":"What is the weather in Pune?"}],
+    "tools": [{"type":"function","function":{"name":"get_weather","description":"Get the current weather for a city","parameters":{"type":"object","properties":{"city":{"type":"string"}},"required":["city"]}}}]
+  }'
+# the reply has "finish_reason": "tool_calls" and message.tool_calls[0].function.arguments = "{\"city\":\"Pune\"}"</pre></div></div>
+          </div>
+
+          <h3 style="margin:26px 0 12px;font-size:17px">Request fields</h3>
+          <div class="dx-tablewrap"><table class="dx-table">
+            <thead><tr><th>Field</th><th>What it does</th></tr></thead>
+            <tbody>
+              <tr><td class="mono">tools</td><td>Up to 128 functions, each <span class="mono">{"type":"function","function":{name, description, parameters}}</span>, where <span class="mono">parameters</span> is a JSON Schema object</td></tr>
+              <tr><td class="mono">tool_choice</td><td><span class="mono">"auto"</span> (default), <span class="mono">"none"</span>, <span class="mono">"required"</span> (must call a tool), or <span class="mono">{"type":"function","function":{"name":"get_weather"}}</span> to force one</td></tr>
+              <tr><td class="mono">parallel_tool_calls</td><td><span class="mono">false</span> makes the model call at most one tool per turn</td></tr>
+              <tr><td class="mono">reasoning_effort</td><td><span class="mono">none</span>, <span class="mono">minimal</span>, <span class="mono">low</span>, <span class="mono">medium</span>, <span class="mono">high</span> or <span class="mono">xhigh</span>. Sent to OpenAI models only</td></tr>
+            </tbody>
+          </table></div>
+
+          <ul class="dx-list">
+            <li>When the model calls a tool, <span class="mono">message.content</span> is <span class="mono">null</span> (or short text), <span class="mono">message.tool_calls</span> lists the calls, and <span class="mono">finish_reason</span> is <span class="mono">"tool_calls"</span>. Each call has an <span class="mono">id</span>, and its <span class="mono">function.arguments</span> is a JSON string.</li>
+            <li>Send each result back as a message with <span class="mono">role: "tool"</span> and the matching <span class="mono">tool_call_id</span>. Keep the assistant message that contains the calls in the history.</li>
+            <li>Streaming works: with <span class="mono">stream: true</span> the calls arrive in <span class="mono">delta.tool_calls</span> pieces (the name first, then fragments of the arguments), exactly as the OpenAI SDK expects.</li>
+            <li>Claude models take the same OpenAI-format request. Yantra converts it to Anthropic's format and back for you.</li>
+            <li>Pick a specific model id for tool calls. A request with <span class="mono">tools</span> is only ever sent to models that support them, and if the model you chose cannot, you get a <span class="mono">400</span> error.</li>
+            <li>The tool definitions count as input tokens, so many large tools cost a little more per request.</li>
+          </ul>
+          <p class="dx-note">Some OpenAI reasoning models refuse tools on <span class="mono">/v1/chat/completions</span> unless reasoning is off. If you see that error, add <span class="mono">"reasoning_effort": "none"</span>, or call the <a href="#responses-api">Responses API</a> instead.</p>
+        </section>
+
+        <section class="dx-sec" id="responses-api">
+          <h2>Responses API and JSON output</h2>
+          <p><span class="mono">POST /v1/responses</span> is OpenAI's newer API. Yantra supports it for every chat model, with the same routing, failover and ₹ billing as <span class="mono">/v1/chat/completions</span>. The OpenAI SDK works as usual: <span class="mono">client.responses.create(...)</span>.</p>
+          <div class="codeblock"><button class="cp" onclick="copyCode(this)">copy</button><pre>from openai import OpenAI
+
+client = OpenAI(base_url="https://api.aitklabs.in/v1", api_key="yk_live_xxxxxxxxxxxx")
+
+resp = client.responses.create(
+    model="openai/gpt-4o-mini",
+    instructions="Answer in one short sentence.",
+    input="Why is the sky blue?",
+)
+print(resp.output_text)</pre></div>
+          <ul class="dx-list">
+            <li>Supported: text and image <span class="mono">input</span>, <span class="mono">instructions</span>, function tools, <span class="mono">tool_choice</span>, <span class="mono">max_output_tokens</span>, <span class="mono">temperature</span>, <span class="mono">reasoning.effort</span>, <span class="mono">text.format</span> and streaming.</li>
+            <li>Tool calls come back as <span class="mono">function_call</span> items. Send the result back as a <span class="mono">function_call_output</span> item with the same <span class="mono">call_id</span>.</li>
+            <li>Not supported: <span class="mono">previous_response_id</span> (Yantra does not store responses, so send the whole conversation in <span class="mono">input</span>) and built-in tools such as web search and file search. These return a clear <span class="mono">400</span>.</li>
+          </ul>
+          <h3 style="margin:26px 0 12px;font-size:17px">JSON output</h3>
+          <p>Ask for valid JSON with <span class="mono">response_format</span> on chat completions, or <span class="mono">text.format</span> on the Responses API.</p>
+          <div class="codeblock"><button class="cp" onclick="copyCode(this)">copy</button><pre>{
+  "model": "openai/gpt-4o-mini",
+  "messages": [{"role": "user", "content": "Give me a city and its country."}],
+  "response_format": {
+    "type": "json_schema",
+    "json_schema": {
+      "name": "place",
+      "schema": {"type": "object", "properties": {"city": {"type": "string"}, "country": {"type": "string"}}, "required": ["city", "country"]}
+    }
+  }
+}</pre></div>
+          <p class="dx-note">OpenAI-style models enforce the format themselves. Claude has no such switch, so Yantra asks it for JSON in the instructions, which works well but is not a hard guarantee. Gemini models ignore <span class="mono">response_format</span>.</p>
         </section>
 
         <div class="dx-divider"><span>Integrations</span></div>
@@ -1178,7 +1342,9 @@ curl https://api.aitklabs.in/v1/videos/vid_xxxxxxxx \
         <div class="dx-divider"><span>Help</span></div>
         <section class="dx-sec dx-faq" id="faq">
           <h2>Frequently asked questions</h2>
-          <details><summary>What is Yantra&#x27;s base URL?</summary><p>The base URL is <span class="mono">https://api.aitklabs.in/v1</span>. Set it as <span class="mono">base_url</span> in the OpenAI Python SDK or <span class="mono">baseURL</span> in the Node SDK, and use your <span class="mono">yk_live_…</span> key as the API key.</p></details><details><summary>Does Yantra work with the OpenAI SDK?</summary><p>Yes. Yantra follows the OpenAI request and response format for chat, images, embeddings, speech and transcription. If your code already works with OpenAI, you only change the base URL and the API key.</p></details><details><summary>How do I pay, and what does it cost to start?</summary><p>You pay in Indian rupees with UPI. Add credit to your wallet from ₹10, and each request is charged against it by what you use: tokens for chat and embeddings, images, characters for speech, minutes for transcription and seconds for video. There is no subscription.</p></details><details><summary>Which models can I use?</summary><p>Hundreds of models from OpenAI, Anthropic, Google, DeepSeek, xAI, Mistral and open-weight labs. The <a href="models.html">models page</a> lists every model with its live price in ₹, and <span class="mono">GET /v1/models</span> returns the same list.</p></details><details><summary>What do the auto modes do?</summary><p>Instead of a model id you can send <span class="mono">auto</span>, <span class="mono">auto:cheap</span>, <span class="mono">auto:fast</span>, <span class="mono">auto:reasoning</span> or <span class="mono">auto:long-context</span>. Yantra then picks a suitable model for you. The reply tells you which model answered.</p></details><details><summary>What happens if a provider is down?</summary><p>For a retryable error (429, 5xx or a timeout), Yantra switches to a similar model of the same kind and sets the header <span class="mono">x-yantra-fell-back: true</span> so you can see it happened.</p></details><details><summary>Am I charged for failed requests?</summary><p>No. A request that fails is not charged. Video is charged only when the finished video is ready.</p></details><details><summary>How can I see what a request cost?</summary><p>Every chat reply has the headers <span class="mono">x-yantra-cost-paise</span> and <span class="mono">x-yantra-balance-paise</span>. Your dashboard also shows your balance and the cost of each request.</p></details><details><summary>Does Yantra store my prompts?</summary><p>No. Prompt and reply content is not logged. Only token counts, cost and latency are recorded for billing.</p></details><details><summary>Can I use Yantra in OpenCode, n8n and other tools?</summary><p>Yes. Any tool that lets you set a custom OpenAI-compatible base URL can use Yantra. See the <a href="#opencode">OpenCode setup</a> above or the <a href="n8n-openai-india.html">n8n guide</a>.</p></details><details><summary>Where do I get help?</summary><p>Email <a href="mailto:gettony3000@gmail.com">gettony3000@gmail.com</a> or check the <a href="status.html">status page</a>.</p></details>
+          <details><summary>What is Yantra&#x27;s base URL?</summary><p>The base URL is <span class="mono">https://api.aitklabs.in/v1</span>. Set it as <span class="mono">base_url</span> in the OpenAI Python SDK or <span class="mono">baseURL</span> in the Node SDK, and use your <span class="mono">yk_live_…</span> key as the API key.</p></details><details><summary>Does Yantra work with the OpenAI SDK?</summary><p>Yes. Yantra follows the OpenAI request and response format for chat, images, embeddings, speech and transcription. If your code already works with OpenAI, you only change the base URL and the API key.</p></details><details><summary>How do I pay, and what does it cost to start?</summary><p>You pay in Indian rupees with UPI. Add credit to your wallet from ₹10, and each request is charged against it by what you use: tokens for chat and embeddings, images, characters for speech, minutes for transcription and seconds for video. There is no subscription.</p></details><details><summary>Which models can I use?</summary><p>Hundreds of models from OpenAI, Anthropic, Google, DeepSeek, xAI, Mistral and open-weight labs. The <a href="models.html">models page</a> lists every model with its live price in ₹, and <span class="mono">GET /v1/models</span> returns the same list.</p></details><details><summary>What do the auto modes do?</summary><p>Instead of a model id you can send <span class="mono">auto</span>, <span class="mono">auto:cheap</span>, <span class="mono">auto:fast</span>, <span class="mono">auto:reasoning</span> or <span class="mono">auto:long-context</span>. Yantra then picks a suitable model for you. The reply tells you which model answered.</p></details><details><summary>What happens if a provider is down?</summary><p>For a retryable error (429, 5xx or a timeout), Yantra switches to a similar model of the same kind and sets the header <span class="mono">x-yantra-fell-back: true</span> so you can see it happened.</p></details><details><summary>Am I charged for failed requests?</summary><p>No. A request that fails is not charged. Video is charged only when the finished video is ready.</p></details><details><summary>How can I see what a request cost?</summary><p>Every chat reply has the headers <span class="mono">x-yantra-cost-paise</span> and <span class="mono">x-yantra-balance-paise</span>, and the timing headers <span class="mono">x-yantra-latency-ms</span> (total), <span class="mono">x-yantra-upstream-ms</span> (time inside the provider) and <span class="mono">x-yantra-attempts</span>. The same numbers, plus <span class="mono">overhead_ms</span> and <span class="mono">tokens_per_sec</span>, are in the <span class="mono">yantra</span> object of the JSON reply (streams add <span class="mono">ttfb_ms</span> in the last chunk). Your dashboard shows each request's cost, speed and routing.</p></details><details><summary>Does Yantra store my prompts?</summary><p>No. Prompt and reply content is not logged. Only token counts, cost and latency are recorded for billing.</p></details><details><summary>Can I use Yantra in OpenCode, n8n and other tools?</summary><p>Yes. Any tool that lets you set a custom OpenAI-compatible base URL can use Yantra. See the <a href="#opencode">OpenCode setup</a> above or the <a href="n8n-openai-india.html">n8n guide</a>.</p></details><details><summary>Where do I get help?</summary><p>Email <a href="mailto:gettony3000@gmail.com">gettony3000@gmail.com</a> or check the <a href="status.html">status page</a>.</p></details>
+          <details><summary>Does Yantra support tool calling (function calling)?</summary><p>Yes. Send <span class="mono">tools</span> in <span class="mono">/v1/chat/completions</span> and the reply carries <span class="mono">tool_calls</span> in the standard OpenAI format, with streaming. It works with OpenAI-style models and Claude, and with LangChain and n8n agents. Gemini models do not support tools through Yantra yet. See <a href="#tool-calling">Tool calling</a>.</p></details>
+          <details><summary>Does Yantra support the OpenAI Responses API and JSON output?</summary><p>Yes. <span class="mono">POST /v1/responses</span> works with every chat model, including streaming, function tools and image input. JSON output works through <span class="mono">response_format</span> and <span class="mono">text.format</span>. Responses are not stored, so <span class="mono">previous_response_id</span> is not supported. See <a href="#responses-api">Responses API and JSON output</a>.</p></details>
           <div class="dx-next"><a href="models.html">Browse all models</a><a href="playground.html">Try the playground</a><a href="llm-api-pricing-india.html">LLM API pricing in India</a><a href="openai-alternative-india.html">OpenAI alternative for India</a><a href="guides.html">All guides</a></div>
         </section>
 
@@ -1289,6 +1455,8 @@ function jset(k,v){ store.set(k, JSON.stringify(v)); }
 
 /* ════════════ model registry (mirrors backend src/router/registry.js) ════════════ */
 var MODELS = {
+  "openai/gpt-6.2-sol": { provider:"openai", label:"GPT-6.2 Sol", inr:{in:217.35,out:1086.75}, ctx:270000, tags:["reasoning","vision","flagship"], blurb:"Newest Sol - $2/$10 per 1M tokens, same price as 6.1." },
+  "openai/gpt-6.2-astra": { provider:"openai", label:"GPT-6.2 Astra", inr:{in:869.4,out:4347}, ctx:270000, tags:["reasoning","vision","flagship"], blurb:"OpenAI's top model - now $8/$40, 20% below GPT-6 Astra." },
   "openai/gpt-6.1-sol": { provider:"openai", label:"GPT-6.1 Sol", inr:{in:217.35,out:1086.75}, ctx:270000, tags:["reasoning","vision","tools","flagship"], blurb:"Near-Astra intelligence at a fifth of the price - $2/$10." },
   "openai/gpt-6-luna": { provider:"openai", label:"GPT-6 Luna", inr:{in:10.87,out:54.34}, ctx:270000, tags:["fast","cheap","vision","tools"], blurb:"Cheapest GPT-6 - $0.10/$0.50 per 1M tokens." },
   "openai/gpt-6-astra": { provider:"openai", label:"GPT-6 Astra", inr:{in:1086.75,out:5433.75}, ctx:1100000, tags:["reasoning","vision","tools","flagship","long-context"], blurb:"OpenAI's new frontier flagship — succeeds Sol, priced 2.5x higher." },
@@ -1311,6 +1479,9 @@ var MODELS = {
   "anthropic/claude-haiku-4-5": { provider:"anthropic", label:"Claude Haiku 4.5", inr:{in:108.68,out:543.38}, ctx:200000, tags:["fast","cheap","tools"], blurb:"Fastest Claude — real-time tasks." },
   "google/gemini-3.1-pro": { provider:"gemini", label:"Gemini 3.1 Pro", inr:{in:217.35,out:1304.1}, ctx:1000000, tags:["reasoning","vision","long-context","flagship"], blurb:"Reasoning-first Google flagship, 1M context (preview)." },
   "google/gemini-3.6-flash": { provider:"gemini", label:"Gemini 3.6 Flash", inr:{in:81.51,out:407.54}, ctx:1000000, tags:["fast","vision","long-context","code"], blurb:"Previous-gen Flash tier." },
+  "google/gemini-4-carbon": { provider:"gemini", label:"Gemini 4 Carbon", get inr(){ return Date.now()>=Date.UTC(2026,11,1) ? {in:434.7,out:2173.5} : {in:217.35,out:1086.75}; }, ctx:1000000, tags:["reasoning","vision","long-context","flagship"], blurb:"Gemini 4 Carbon - 1M context, intro pricing until Nov 30." },
+  "google/gemini-4-neon": { provider:"gemini", label:"Gemini 4 Neon", inr:{in:326.03,out:1630.13}, ctx:1000000, tags:["reasoning","vision","long-context","flagship"], blurb:"Gemini 4 Neon - Google's newest flagship, $3/$15 per 1M." },
+  "google/gemini-4-hydrogen": { provider:"gemini", label:"Gemini 4 Hydrogen", inr:{in:163.01,out:815.06}, ctx:1000000, tags:["fast","vision","long-context","cheap"], blurb:"Gemini 4 Hydrogen - fast 1M-context tier, $1.50/$7.50 per 1M." },
   "google/gemini-4-argon": { provider:"gemini", label:"Gemini 4 Argon", get inr(){ return Date.now()>=Date.UTC(2026,11,1) ? {in:434.7,out:2173.5} : {in:217.35,out:1086.75}; }, ctx:1000000, tags:["reasoning","vision","tools","long-context","flagship"], blurb:"Latest Google flagship - 1M context, intro pricing until Nov 30." },
   "google/gemini-3.8-flash": { provider:"gemini", label:"Gemini 3.8 Flash", inr:{in:81.51,out:407.54}, ctx:1000000, tags:["fast","vision","long-context","code"], blurb:"Latest Gemini Flash." },
   "google/gemini-3.7-flash": { provider:"gemini", label:"Gemini 3.7 Flash", inr:{in:81.65,out:407.1}, ctx:1000000, tags:["fast","vision","long-context","code","reasoning"], blurb:"Google's newest Flash tier — introductory pricing through Dec 2026." },
