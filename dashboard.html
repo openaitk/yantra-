@@ -1117,6 +1117,8 @@ main{padding:30px 0 80px}
   var usageCharts = {}; // Chart.js instances — must be destroyed before redraw, or the canvas leaks/errors
   var CHART_COLORS = ['#0b6cff','#7c3aed','#0a9d5c','#d99a00','#e8710a','#e11d74','#3b82f6','#64748b'];
 
+  function fmtMs(ms){ return ms>=1000 ? (ms/1000).toFixed(ms>=10000?0:1)+' s' : Math.round(ms)+' ms'; }
+
   function loadUsage(){
     api('/app/usage').then(function(d){
       var t=d.totals;
@@ -1124,16 +1126,22 @@ main{padding:30px 0 80px}
         stat('Requests',fmtNum(t.requests),'cy')+
         stat('Input tokens',fmtNum(t.in_tokens),'pu')+
         stat('Output tokens',fmtNum(t.out_tokens),'pu')+
-        stat('Total spent',inr(t.cost_paise),'sf');
+        stat('Total spent',inr(t.cost_paise),'sf')+
+        stat('Typical speed',t.p50_ms!=null?fmtMs(t.p50_ms):'—','cy')+
+        stat('Slowest 5%',t.p95_ms!=null?fmtMs(t.p95_ms):'—','pu');
       renderUsageCharts(d);
       renderByKey(d.byKey||[]);
       var el=$('usage-list'), rows=d.recent||[];
       if(!rows.length){ el.innerHTML='<div class="empty"><div class="big">📊</div>No requests yet. Send one from the playground or your app.</div>'; return; }
       el.innerHTML=rows.map(function(u){
         var routed = u.routed_as && u.routed_as!==u.model;
+        var bad = u.status && u.status!=='ok';
+        var ms = u.latency_ms>0 ? ' · <span title="Time from request received to reply finished (streams include the whole generation)">'+fmtMs(u.latency_ms)+'</span>' : '';
+        var tps = (u.latency_ms>500 && u.out_tokens>0) ? ' · '+Math.round(u.out_tokens/(u.latency_ms/1000))+' tok/s' : '';
         return '<div class="row"><div class="grow"><div class="t1 mono">'+esc(u.model)+
-          (routed?' <span class="tag dim">→ '+esc(u.routed_as)+'</span>':'')+'</div>'+
-          '<div class="t2">'+esc(u.provider)+' · '+fmtNum(u.in_tokens)+' in / '+fmtNum(u.out_tokens)+' out · '+when(u.created_at)+'</div></div>'+
+          (routed?' <span class="tag dim" title="Your request was served by a different model (automatic fallback or auto mode)">→ '+esc(u.routed_as)+'</span>':'')+
+          (bad?' <span class="tag dim">'+esc(u.status==='client_closed'?'cancelled':u.status)+'</span>':'')+'</div>'+
+          '<div class="t2">'+esc(u.provider)+' · '+fmtNum(u.in_tokens)+' in / '+fmtNum(u.out_tokens)+' out'+ms+tps+' · '+when(u.created_at)+'</div></div>'+
           '<div class="mono" style="color:var(--saffron);font-weight:600">'+inr(u.cost_paise)+'</div></div>';
       }).join('');
     }).catch(function(e){ toast(e.message,'bad'); });

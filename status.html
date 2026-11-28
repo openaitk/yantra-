@@ -117,7 +117,7 @@ h1{font-family:var(--fd);font-weight:800;font-size:28px;letter-spacing:-.8px;mar
     <div id="incidents"><div class="empty">Loading…</div></div>
   </section>
 
-  <p class="foot">Updates every 30 seconds · Times shown in your local time zone<br>
+  <p class="foot">Updates every 30 seconds · Times shown in your local time zone · "avg" is the average full response time of non-streaming calls over 24 h<br>
     Something not working that isn't shown here? Write to <a href="mailto:gettony3000@gmail.com" style="text-decoration:underline">gettony3000@gmail.com</a></p>
 </main>
 
@@ -152,6 +152,7 @@ h1{font-family:var(--fd);font-weight:800;font-size:28px;letter-spacing:-.8px;mar
       var r=el('div','row');
       r.appendChild(el('span','pname',p.name));
       var right=el('span','row');
+      if(p.avg_ms_24h!=null) right.appendChild(el('span','up','avg '+(p.avg_ms_24h>=1000?(p.avg_ms_24h/1000).toFixed(1)+' s':p.avg_ms_24h+' ms')));
       if(p.uptime_24h!=null) right.appendChild(el('span','up',p.uptime_24h.toFixed(2)+'% · 24 h'));
       right.appendChild(el('span','pill '+p.status,LABEL[p.status]||p.status));
       r.appendChild(right); row.appendChild(r);
