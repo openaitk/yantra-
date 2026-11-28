@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en-IN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Continue.dev Custom Model Setup for India — config.yaml, UPI | Yantra AI</title>
+<meta name="description" content="Add Yantra to Continue.dev with a few lines of config.yaml and use GPT, Claude, Gemini or DeepSeek from India. Pay in rupees with UPI.">
+<link rel="canonical" href="https://apikeys.in/continue-dev-india.html">
+<link rel="alternate" hreflang="en-IN" href="https://apikeys.in/continue-dev-india.html">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Use Continue.dev with GPT, Claude and Gemini from India">
+<meta property="og:description" content="Add Yantra to Continue.dev with a few lines of config.yaml and use GPT, Claude, Gemini or DeepSeek from India. Pay in rupees with UPI.">
+<meta property="og:url" content="https://apikeys.in/continue-dev-india.html">
+<meta property="og:image" content="https://apikeys.in/assets/og-image.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@700;800&family=Instrument+Sans:wght@400;600&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"Do I need an international credit card?","acceptedAnswer":{"@type":"Answer","text":"No. You pay with UPI in Indian rupees. The minimum top-up is ₹10."}},{"@type":"Question","name":"Is this the official provider API?","acceptedAnswer":{"@type":"Answer","text":"No. Yantra AI is an independent gateway. It routes your request to the model provider and bills you in rupees."}},{"@type":"Question","name":"Which models work for agent and tool-calling features?","acceptedAnswer":{"@type":"Answer","text":"Use a model tagged for tools, such as anthropic/claude-sonnet-5-5 or deepseek/deepseek-v4-flash. The models page shows which models support tools."}}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://apikeys.in/"},{"@type":"ListItem","position":2,"name":"Guides","item":"https://apikeys.in/guides.html"},{"@type":"ListItem","position":3,"name":"Use Continue.dev with GPT, Claude and Gemini from India","item":"https://apikeys.in/continue-dev-india.html"}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Article","headline":"Use Continue.dev with GPT, Claude and Gemini from India","description":"Add Yantra to Continue.dev with a few lines of config.yaml and use GPT, Claude, Gemini or DeepSeek from India. Pay in rupees with UPI.","dateModified":"2026-11-28","inLanguage":"en-IN","author":{"@type":"Person","name":"Aditya Sunil Borgaonkar"},"publisher":{"@type":"Organization","name":"Yantra AI","url":"https://apikeys.in/"},"mainEntityOfPage":"https://apikeys.in/continue-dev-india.html"}</script>
+<style>
+:root{--bg:#eaeff7;--card:#fff;--border:rgba(15,40,90,.14);--cyan:#0069b8;
+ --text:#0f1e33;--text2:#4a5a75;--text3:#78889f;--green:#009453;--saffron:#d16800;
+ --fd:'Bricolage Grotesque',sans-serif;--fm:'JetBrains Mono',monospace;--fb:'Instrument Sans',sans-serif;}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:var(--fb);line-height:1.65}
+.wrap{max-width:780px;margin:0 auto;padding:0 22px}
+.top{background:var(--card);border-bottom:1px solid var(--border);padding:14px 0}
+.brand{display:inline-flex;align-items:center;gap:10px;text-decoration:none}
+.mark{width:34px;height:34px;border-radius:10px;background:linear-gradient(135deg,#00d4ff,#9d4edd);
+ display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-family:var(--fd)}
+.bn{font-family:var(--fd);font-weight:800;font-size:17px;color:var(--text)}
+.bn span{color:var(--cyan)}
+main{padding:30px 0 60px}
+.crumb{font-size:13px;color:var(--text3);margin-bottom:16px}
+.crumb a{color:var(--text2);text-decoration:none}.crumb a:hover{color:var(--cyan)}
+h1{font-family:var(--fd);font-weight:800;font-size:clamp(26px,5vw,36px);letter-spacing:-1.2px;margin-bottom:8px}
+.by{color:var(--text2);font-size:14.5px;margin-bottom:6px}
+.mid{font-family:var(--fm);font-size:13px;color:var(--cyan);margin-bottom:20px;word-break:break-all}
+.lead{font-size:16px;color:var(--text2);margin-bottom:24px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:26px}
+.kpi{background:var(--card);border:1px solid var(--border);border-radius:13px;padding:15px 16px}
+.kpi .l{font-size:10.5px;text-transform:uppercase;letter-spacing:1px;color:var(--text3);font-weight:700;margin-bottom:5px}
+.kpi .v{font-family:var(--fd);font-weight:800;font-size:20px;letter-spacing:-.5px}
+h2{font-family:var(--fd);font-weight:700;font-size:19px;margin:28px 0 10px}
+p{color:var(--text2);margin-bottom:13px}
+pre{background:#0d1528;color:#e2eaff;border-radius:12px;padding:16px;overflow-x:auto;
+ font-family:var(--fm);font-size:12.5px;line-height:1.6;margin-bottom:14px}
+.alts{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:11px;margin:14px 0 6px}
+.alt{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px;
+ text-decoration:none;display:block;transition:all .2s}
+.alt:hover{border-color:var(--cyan);transform:translateY(-2px)}
+.alt-k{display:block;font-size:10.5px;text-transform:uppercase;letter-spacing:1px;color:var(--text3);font-weight:700;margin-bottom:4px}
+.alt-n{display:block;font-family:var(--fd);font-weight:700;font-size:15px;color:var(--text);margin-bottom:3px}
+.alt-p{display:block;font-family:var(--fm);font-size:11.5px;color:var(--text2)}
+.cta{display:inline-flex;align-items:center;gap:8px;background:linear-gradient(135deg,var(--cyan),#005599);
+ color:#fff;text-decoration:none;font-family:var(--fd);font-weight:700;font-size:15px;
+ padding:13px 24px;border-radius:12px;margin:8px 0 4px}
+.tags{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:20px}
+.tag{font-size:10.5px;font-weight:700;letter-spacing:.4px;text-transform:uppercase;
+ padding:4px 9px;border-radius:6px;background:rgba(0,105,184,.09);color:var(--cyan)}
+footer{border-top:1px solid var(--border);padding:24px 0 50px;text-align:center;font-size:13px;color:var(--text3)}
+footer a{color:var(--text2);text-decoration:none;margin:0 7px}
+table{width:100%;border-collapse:collapse;margin:8px 0 18px;font-size:13.5px;background:var(--card);border:1px solid var(--border);border-radius:12px;overflow:hidden}th,td{padding:10px 12px;text-align:left;border-bottom:1px solid var(--border)}th{font-size:11px;text-transform:uppercase;letter-spacing:.8px;color:var(--text3)}td.n{font-family:var(--fm);white-space:nowrap}tr:last-child td{border-bottom:none}.scroll{overflow-x:auto}ul.l{margin:0 0 14px 20px;color:var(--text2)}ul.l li{margin-bottom:6px}h3.q{font-family:var(--fd);font-size:16px;margin:14px 0 4px}</style>
+<script src="/assets/yk.js" defer></script>
+</head>
+<body>
+<div class="top"><div class="wrap"><a class="brand" href="index.html"><span class="mark">य</span><span class="bn">Yantra <span>AI</span></span></a></div></div>
+<main><div class="wrap">
+  <div class="crumb"><a href="index.html">Home</a> › <a href="guides.html">Guides</a> › Use Continue.dev with GPT, Claude and Gemini from India</div>
+  <h1>Use Continue.dev with GPT, Claude and Gemini from India</h1>
+  <p class="lead">Continue is an open-source coding assistant for VS Code and JetBrains. Adding Yantra takes a few lines in its config file, and then every model you pick is billed in rupees.</p>
+  <a class="cta" href="dashboard.html">Get your API key →</a>
+<h2>Add Yantra to config.yaml</h2>
+<p>Open Continue's config file (the settings icon in the Continue panel opens it) and add models like this:</p>
+<pre>name: Yantra
+version: 1.0.0
+schema: v1
+models:
+  - name: Claude Sonnet 5.5 (Yantra)
+    provider: openai
+    model: anthropic/claude-sonnet-5-5
+    apiBase: https://api.aitklabs.in/v1
+    apiKey: yk_live_xxxxxxxxxxxx
+    roles: [chat, edit, apply]
+  - name: DeepSeek V4 Flash (Yantra)
+    provider: openai
+    model: deepseek/deepseek-v4-flash
+    apiBase: https://api.aitklabs.in/v1
+    apiKey: yk_live_xxxxxxxxxxxx
+    roles: [chat, edit, apply]</pre>
+<p>Save the file and pick the model from the dropdown in the Continue panel. Replace the example key with your own, and do not commit the file to a public repository.</p>
+<h2>What it costs</h2>
+<p>Coding tools send a lot of text with every request (your open files and the conversation so far), so cost depends on the model you pick. As a rough guide, a typical request of about 8,000 tokens in and 800 tokens out costs around ₹0.37 on DeepSeek V4 Flash (-&gt; V4.1) and around ₹2.61 on Claude Sonnet 5.5. That is roughly 273 requests versus 38 requests for ₹100. Your real numbers will differ, and the <a href="dashboard.html">dashboard</a> shows the exact cost of every call.</p><h2>Keep spending under control</h2>
+<ul class="l"><li>Create a <b>separate key for this tool</b> in the dashboard and give it a credit limit (for example ₹200 a month). If the tool loops, the key stops and the rest of your balance is safe.</li><li>Top up small. The minimum is ₹10 by UPI, and unused balance stays in your account.</li><li>Use <span style="font-family:var(--fm)">deepseek/deepseek-v4-flash</span> for everyday edits and a stronger model such as <span style="font-family:var(--fm)">anthropic/claude-sonnet-5-5</span> only for hard problems.</li></ul>
+<h2>Frequently asked questions</h2><h3 class="q">Do I need an international credit card?</h3><p>No. You pay with UPI in Indian rupees. The minimum top-up is ₹10.</p><h3 class="q">Is this the official provider API?</h3><p>No. Yantra AI is an independent gateway. It routes your request to the model provider and bills you in rupees.</p><h3 class="q">Which models work for agent and tool-calling features?</h3><p>Use a model tagged for tools, such as anthropic/claude-sonnet-5-5 or deepseek/deepseek-v4-flash. The <a href="models.html">models page</a> shows which models support tools.</p>
+<h2>Keep reading</h2><div class="alts"><a class="alt" href="cheapest-llm-api-india.html"><span class="alt-n">Cheapest LLM APIs in India</span><span class="alt-p">Ranked by price in ₹</span></a><a class="alt" href="llm-api-pricing-india.html"><span class="alt-n">LLM API pricing in India</span><span class="alt-p">Popular models in ₹</span></a><a class="alt" href="n8n-openai-india.html"><span class="alt-n">Use it in n8n</span><span class="alt-p">Step by step</span></a><a class="alt" href="docs.html"><span class="alt-n">API documentation</span><span class="alt-p">Endpoints, routing, errors</span></a></div>
+  <p style="font-size:12.5px;color:var(--text3);margin-top:22px">Prices are in Indian rupees per 1M tokens, taken from the live Yantra catalogue on 2026-11-28, and can change. Yantra AI is an independent gateway and is not affiliated with or endorsed by OpenAI, Anthropic, Google, DeepSeek, Cursor, Cline, Continue, Aider, LangChain, Open WebUI or any other company named here. Product names are used only to describe compatibility, and menu names in third-party tools can change between versions.</p>
+</div></main>
+<footer><div class="wrap"><a href="index.html">Home</a>·<a href="models.html">Models</a>·<a href="guides.html">Guides</a>·<a href="docs.html">Docs</a>·<a href="status.html">Status</a>·<a href="legal/terms.html">Terms</a><div style="margin-top:9px">© 2026 Yantra AI · Kolhapur, Maharashtra, India</div></div></footer>
+</body>
+</html>

@@ -428,6 +428,11 @@ main{padding:30px 0 80px}
         <button class="btn btn-saf" id="pay-btn" onclick="addCredits()" style="width:100%">Pay <span id="pay-amt">₹500</span> with UPI</button>
       </div>
       <div class="card pad" style="margin-top:18px">
+        <div class="t1" style="font-weight:600;margin-bottom:6px">Have a credit code?</div>
+        <p style="font-size:13px;color:var(--text3);margin-bottom:10px">Event and campus codes add credit to your balance. Your email must be verified.</p>
+        <div style="display:flex;gap:8px"><input class="inp mono" id="coupon-code" placeholder="TKIET-AB12-CD34" autocomplete="off" autocapitalize="characters" spellcheck="false" style="flex:1;min-width:0"><button class="btn" id="coupon-btn" onclick="redeemCode()">Redeem</button></div>
+      </div>
+      <div class="card pad" style="margin-top:18px">
         <div class="t1" style="font-weight:600;margin-bottom:6px">Transaction history</div>
         <div class="list" id="txn-list"></div>
       </div>
@@ -1050,12 +1055,23 @@ main{padding:30px 0 80px}
       if(!rows.length){ el.innerHTML='<div class="empty"><div class="big">🧾</div>No transactions yet.</div>'; return; }
       el.innerHTML=rows.map(function(t){
         var paid=t.status==='paid';
-        return '<div class="row"><div class="grow"><div class="t1">'+inr(t.amount_paise)+' top-up</div>'+
+        return '<div class="row"><div class="grow"><div class="t1">'+inr(t.amount_paise)+(String(t.id).indexOf('coupon_')===0?' credit code':' top-up')+'</div>'+
           '<div class="t2 mono">'+esc(t.id)+' · '+when(t.created_at)+'</div></div>'+
           '<span class="tag '+(paid?'green':'dim')+'">'+esc(t.status)+'</span></div>';
       }).join('');
     }).catch(function(){});
   }
+
+  window.redeemCode=function(){
+    var inp=$('coupon-code'), code=(inp.value||'').trim();
+    if(!code){ toast('Enter your code','bad'); return; }
+    if(ME && ME.user && !ME.user.email_verified){ toast('Verify your email first','bad'); var vb=$('verify-banner'); if(vb) vb.classList.remove('hide'); return; }
+    var btn=$('coupon-btn'); btn.disabled=true; var old=btn.innerHTML; btn.innerHTML='<span class="spin"></span>';
+    api('/app/coupons/redeem',{method:'POST',body:{code:code}})
+      .then(function(out){ inp.value=''; toast('Added '+inr(out.amount_paise)+' to your balance','good'); refreshAfterPay(); })
+      .catch(function(e){ toast(e.message||'Could not redeem this code','bad'); })
+      .then(function(){ btn.disabled=false; btn.innerHTML=old; });
+  };
 
   window.addCredits=function(){
     if(selectedPaise<1000){ toast('Minimum top-up is ₹10','bad'); return; }
